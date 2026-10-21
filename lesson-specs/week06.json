@@ -1,0 +1,449 @@
+{
+  "week": 6,
+  "goals": [
+    "อ่านแผ่นงาน Products และ Daily_Sales แล้วอธิบายระดับรายละเอียดของหนึ่งแถว",
+    "ตรวจคีย์ เชื่อมตาราง และนับรายการที่หารหัสสินค้าไม่พบ",
+    "คำนวณยอดเงินและกำไรขั้นต้นทีละรายการพร้อมบอกหน่วย"
+  ],
+  "files": [
+    "nvc_store_sales.xlsx"
+  ],
+  "concepts": [
+    {
+      "day": 0,
+      "title": "วันจันทร์ 180 นาที: เข้าใจตารางก่อนเชื่อม",
+      "items": [
+        "ใช้ 30 นาทีอ่านความหมายตาราง 120 นาทีพิมพ์ขั้นที่ 1–12 พร้อมหยุดตรวจ และ 30 นาทีอธิบายผล",
+        "Products มี 6 แถว หนึ่งแถวคือหนึ่งสินค้า; product_id ต้องไม่ซ้ำ",
+        "Daily_Sales มี 15 แถว หนึ่งแถวคือหนึ่งรายการขายในชุดฝึกนี้; quantity คือจำนวนหน่วย",
+        "ตารางสินค้าใช้บอกคุณลักษณะ ส่วนรายการขายใช้บอกเหตุการณ์ที่จะนำมารวม"
+      ]
+    },
+    {
+      "day": 0,
+      "title": "คีย์และการเชื่อมตาราง",
+      "items": [
+        "ใช้ product_id จับคู่ข้อมูล; คีย์สินค้าไม่ซ้ำช่วยป้องกันแถวขายเพิ่มจากการจับคู่หลายแถว",
+        "left เก็บรายการขายทั้งหมด; many_to_one ตรวจด้านสินค้า; indicator บอกว่าจับคู่สำเร็จหรือไม่",
+        "True จาก is_unique หมายถึงค่าคอลัมน์ไม่ซ้ำ; หากเป็น False ให้ตรวจข้อมูลก่อนเชื่อม"
+      ]
+    },
+    {
+      "day": 1,
+      "title": "วันอังคาร 120 นาที: คำนวณแล้วตรวจความหมาย",
+      "items": [
+        "ใช้ 15 นาทีทบทวนและรันเซลล์เดิม 75 นาทีพิมพ์ขั้นที่ 13–19 และ 30 นาทีฝึกอธิบายผล",
+        "ยอดเงินรายการ = จำนวนหน่วย × ราคาขายต่อหน่วย",
+        "กำไรขั้นต้นรายการ = จำนวนหน่วย × (ราคาขายต่อหน่วย − ราคาทุนต่อหน่วย)",
+        "กำไรขั้นต้นยังไม่ได้หักค่าเช่า ค่าแรง และค่าใช้จ่ายอื่น; ก่อนรวมยอดต้องยืนยันว่าไม่มีรายการเชื่อมไม่สำเร็จ"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "day": 0,
+      "title": "เรียกเครื่องมือจัดการตาราง",
+      "code": "import pandas as pd",
+      "meaning": "เรียก pandas และตั้งชื่อย่อเพื่อใช้จัดการตาราง",
+      "parts": [
+        {
+          "token": "import pandas",
+          "meaning": "เรียกไลบรารี pandas"
+        },
+        {
+          "token": "as pd",
+          "meaning": "ตั้งชื่อย่อ pd"
+        }
+      ],
+      "interpretation": "ไม่มีตารางปรากฏเมื่อคำสั่งสำเร็จ",
+      "mistake": "ใช้ pandas และ pd เป็นตัวพิมพ์เล็ก",
+      "checkpoint": "รันเซลล์ได้โดยไม่เกิดข้อผิดพลาด แล้วชี้ชื่อย่อ pd"
+    },
+    {
+      "day": 0,
+      "title": "อ่านตารางสินค้า",
+      "code": "products = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')",
+      "meaning": "อ่านแผ่นงานสินค้าและเก็บเป็นตาราง products",
+      "parts": [
+        {
+          "token": "products =",
+          "meaning": "เก็บตารางในตัวแปร"
+        },
+        {
+          "token": "'nvc_store_sales.xlsx'",
+          "meaning": "ชื่อไฟล์ Excel ที่อัปโหลด"
+        },
+        {
+          "token": "sheet_name='Products'",
+          "meaning": "เลือกแผ่นงาน Products"
+        }
+      ],
+      "interpretation": "คำสั่งนี้เก็บตาราง แต่ยังไม่แสดงตาราง",
+      "mistake": "ตรวจชื่อไฟล์และตัวพิมพ์ใหญ่ใน Products",
+      "checkpoint": "รันได้โดยไม่เกิดข้อผิดพลาด แล้วทำขั้นแสดงตาราง"
+    },
+    {
+      "day": 0,
+      "title": "ตรวจตัวอย่างสินค้า",
+      "code": "products.head()",
+      "meaning": "แสดงห้าแถวแรกของตารางสินค้า",
+      "parts": [
+        {
+          "token": "products",
+          "meaning": "ตารางที่อ่านแล้ว"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรกเมื่อไม่ระบุจำนวน"
+        }
+      ],
+      "interpretation": "หนึ่งแถวคือหนึ่งสินค้า มีราคาทุนและราคาขายต่อหน่วยเป็นบาท",
+      "mistake": "ต้องรันขั้นอ่าน Products ก่อน",
+      "checkpoint": "พบ product_id, cost_price และ selling_price; แถว P001 มีราคาขาย 30 บาทต่อหน่วย"
+    },
+    {
+      "day": 0,
+      "title": "อ่านตารางรายการขาย",
+      "code": "sales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')",
+      "meaning": "อ่านแผ่นงานรายการขายและเก็บเป็นตาราง sales",
+      "parts": [
+        {
+          "token": "sales =",
+          "meaning": "เก็บตารางรายการขาย"
+        },
+        {
+          "token": "'nvc_store_sales.xlsx'",
+          "meaning": "ชื่อไฟล์เดิม"
+        },
+        {
+          "token": "sheet_name='Daily_Sales'",
+          "meaning": "เลือกแผ่นงาน Daily_Sales"
+        }
+      ],
+      "interpretation": "คำสั่งนี้ยังไม่แสดงตาราง ต้องตรวจด้วยขั้นถัดไป",
+      "mistake": "Daily_Sales มีขีดล่างและตัวพิมพ์ใหญ่",
+      "checkpoint": "รันได้โดยไม่เกิดข้อผิดพลาด"
+    },
+    {
+      "day": 0,
+      "title": "ตรวจตัวอย่างรายการขาย",
+      "code": "sales.head()",
+      "meaning": "แสดงห้าแถวแรกของรายการขาย",
+      "parts": [
+        {
+          "token": "sales",
+          "meaning": "ตารางรายการขาย"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรก"
+        }
+      ],
+      "interpretation": "หนึ่งแถวเป็นรายการขายที่มีรหัส order_id; quantity เป็นจำนวนหน่วย",
+      "mistake": "อย่าสับสน quantity กับจำนวนแถว",
+      "checkpoint": "พบ order_id, product_id, quantity และ sale_date; ORD001 ขาย 2 หน่วย"
+    },
+    {
+      "day": 0,
+      "title": "ตรวจคีย์สินค้าว่าไม่ซ้ำ",
+      "code": "products['product_id'].is_unique",
+      "meaning": "ตรวจความไม่ซ้ำของรหัสสินค้า",
+      "parts": [
+        {
+          "token": "products['product_id']",
+          "meaning": "เลือกคอลัมน์รหัสสินค้า"
+        },
+        {
+          "token": ".is_unique",
+          "meaning": "ให้ค่า True เมื่อทุกค่าไม่ซ้ำ เป็นคุณสมบัติจึงไม่ใส่วงเล็บ"
+        }
+      ],
+      "interpretation": "ได้ True แปลว่าสินค้าหนึ่งรหัสมีเพียงหนึ่งแถวในชุดนี้",
+      "mistake": "is_unique ไม่มี (); หากได้ False ให้กลับไปตรวจตารางสินค้า",
+      "checkpoint": "ผลเป็น True และอธิบายได้ว่าตรวจด้านสินค้า"
+    },
+    {
+      "day": 0,
+      "title": "ตรวจรหัสรายการขาย",
+      "code": "sales['order_id'].is_unique",
+      "meaning": "ตรวจว่ารหัสรายการขายในชุดฝึกไม่ซ้ำ",
+      "parts": [
+        {
+          "token": "sales['order_id']",
+          "meaning": "เลือกคอลัมน์รหัสรายการขาย"
+        },
+        {
+          "token": ".is_unique",
+          "meaning": "ตรวจความไม่ซ้ำ"
+        }
+      ],
+      "interpretation": "ได้ True จึงนับหนึ่งแถวเป็นหนึ่งรายการขายในชุดนี้",
+      "mistake": "product_id ในรายการขายอาจซ้ำได้ อย่าใช้เป็นรหัสรายการขาย",
+      "checkpoint": "ผลเป็น True และแยก order_id ออกจาก product_id ได้"
+    },
+    {
+      "day": 0,
+      "title": "เชื่อมรายการขายกับสินค้า",
+      "code": "merged = sales.merge(products, on='product_id', how='left', validate='many_to_one', indicator=True)",
+      "meaning": "เติมชื่อสินค้าและราคาลงในแต่ละรายการขาย",
+      "parts": [
+        {
+          "token": "sales.merge(products, ...)",
+          "meaning": "ใช้ sales เป็นตารางซ้ายและ products เป็นตารางขวา"
+        },
+        {
+          "token": "on='product_id'",
+          "meaning": "จับคู่ด้วยรหัสสินค้าที่ชื่อเหมือนกันทั้งสองตาราง"
+        },
+        {
+          "token": "how='left'",
+          "meaning": "เก็บทุกรายการจาก sales แม้หารหัสคู่ไม่พบ"
+        },
+        {
+          "token": "validate='many_to_one'",
+          "meaning": "ตรวจว่าหลายรายการขายจับคู่กับสินค้าเพียงหนึ่งแถวต่อรหัส"
+        },
+        {
+          "token": "indicator=True",
+          "meaning": "สร้างคอลัมน์ _merge เพื่อบอกผลการจับคู่"
+        }
+      ],
+      "interpretation": "เก็บตาราง merged โดยยังไม่แสดง; หากคีย์สินค้าซ้ำจะเกิดข้อผิดพลาด",
+      "mistake": "อย่าใช้ inner เพื่อซ่อนรายการที่ไม่มีคู่; ตรวจชื่อคีย์และคีย์ซ้ำเมื่อเชื่อมไม่ผ่าน",
+      "checkpoint": "รันได้โดยไม่เกิดข้อผิดพลาด แล้วแสดง merged ในขั้นถัดไป"
+    },
+    {
+      "day": 0,
+      "title": "ตรวจตารางที่เชื่อมแล้ว",
+      "code": "merged.head()",
+      "meaning": "แสดงตัวอย่างผลการเชื่อม",
+      "parts": [
+        {
+          "token": "merged",
+          "meaning": "ตารางหลังเชื่อม"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรก"
+        }
+      ],
+      "interpretation": "ORD001 จับคู่ P001 ได้ชื่อชาไทยเย็น ราคาขาย 30 บาทต่อหน่วย",
+      "mistake": "อย่าใช้ผลจากตัวแปร sales แทน merged",
+      "checkpoint": "พบข้อมูลรายการขายและราคาในตารางเดียวกัน"
+    },
+    {
+      "day": 0,
+      "title": "ระบุแถวที่หารหัสสินค้าไม่พบ",
+      "code": "unmatched_mask = merged['_merge'] == 'left_only'",
+      "meaning": "สร้างชุดค่าจริงหรือเท็จสำหรับรายการขายที่ไม่มีคู่สินค้า",
+      "parts": [
+        {
+          "token": "unmatched_mask =",
+          "meaning": "เก็บเงื่อนไขไว้"
+        },
+        {
+          "token": "merged['_merge']",
+          "meaning": "ผลการจับคู่จาก indicator"
+        },
+        {
+          "token": "== 'left_only'",
+          "meaning": "เปรียบเทียบว่าแถวนั้นมีเฉพาะตารางซ้ายหรือไม่"
+        }
+      ],
+      "interpretation": "ยังไม่แสดงผล; True หมายถึงไม่มีคู่สินค้า",
+      "mistake": "ใช้ == เพื่อเปรียบเทียบ และ = เพื่อเก็บตัวแปร",
+      "checkpoint": "รันได้และชี้ได้ว่า left_only คือรายการที่มีเฉพาะ sales"
+    },
+    {
+      "day": 0,
+      "title": "นับรายการที่เชื่อมไม่สำเร็จ",
+      "code": "unmatched_count = unmatched_mask.sum()",
+      "meaning": "รวมจำนวนค่า True ในเงื่อนไข",
+      "parts": [
+        {
+          "token": "unmatched_count =",
+          "meaning": "เก็บจำนวนรายการที่ไม่มีคู่"
+        },
+        {
+          "token": "unmatched_mask",
+          "meaning": "ชุดค่าจริงหรือเท็จ"
+        },
+        {
+          "token": ".sum()",
+          "meaning": "นับ True เป็น 1 และ False เป็น 0 แล้วรวม"
+        }
+      ],
+      "interpretation": "ได้จำนวนรายการ แต่คำสั่งเก็บตัวแปรยังไม่แสดงค่า",
+      "mistake": "ต้องสร้าง unmatched_mask ก่อน",
+      "checkpoint": "รันได้ แล้วแสดง unmatched_count ในขั้นถัดไป"
+    },
+    {
+      "day": 0,
+      "title": "แสดงจำนวนรายการที่ไม่มีคู่",
+      "code": "unmatched_count",
+      "meaning": "อ่านจำนวนรายการขายที่หารหัสสินค้าไม่พบ",
+      "parts": [
+        {
+          "token": "unmatched_count",
+          "meaning": "แสดงค่าตัวแปรที่คำนวณแล้ว"
+        }
+      ],
+      "interpretation": "ได้ 0 รายการ จึงไม่มีราคาสินค้าหายจากการเชื่อมในชุดนี้",
+      "mistake": "ถ้าเกิน 0 ให้ตรวจรหัสสินค้า ห้ามตีความราคา missing เป็นศูนย์",
+      "checkpoint": "ผลเท่ากับ 0 และอธิบายหน่วยว่าเป็นรายการขาย"
+    },
+    {
+      "day": 1,
+      "title": "คำนวณยอดเงินแต่ละรายการ",
+      "code": "merged['total_amount'] = merged['quantity'] * merged['selling_price']",
+      "meaning": "เพิ่มคอลัมน์ยอดเงินจากจำนวนหน่วยคูณราคาต่อหน่วย",
+      "parts": [
+        {
+          "token": "merged['total_amount'] =",
+          "meaning": "สร้างหรือแทนค่าคอลัมน์ยอดเงิน"
+        },
+        {
+          "token": "merged['quantity']",
+          "meaning": "จำนวนหน่วยในแต่ละรายการ"
+        },
+        {
+          "token": "*",
+          "meaning": "คูณค่าในแถวเดียวกัน"
+        },
+        {
+          "token": "merged['selling_price']",
+          "meaning": "ราคาขายบาทต่อหน่วย"
+        }
+      ],
+      "interpretation": "เก็บยอดเงินบาทต่อรายการไว้ในตาราง ยังไม่แสดงผล",
+      "mistake": "ห้ามใช้ราคาทุนแทนราคาขาย",
+      "checkpoint": "รันได้ แล้วตรวจคอลัมน์คำนวณในขั้นถัดไป"
+    },
+    {
+      "day": 1,
+      "title": "ตรวจยอดเงินรายการแรก",
+      "code": "merged[['quantity', 'selling_price', 'total_amount']].head()",
+      "meaning": "เลือกสามคอลัมน์เพื่อเทียบสูตรกับผล",
+      "parts": [
+        {
+          "token": "[['quantity', 'selling_price', 'total_amount']]",
+          "meaning": "ใช้รายการชื่อคอลัมน์เลือกตารางย่อย"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรก"
+        }
+      ],
+      "interpretation": "แถวแรก 2 หน่วย × 30 บาทต่อหน่วย = 60 บาท",
+      "mistake": "เลือกหลายคอลัมน์ใช้วงเล็บเหลี่ยมสองชั้น",
+      "checkpoint": "อ่านแถวแรกได้ครบทั้งจำนวน ราคา และยอดเงิน"
+    },
+    {
+      "day": 1,
+      "title": "หากำไรต่อหน่วย",
+      "code": "unit_profit = merged['selling_price'] - merged['cost_price']",
+      "meaning": "แยกส่วนต่างราคาต่อหน่วยไว้ใช้คำนวณ",
+      "parts": [
+        {
+          "token": "unit_profit =",
+          "meaning": "เก็บผลส่วนต่างของแต่ละแถว"
+        },
+        {
+          "token": "merged['selling_price']",
+          "meaning": "ราคาขายต่อหน่วย"
+        },
+        {
+          "token": "-",
+          "meaning": "ลบราคาทุนออกจากราคาขาย"
+        },
+        {
+          "token": "merged['cost_price']",
+          "meaning": "ราคาทุนต่อหน่วย"
+        }
+      ],
+      "interpretation": "เก็บส่วนต่างเป็นบาทต่อหน่วย โดยยังไม่แสดงค่า",
+      "mistake": "อย่าสลับลำดับราคาทุนกับราคาขาย",
+      "checkpoint": "รันได้และบอกหน่วยว่าเป็นบาทต่อหน่วย"
+    },
+    {
+      "day": 1,
+      "title": "คำนวณกำไรขั้นต้นรายการ",
+      "code": "merged['total_profit'] = merged['quantity'] * unit_profit",
+      "meaning": "เพิ่มกำไรขั้นต้นจากจำนวนหน่วยคูณส่วนต่างราคาต่อหน่วย",
+      "parts": [
+        {
+          "token": "merged['total_profit'] =",
+          "meaning": "เก็บกำไรขั้นต้นในคอลัมน์ใหม่"
+        },
+        {
+          "token": "merged['quantity']",
+          "meaning": "จำนวนหน่วย"
+        },
+        {
+          "token": "* unit_profit",
+          "meaning": "คูณกำไรต่อหน่วยในแถวเดียวกัน"
+        }
+      ],
+      "interpretation": "เก็บกำไรขั้นต้นเป็นบาทต่อรายการ ยังไม่แสดงตาราง",
+      "mistake": "กำไรนี้ยังไม่หักค่าใช้จ่ายดำเนินงาน",
+      "checkpoint": "รันได้ แล้วตรวจแถวตัวอย่างในขั้นถัดไป"
+    },
+    {
+      "day": 1,
+      "title": "ตรวจยอดเงินและกำไรขั้นต้น",
+      "code": "merged[['order_id', 'total_amount', 'total_profit']].head()",
+      "meaning": "แสดงผลคำนวณที่จับคู่กับรหัสรายการขาย",
+      "parts": [
+        {
+          "token": "[['order_id', 'total_amount', 'total_profit']]",
+          "meaning": "เลือกคอลัมน์รหัสและผลคำนวณ"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรก"
+        }
+      ],
+      "interpretation": "ORD001 มีรายได้ 60 บาท และกำไรขั้นต้น 30 บาท",
+      "mistake": "total_amount กับ total_profit เป็นคนละตัวชี้วัด",
+      "checkpoint": "พบ 60 และ 30 ใน ORD001 พร้อมอธิบายความต่าง"
+    },
+    {
+      "day": 1,
+      "title": "ตรวจยอดเงินรวม",
+      "code": "merged['total_amount'].sum()",
+      "meaning": "รวมยอดเงินทุกรายการเพื่อตรวจการคำนวณ",
+      "parts": [
+        {
+          "token": "merged['total_amount']",
+          "meaning": "เลือกยอดเงินบาทต่อรายการ"
+        },
+        {
+          "token": ".sum()",
+          "meaning": "บวกค่าทุกรายการ"
+        }
+      ],
+      "interpretation": "ยอดเงินรวม 910 บาทของ 15 รายการในชุดฝึก",
+      "mistake": "อย่ารวมราคาขายต่อหน่วยแทนยอดเงินรายการ",
+      "checkpoint": "ผลเท่ากับ 910 บาท"
+    },
+    {
+      "day": 1,
+      "title": "ตรวจกำไรขั้นต้นรวม",
+      "code": "merged['total_profit'].sum()",
+      "meaning": "รวมกำไรขั้นต้นทุกรายการ",
+      "parts": [
+        {
+          "token": "merged['total_profit']",
+          "meaning": "เลือกกำไรขั้นต้นบาทต่อรายการ"
+        },
+        {
+          "token": ".sum()",
+          "meaning": "บวกค่าทุกรายการ"
+        }
+      ],
+      "interpretation": "กำไรขั้นต้นรวม 446 บาท โดยยังไม่หักค่าใช้จ่ายอื่น",
+      "mistake": "ห้ามเรียกค่านี้ว่ากำไรสุทธิ",
+      "checkpoint": "ผลเท่ากับ 446 บาท และระบุข้อจำกัดได้"
+    }
+  ]
+}

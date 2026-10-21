@@ -1,0 +1,408 @@
+{
+  "week": 4,
+  "goals": [
+    "จัดทำรายงานจำนวน ร้อยละ และตัวหารได้",
+    "สร้างตารางรายงานด้วย pd.DataFrame ได้",
+    "ส่งออก CSV โดยรักษาชื่อคอลัมน์และดัชนีที่มีความหมายได้"
+  ],
+  "files": [
+    "student_register_dirty.csv"
+  ],
+  "concepts": [
+    {
+      "day": 0,
+      "title": "รายงานก่อนแก้ข้อมูล",
+      "items": [
+        "วันจันทร์ 180 นาที: กำหนดตัวหาร คำนวณค่าว่าง สร้างและบันทึกรายงาน",
+        "รายงานต้องมีชื่อชุดข้อมูล เกณฑ์ตรวจ จำนวน ร้อยละ ตัวหาร และข้อจำกัด",
+        "รายงานนี้ใช้ 42 แถวรวมสำเนาซ้ำเป็นตัวหาร จึงไม่ควรเรียกว่าจำนวนผู้เรียนไม่ซ้ำ",
+        "ร้อยละ = จำนวนปัญหา ÷ จำนวนแถว × 100; แสดงทศนิยมตามผลจริงโดยยังไม่ปัดค่า"
+      ]
+    },
+    {
+      "day": 0,
+      "title": "ดัชนีที่มีความหมาย",
+      "items": [
+        "DataFrame จาก Series จะรักษาดัชนีชื่อคอลัมน์ต้นทางไว้",
+        "quality ต้องส่งออกดัชนีด้วย index_label เพื่อรักษาชื่อ age, gpa และคอลัมน์อื่น",
+        "ตารางที่มีชื่อปัญหาในคอลัมน์ issue แล้ว ใช้ index=False เพื่อไม่เพิ่มเลขดัชนี"
+      ]
+    },
+    {
+      "day": 1,
+      "title": "จำนวนปัญหาและความหมาย",
+      "items": [
+        "วันอังคาร 120 นาที: รายงานอายุผิดช่วง GPA ผิดช่วง และสำเนาซ้ำ",
+        "หน้ากากผิดช่วงต้องไม่รวมค่าว่าง; ใช้ ~ กับหน้ากากในช่วง และ & กับ notna",
+        "หนึ่งรายการอาจมีหลายปัญหา จำนวนและร้อยละหลายชนิดจึงอาจซ้อนกัน",
+        "เสนอให้ตรวจต้นทางและบันทึกวิธีแก้ แทนการสรุปว่าควรลบทุกค่าที่ผิดเกณฑ์"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "day": 0,
+      "title": "เรียกใช้ pandas",
+      "code": "import pandas as pd",
+      "meaning": "นำเข้าเครื่องมือจัดการตาราง และตั้งชื่อย่อว่า pd",
+      "parts": [
+        {
+          "token": "import",
+          "meaning": "นำเข้าไลบรารี"
+        },
+        {
+          "token": "as pd",
+          "meaning": "กำหนดชื่อย่อสำหรับคำสั่งต่อไป"
+        }
+      ],
+      "interpretation": "เมื่อสำเร็จจะไม่มีตารางปรากฏ และสามารถใช้ pd ได้",
+      "mistake": "เขียน pandas และ pd ด้วยตัวพิมพ์เล็ก",
+      "checkpoint": "รันแล้วไม่มีข้อความผิดพลาด"
+    },
+    {
+      "day": 0,
+      "title": "อ่านข้อมูลสำหรับรายงาน",
+      "code": "df = pd.read_csv('student_register_dirty.csv', dtype={'phone': 'string'})\ndf",
+      "meaning": "อ่านข้อมูลต้นทางโดยยังไม่ทำความสะอาด",
+      "parts": [
+        {
+          "token": "pd.read_csv",
+          "meaning": "อ่าน CSV"
+        },
+        {
+          "token": "dtype",
+          "meaning": "รักษา phone เป็นข้อความ"
+        }
+      ],
+      "interpretation": "ตารางมี 42 แถว 7 คอลัมน์",
+      "mistake": "ต้องใช้ไฟล์ dirty เพื่อรายงานก่อนแก้",
+      "checkpoint": "จำนวนแถวยังเป็น 42"
+    },
+    {
+      "day": 0,
+      "title": "ทบทวนส่วนต้นของข้อมูล",
+      "code": "df.head()",
+      "meaning": "ตรวจว่าใช้ข้อมูลชุดเดียวกับสัปดาห์ก่อน",
+      "parts": [
+        {
+          "token": ".head()",
+          "meaning": "แสดงห้าแถวแรก"
+        }
+      ],
+      "interpretation": "เห็น S001–S005 และ GPA ว่างของ S004",
+      "mistake": "การแสดงห้าแถวไม่ใช่การเลือกใช้เพียงห้าแถวในการรายงาน",
+      "checkpoint": "พบค่าว่างของ S004"
+    },
+    {
+      "day": 0,
+      "title": "กำหนดตัวหาร",
+      "code": "row_count = len(df)\nrow_count",
+      "meaning": "เก็บจำนวนแถวต้นทางสำหรับคำนวณร้อยละ",
+      "parts": [
+        {
+          "token": "len(df)",
+          "meaning": "จำนวนแถวในตาราง"
+        },
+        {
+          "token": "row_count",
+          "meaning": "ตัวหารที่ใช้ทั้งรายงาน"
+        }
+      ],
+      "interpretation": "ได้ 42 ซึ่งรวมสำเนาซ้ำด้วย",
+      "mistake": "รายงานนี้ใช้ 42 แถวเป็นตัวหาร ไม่ใช่จำนวนผู้เรียนไม่ซ้ำ",
+      "checkpoint": "อธิบายตัวหาร 42 ได้"
+    },
+    {
+      "day": 0,
+      "title": "ทบทวนตารางค่าว่าง",
+      "code": "missing = df.isna()\nmissing.head()",
+      "meaning": "สร้างหน้ากากค่าว่างและดูส่วนต้น",
+      "parts": [
+        {
+          "token": ".isna()",
+          "meaning": "ตรวจค่าว่างทุกคอลัมน์"
+        },
+        {
+          "token": ".head()",
+          "meaning": "แสดงตัวอย่างห้าแถว"
+        }
+      ],
+      "interpretation": "เห็น True ที่ gpa ของ S004; missing ยังมีหน้ากากครบ 42 แถว",
+      "mistake": "head ใช้ตรวจตัวอย่าง ไม่ได้ลดข้อมูลใน missing",
+      "checkpoint": "บอกได้ว่าการนับถัดไปใช้ครบทุกแถว"
+    },
+    {
+      "day": 0,
+      "title": "คำนวณจำนวนค่าว่าง",
+      "code": "missing_count = missing.sum()\nmissing_count",
+      "meaning": "นับค่าว่างแต่ละคอลัมน์",
+      "parts": [
+        {
+          "token": ".sum()",
+          "meaning": "รวม True แยกตามคอลัมน์"
+        }
+      ],
+      "interpretation": "age 1, gpa 2, phone 1; คอลัมน์อื่น 0",
+      "mistake": "อย่าสับสนค่าว่างกับค่าผิดช่วง",
+      "checkpoint": "อ่านจำนวนทั้งสามได้"
+    },
+    {
+      "day": 0,
+      "title": "คำนวณร้อยละค่าว่าง",
+      "code": "missing_percent = missing_count / row_count * 100\nmissing_percent",
+      "meaning": "ใช้จำนวนปัญหาหารจำนวนแถว แล้วคูณ 100",
+      "parts": [
+        {
+          "token": "/ row_count",
+          "meaning": "หารด้วยจำนวนแถวต้นทาง"
+        },
+        {
+          "token": "* 100",
+          "meaning": "เปลี่ยนสัดส่วนเป็นร้อยละ"
+        }
+      ],
+      "interpretation": "age และ phone ประมาณ 2.380952%; gpa ประมาณ 4.761905%; คอลัมน์อื่น 0%",
+      "mistake": "ไม่คูณ 100 ซ้ำ และระบุว่าตัวหารคือ 42 แถว",
+      "checkpoint": "อธิบายได้ว่า gpa คือ 2 ÷ 42 × 100"
+    },
+    {
+      "day": 0,
+      "title": "สร้างตารางรายงานค่าว่าง",
+      "code": "quality = pd.DataFrame({'missing_count': missing_count, 'missing_percent': missing_percent})\nquality",
+      "meaning": "รวม Series จำนวนและร้อยละเป็น DataFrame",
+      "parts": [
+        {
+          "token": "pd.DataFrame",
+          "meaning": "สร้างตารางจาก dict"
+        },
+        {
+          "token": "missing_count, missing_percent",
+          "meaning": "Series ที่มีชื่อคอลัมน์ต้นทางเป็นดัชนี"
+        }
+      ],
+      "interpretation": "ได้ 7 แถว 2 คอลัมน์; ดัชนีคือชื่อคอลัมน์ต้นทาง เช่น age และ gpa",
+      "mistake": "ดัชนีชื่อคอลัมน์มีความหมาย ต้องรักษาไว้ตอนส่งออก",
+      "checkpoint": "พบแถว gpa จำนวน 2 และร้อยละประมาณ 4.76"
+    },
+    {
+      "day": 0,
+      "title": "บันทึกรายงานค่าว่าง",
+      "code": "quality.to_csv('quality_report.csv', index_label='column', encoding='utf-8-sig')",
+      "meaning": "บันทึกรายงานและตั้งชื่อดัชนีใน CSV ว่า column",
+      "parts": [
+        {
+          "token": ".to_csv",
+          "meaning": "เขียนตารางเป็นไฟล์ CSV"
+        },
+        {
+          "token": "index_label='column'",
+          "meaning": "เก็บดัชนีที่เป็นชื่อคอลัมน์ต้นทาง พร้อมหัวชื่อ"
+        },
+        {
+          "token": "encoding='utf-8-sig'",
+          "meaning": "การเข้ารหัสที่สะดวกต่อการเปิดข้อความไทยใน Excel"
+        }
+      ],
+      "interpretation": "เซลล์ไม่มีตารางแสดง; สร้างไฟล์ quality_report.csv ที่มี column, missing_count และ missing_percent",
+      "mistake": "ห้ามใช้ index=False ในรายงานนี้ เพราะจะทำชื่อคอลัมน์ต้นทางหาย",
+      "checkpoint": "พบไฟล์ quality_report.csv ในแถบ Files"
+    },
+    {
+      "day": 0,
+      "title": "เปิดไฟล์รายงานเพื่อตรวจ",
+      "code": "quality_saved = pd.read_csv('quality_report.csv')\nquality_saved",
+      "meaning": "อ่านรายงานที่เพิ่งบันทึกเพื่อตรวจความครบถ้วน",
+      "parts": [
+        {
+          "token": "pd.read_csv",
+          "meaning": "อ่าน CSV ที่สร้างแล้ว"
+        }
+      ],
+      "interpretation": "ตารางมี 7 แถว 3 คอลัมน์; column เก็บชื่อ student_id ถึง updated_date",
+      "mistake": "หากหาไฟล์ไม่พบ ต้องรันเซลล์บันทึกก่อน",
+      "checkpoint": "พบ column ชื่อ gpa และจำนวน 2"
+    },
+    {
+      "day": 0,
+      "title": "นับสำเนาซ้ำสำหรับรายงาน",
+      "code": "duplicate_count = df.duplicated().sum()\nduplicate_count",
+      "meaning": "ทบทวนการนับสำเนาซ้ำทั้งหมด",
+      "parts": [
+        {
+          "token": ".duplicated()",
+          "meaning": "หน้ากากสำเนาซ้ำ"
+        },
+        {
+          "token": ".sum()",
+          "meaning": "จำนวน True"
+        }
+      ],
+      "interpretation": "ได้ 2; เป็นจำนวนสำเนาที่เกินจากรายการแรก",
+      "mistake": "ยังไม่ลบแถวซ้ำก่อนจัดทำรายงานต้นทาง",
+      "checkpoint": "จำนวนตรงกับผลสัปดาห์ที่ 3"
+    },
+    {
+      "day": 0,
+      "title": "ทบทวนช่วงอายุ",
+      "code": "age_valid = df['age'].between(15, 60)\nage_valid",
+      "meaning": "ตรวจอายุในเกณฑ์เดิมเพื่อให้รายงานเปรียบเทียบกันได้",
+      "parts": [
+        {
+          "token": ".between(15, 60)",
+          "meaning": "ช่วงรวมขอบ 15 และ 60"
+        }
+      ],
+      "interpretation": "False มี 2 ตำแหน่ง รวมทั้งอายุว่าง",
+      "mistake": "False ยังไม่ใช่จำนวนค่าผิดช่วง",
+      "checkpoint": "จำได้ว่าต้องตัดค่าว่างออกจากการนับผิดช่วง"
+    },
+    {
+      "day": 1,
+      "title": "แยกอายุผิดช่วง",
+      "code": "age_bad = ~age_valid & df['age'].notna()\nage_bad",
+      "meaning": "ใช้หน้ากากนอกช่วงร่วมกับหน้ากากมีค่า",
+      "parts": [
+        {
+          "token": "~age_valid",
+          "meaning": "ไม่อยู่ในช่วง"
+        },
+        {
+          "token": ".notna()",
+          "meaning": "มีค่า"
+        },
+        {
+          "token": "&",
+          "meaning": "ทั้งสองเงื่อนไขต้องเป็น True"
+        }
+      ],
+      "interpretation": "True 1 แถว คือ S008; อายุว่างไม่ถูกนับ",
+      "mistake": "เขียน & สำหรับหน้ากาก ไม่ใช้ and",
+      "checkpoint": "หน้ากากระบุค่าผิดช่วงเพียง 1 แถว"
+    },
+    {
+      "day": 1,
+      "title": "นับอายุผิดช่วง",
+      "code": "age_count = age_bad.sum()\nage_count",
+      "meaning": "เก็บจำนวนอายุผิดช่วงเพื่อสร้างรายงาน",
+      "parts": [
+        {
+          "token": ".sum()",
+          "meaning": "นับ True"
+        }
+      ],
+      "interpretation": "ได้ 1",
+      "mistake": "ต้องใช้ age_bad ไม่ใช้ age_valid",
+      "checkpoint": "ได้จำนวน 1"
+    },
+    {
+      "day": 1,
+      "title": "ทบทวนช่วง GPA",
+      "code": "gpa_valid = df['gpa'].between(0, 4)\ngpa_valid",
+      "meaning": "ตรวจ GPA ด้วยเกณฑ์ 0.00–4.00",
+      "parts": [
+        {
+          "token": ".between(0, 4)",
+          "meaning": "ช่วง GPA ที่ยอมรับในโจทย์"
+        }
+      ],
+      "interpretation": "False 3 ตำแหน่ง รวมค่าว่าง 2 แถว",
+      "mistake": "ยังต้องแยกค่าว่างก่อนนับค่าผิดช่วง",
+      "checkpoint": "ระบุได้ว่า False รวมหลายสาเหตุ"
+    },
+    {
+      "day": 1,
+      "title": "แยก GPA ผิดช่วง",
+      "code": "gpa_bad = ~gpa_valid & df['gpa'].notna()\ngpa_bad",
+      "meaning": "แยกค่า GPA ที่มีค่าและอยู่นอกเกณฑ์",
+      "parts": [
+        {
+          "token": "~",
+          "meaning": "กลับหน้ากากในช่วง"
+        },
+        {
+          "token": "&",
+          "meaning": "ใช้ทั้งสองเงื่อนไข"
+        },
+        {
+          "token": ".notna()",
+          "meaning": "ตัดค่าว่างออกจากการนับผิดช่วง"
+        }
+      ],
+      "interpretation": "True 1 แถว คือ S019",
+      "mistake": "หน้ากากต้องมาจาก df ที่ยังไม่ได้แก้ข้อมูล",
+      "checkpoint": "แยกผิดช่วง 1 จากค่าว่าง 2 ได้"
+    },
+    {
+      "day": 1,
+      "title": "นับ GPA ผิดช่วง",
+      "code": "gpa_count = gpa_bad.sum()\ngpa_count",
+      "meaning": "เก็บจำนวน GPA ผิดช่วง",
+      "parts": [
+        {
+          "token": ".sum()",
+          "meaning": "นับ True"
+        }
+      ],
+      "interpretation": "ได้ 1",
+      "mistake": "ใช้ gpa_bad เพื่อไม่นับค่าว่างปน",
+      "checkpoint": "ได้จำนวน 1"
+    },
+    {
+      "day": 1,
+      "title": "สร้างรายงานปัญหาอื่น",
+      "code": "issue_report = pd.DataFrame({\n    'issue': ['สำเนาซ้ำทั้งแถว', 'อายุผิดช่วง', 'GPA ผิดช่วง'],\n    'count': [duplicate_count, age_count, gpa_count],\n    'denominator': [row_count, row_count, row_count]\n})\nissue_report",
+      "meaning": "สร้างตารางชนิดปัญหา จำนวน และตัวหาร",
+      "parts": [
+        {
+          "token": "{}",
+          "meaning": "dict จับหัวคอลัมน์กับ list"
+        },
+        {
+          "token": "[]",
+          "meaning": "แต่ละ list มีสามสมาชิกตามลำดับปัญหา"
+        }
+      ],
+      "interpretation": "ได้สามแถว จำนวน 2, 1 และ 1; ตัวหารทุกแถวเป็น 42",
+      "mistake": "ต้องเรียงจำนวนให้ตรงกับชื่อปัญหา",
+      "checkpoint": "อ่านจำนวนและตัวหารของแต่ละแถวได้"
+    },
+    {
+      "day": 1,
+      "title": "เพิ่มร้อยละในรายงาน",
+      "code": "issue_report['percent'] = issue_report['count'] / issue_report['denominator'] * 100\nissue_report",
+      "meaning": "คำนวณร้อยละแยกตามแถวของรายงาน",
+      "parts": [
+        {
+          "token": "['percent']",
+          "meaning": "คอลัมน์ใหม่สำหรับร้อยละ"
+        },
+        {
+          "token": "/ และ *",
+          "meaning": "หารตัวหารแล้วคูณ 100"
+        }
+      ],
+      "interpretation": "สำเนาซ้ำประมาณ 4.761905%; อายุและ GPA ผิดช่วงอย่างละ 2.380952%",
+      "mistake": "ร้อยละปัญหาอาจซ้อนกัน ห้ามบวกเป็นร้อยละผู้เรียนที่มีปัญหาทันที",
+      "checkpoint": "อธิบาย 1 ÷ 42 × 100 ได้"
+    },
+    {
+      "day": 1,
+      "title": "บันทึกรายงานชนิดปัญหา",
+      "code": "issue_report.to_csv('quality_issues.csv', index=False, encoding='utf-8-sig')",
+      "meaning": "บันทึกรายงานที่มีชื่อปัญหาอยู่ในคอลัมน์แล้ว",
+      "parts": [
+        {
+          "token": "index=False",
+          "meaning": "ไม่บันทึกเลขดัชนี 0, 1, 2 ที่ไม่มีความหมายในรายงาน"
+        },
+        {
+          "token": ".to_csv",
+          "meaning": "สร้างไฟล์ CSV"
+        }
+      ],
+      "interpretation": "เซลล์ไม่มีตารางแสดง; สร้าง quality_issues.csv มี issue, count, denominator และ percent",
+      "mistake": "รายงานนี้ใช้ index=False ได้ เพราะชื่อปัญหาอยู่ใน issue แล้ว",
+      "checkpoint": "พบไฟล์ทั้ง quality_report.csv และ quality_issues.csv"
+    }
+  ]
+}

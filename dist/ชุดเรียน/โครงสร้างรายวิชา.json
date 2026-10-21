@@ -1,0 +1,622 @@
+{
+  "code": "31901-2012",
+  "title": "การวิเคราะห์และนำเสนอข้อมูล",
+  "term": "2/2569",
+  "hours": 75,
+  "theory": 15,
+  "practice": 60,
+  "periodMinutes": 60,
+  "weeklyLabRaw": 10,
+  "weightedLabEach": 2.5,
+  "gradedWeeks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "weights": {
+    "lab": 30,
+    "midterm": 15,
+    "project": 20,
+    "attributes": 15,
+    "final": 20
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "title": "ปฐมนิเทศและก้าวแรกกับข้อมูล",
+      "unit": 1,
+      "files": [
+        "students.csv"
+      ],
+      "objectives": [
+        "แยกข้อมูลกับสารสนเทศและระบุคำถามวิเคราะห์ได้",
+        "เปิด Colab อ่านตารางและตรวจขนาดได้"
+      ],
+      "concept": [
+        "Get Data → ETL → Modeling → Visualization",
+        "พื้นฐาน Colab จากการสาธิตของผู้สอน",
+        "อ่านตารางและใช้ pandas ทีละคำสั่ง"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('students.csv')\ndf.head()\ndf.shape\ndf['score']\ndf['score'].mean()\ndf['score'].max()\ndf['major'].value_counts()\ndf['gender'].value_counts()",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 2,
+      "title": "Get Data การรวบรวมและนำเข้าข้อมูล",
+      "unit": 2,
+      "files": [
+        "students.csv",
+        "nvc_store_sales.xlsx"
+      ],
+      "objectives": [
+        "อ่าน CSV และเลือกแผ่นงาน Excel ได้",
+        "อ่านชื่อคอลัมน์ ชนิดข้อมูล และขนาดตารางได้",
+        "สร้าง Data Dictionary และระบุที่มาของข้อมูลได้"
+      ],
+      "concept": [
+        "การเขียนพร้อมผู้สอน",
+        "CSV และ Excel",
+        "โครงสร้างก่อนสร้างตาราง"
+      ],
+      "code": "import pandas as pd\nstudents = pd.read_csv('students.csv')\nstudents\nstudents.head()\nstudents.columns\nstudents.dtypes\nstudents.shape\nproducts = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')\nproducts\nproducts.head()\nproducts.columns\nproducts.dtypes\nproducts.shape\nsales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')\nsales\nsales.head()\nsales.columns\nsales.dtypes\nsales.shape\ncolumn_names = ['id', 'name', 'gender', 'major', 'score']\ncolumn_names\ndictionary_data = {\n    'column': column_names,\n    'meaning': ['รหัสผู้เรียนสมมติ', 'ชื่อผู้เรียนสมมติ', 'เพศตามข้อมูล', 'สาขาวิชา', 'คะแนน 0–100']\n}\ndictionary_data\ndata_dictionary = pd.DataFrame(dictionary_data)\ndata_dictionary",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 3,
+      "title": "ETL ตรวจคุณภาพข้อมูล",
+      "unit": 3,
+      "files": [
+        "student_register_dirty.csv"
+      ],
+      "objectives": [
+        "ตรวจและนับค่าว่างกับแถวซ้ำได้",
+        "ใช้หน้ากากเลือกอายุและ GPA ที่ผิดช่วงได้",
+        "แยกปัญหาคุณภาพออกจากค่าว่างและบันทึกหลักฐานได้"
+      ],
+      "concept": [
+        "ตรวจคุณภาพโดยยังไม่แก้ข้อมูล",
+        "แยกช่วงค่าจากค่าว่าง",
+        "ดูหลักฐานก่อนเสนอการแก้"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('student_register_dirty.csv', dtype={'phone': 'string'})\ndf\ndf.head()\ndf.dtypes\nmissing = df.isna()\nmissing\nmissing_count = missing.sum()\nmissing_count\nduplicate_rows = df.duplicated()\nduplicate_rows\nduplicate_rows.sum()\ndf.loc[duplicate_rows]\nage_present = df['age'].notna()\nage_present\nage_valid = df['age'].between(15, 60)\nage_valid\nage_bad = ~age_valid & age_present\nage_bad\ndf.loc[age_bad, ['student_id', 'age']]\nage_bad.sum()\ngpa_present = df['gpa'].notna()\ngpa_present\ngpa_valid = df['gpa'].between(0, 4)\ngpa_valid\ngpa_bad = ~gpa_valid & gpa_present\ngpa_bad\ndf.loc[gpa_bad, ['student_id', 'gpa']]\ngpa_bad.sum()\ndf['updated_date']",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 4,
+      "title": "ETL รายงานผลการตรวจสอบคุณภาพข้อมูล",
+      "unit": 3,
+      "files": [
+        "student_register_dirty.csv"
+      ],
+      "objectives": [
+        "จัดทำรายงานจำนวน ร้อยละ และตัวหารได้",
+        "สร้างตารางรายงานด้วย pd.DataFrame ได้",
+        "ส่งออก CSV โดยรักษาชื่อคอลัมน์และดัชนีที่มีความหมายได้"
+      ],
+      "concept": [
+        "รายงานก่อนแก้ข้อมูล",
+        "ดัชนีที่มีความหมาย",
+        "จำนวนปัญหาและความหมาย"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('student_register_dirty.csv', dtype={'phone': 'string'})\ndf\ndf.head()\nrow_count = len(df)\nrow_count\nmissing = df.isna()\nmissing.head()\nmissing_count = missing.sum()\nmissing_count\nmissing_percent = missing_count / row_count * 100\nmissing_percent\nquality = pd.DataFrame({'missing_count': missing_count, 'missing_percent': missing_percent})\nquality\nquality.to_csv('quality_report.csv', index_label='column', encoding='utf-8-sig')\nquality_saved = pd.read_csv('quality_report.csv')\nquality_saved\nduplicate_count = df.duplicated().sum()\nduplicate_count\nage_valid = df['age'].between(15, 60)\nage_valid\nage_bad = ~age_valid & df['age'].notna()\nage_bad\nage_count = age_bad.sum()\nage_count\ngpa_valid = df['gpa'].between(0, 4)\ngpa_valid\ngpa_bad = ~gpa_valid & df['gpa'].notna()\ngpa_bad\ngpa_count = gpa_bad.sum()\ngpa_count\nissue_report = pd.DataFrame({\n    'issue': ['สำเนาซ้ำทั้งแถว', 'อายุผิดช่วง', 'GPA ผิดช่วง'],\n    'count': [duplicate_count, age_count, gpa_count],\n    'denominator': [row_count, row_count, row_count]\n})\nissue_report\nissue_report['percent'] = issue_report['count'] / issue_report['denominator'] * 100\nissue_report\nissue_report.to_csv('quality_issues.csv', index=False, encoding='utf-8-sig')",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 5,
+      "title": "ETL ทำความสะอาดและลดความเสี่ยงข้อมูล",
+      "unit": 3,
+      "files": [
+        "student_register_dirty.csv"
+      ],
+      "objectives": [
+        "ทำความสะอาดสำเนาโดยรักษาข้อมูลต้นทางได้",
+        "แก้รูปแบบข้อความ แถวซ้ำ และค่าผิดช่วงอย่างมีเหตุผลได้",
+        "แปลงวันที่ บันทึกการเปลี่ยน และเผยแพร่เฉพาะข้อมูลสรุปที่ไม่ระบุตัวบุคคลได้"
+      ],
+      "concept": [
+        "กำหนดวิธีแก้ก่อนเขียนคำสั่ง",
+        "ค่าว่างต้องมีเหตุผล",
+        "วันที่และบันทึกการเปลี่ยน",
+        "เผยแพร่ข้อมูลที่ไม่ระบุตัวบุคคล"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('student_register_dirty.csv', dtype={'phone': 'string'})\ndf\ndf.head()\nclean = df.copy()\nclean.head()\nclean = clean.drop_duplicates()\nclean\nclean['major'] = clean['major'].str.strip()\nclean['major']\nclean['major'] = clean['major'].replace({'IT': 'เทคโนโลยีสารสนเทศ', 'เทคโนโลยี สารสนเทศ': 'เทคโนโลยีสารสนเทศ'})\nclean['major']\nclean['phone'] = clean['phone'].fillna('ไม่ระบุ')\nclean['phone']\nage_valid = clean['age'].between(15, 60)\nage_valid\nage_bad = ~age_valid & clean['age'].notna()\nage_bad\nclean.loc[age_bad, 'age'] = pd.NA\nclean['age']\ngpa_valid = clean['gpa'].between(0, 4)\ngpa_valid\ngpa_bad = ~gpa_valid & clean['gpa'].notna()\ngpa_bad\nclean.loc[gpa_bad, 'gpa'] = pd.NA\nclean['gpa']\nclean['updated_date'] = pd.to_datetime(clean['updated_date'], format='%Y-%m-%d', errors='coerce')\nclean['updated_date']\nclean.isna().sum()\ncleaning_log = pd.DataFrame({\n    'item': ['จำนวนแถว', 'อายุว่าง', 'GPA ว่าง', 'เบอร์โทรว่างตาม isna'],\n    'before': [len(df), df['age'].isna().sum(), df['gpa'].isna().sum(), df['phone'].isna().sum()],\n    'after': [len(clean), clean['age'].isna().sum(), clean['gpa'].isna().sum(), clean['phone'].isna().sum()]\n})\ncleaning_log\npublic = cleaning_log.copy()\npublic\npublic.to_csv('clean_public.csv', index=False, encoding='utf-8-sig')\npublic_saved = pd.read_csv('clean_public.csv')\npublic_saved",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 6,
+      "title": "Data Model โครงสร้างและการเชื่อมโยงตาราง",
+      "unit": 4,
+      "files": [
+        "nvc_store_sales.xlsx"
+      ],
+      "objectives": [
+        "อ่านแผ่นงาน Products และ Daily_Sales แล้วอธิบายระดับรายละเอียดของหนึ่งแถว",
+        "ตรวจคีย์ เชื่อมตาราง และนับรายการที่หารหัสสินค้าไม่พบ",
+        "คำนวณยอดเงินและกำไรขั้นต้นทีละรายการพร้อมบอกหน่วย"
+      ],
+      "concept": [
+        "วันจันทร์ 180 นาที: เข้าใจตารางก่อนเชื่อม",
+        "คีย์และการเชื่อมตาราง",
+        "วันอังคาร 120 นาที: คำนวณแล้วตรวจความหมาย"
+      ],
+      "code": "import pandas as pd\nproducts = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')\nproducts.head()\nsales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')\nsales.head()\nproducts['product_id'].is_unique\nsales['order_id'].is_unique\nmerged = sales.merge(products, on='product_id', how='left', validate='many_to_one', indicator=True)\nmerged.head()\nunmatched_mask = merged['_merge'] == 'left_only'\nunmatched_count = unmatched_mask.sum()\nunmatched_count\nmerged['total_amount'] = merged['quantity'] * merged['selling_price']\nmerged[['quantity', 'selling_price', 'total_amount']].head()\nunit_profit = merged['selling_price'] - merged['cost_price']\nmerged['total_profit'] = merged['quantity'] * unit_profit\nmerged[['order_id', 'total_amount', 'total_profit']].head()\nmerged['total_amount'].sum()\nmerged['total_profit'].sum()",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 7,
+      "title": "Data Model สถิติ ตัวชี้วัด และ GroupBy",
+      "unit": 4,
+      "files": [
+        "nvc_store_sales.xlsx"
+      ],
+      "objectives": [
+        "สร้างตารางขายที่เชื่อมแล้วก่อนคำนวณตัวชี้วัด",
+        "หายอดเงินรวม กำไรขั้นต้นรวม จำนวนหน่วย และค่าเฉลี่ยต่อรายการ",
+        "สรุปตามหมวดสินค้าและสร้างตารางวันคูณหมวดพร้อมอธิบายหน่วย"
+      ],
+      "concept": [
+        "วันจันทร์ 180 นาที: ทบทวนตารางและนิยาม KPI",
+        "วันอังคาร 120 นาที: แบ่งกลุ่มและจัดแกนตาราง"
+      ],
+      "code": "import pandas as pd\nproducts = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')\nproducts.head()\nsales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')\nsales.head()\nsales['order_id'].is_unique\nmerged = sales.merge(products, on='product_id', how='left', validate='many_to_one')\nmerged.head()\nmerged['total_amount'] = merged['quantity'] * merged['selling_price']\nmerged['total_profit'] = merged['quantity'] * (merged['selling_price'] - merged['cost_price'])\nmerged[['order_id', 'total_amount', 'total_profit']].head()\nmerged['total_amount'].sum()\nmerged['total_profit'].sum()\nmerged['quantity'].sum()\nmerged['total_amount'].mean()\ncategory_groups = merged.groupby('category')\ncategory_values = category_groups[['total_amount', 'total_profit']]\ncategory_values.sum()\npivot = merged.pivot_table(index='sale_date', columns='category', values='total_amount', aggfunc='sum', fill_value=0)\npivot",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 8,
+      "title": "สอบกลางภาคและประเมินสมรรถนะ",
+      "unit": 8,
+      "files": [
+        "midterm_sales.csv",
+        "midterm_products.csv"
+      ],
+      "objectives": [
+        "นำเข้า ตรวจ ทำความสะอาด เชื่อม และคำนวณข้อมูลรายบุคคลได้"
+      ],
+      "concept": [
+        "กลางภาค 15 คะแนน: ความรู้ 5 และปฏิบัติ 10",
+        "ใช้ข้อมูลสมมติ ขอบเขตสัปดาห์ 1–7 อธิบายวิธีคิดด้วยตนเอง",
+        "หลังสอบให้ผลย้อนกลับรายจุดและกิจกรรมซ่อมเสริม"
+      ],
+      "code": "",
+      "challenge": "ปฏิบัติรายบุคคล: นำเข้า ตรวจปัญหา Cleaning Merge KPI ตามรูบริก และตอบข้อเขียนสั้นห้าข้อ",
+      "deliverable": "ข้อสอบความรู้และ Notebook สอบกลางภาครายบุคคล",
+      "rubric": [
+        [
+          "Get Data",
+          2
+        ],
+        [
+          "ETL พร้อมเหตุผล",
+          3
+        ],
+        [
+          "Merge และคำนวณ",
+          2.5
+        ],
+        [
+          "KPI และแปลผล",
+          2.5
+        ]
+      ],
+      "assessmentMode": "การประเมินหรือโครงงานตามแผนเดิม"
+    },
+    {
+      "week": 9,
+      "title": "Data Model อนุกรมเวลาและการคาดการณ์",
+      "unit": 4,
+      "files": [
+        "drinks_shop.csv"
+      ],
+      "objectives": [
+        "แปลงวันที่เป็น datetime ก่อนรวมยอดรายวัน",
+        "เรียงวันและคำนวณค่าเฉลี่ยเคลื่อนที่สามรายการวันที่มีข้อมูล",
+        "สร้างค่าฐานจากสามรายการล่าสุดและอธิบายข้อจำกัด"
+      ],
+      "concept": [
+        "วันจันทร์ 180 นาที: วันที่และยอดรายวัน",
+        "วันอังคาร 120 นาที: ค่าเฉลี่ยและค่าฐาน"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\ndf['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='raise')\ndf.head()\ndate_groups = df.groupby('date')\ndate_revenue = date_groups['price']\ndaily_revenue = date_revenue.sum()\ndaily_revenue = daily_revenue.sort_index()\ndaily = daily_revenue.to_frame(name='revenue')\ndaily\nrevenue_window = daily['revenue'].rolling(window=3, min_periods=3)\nmoving_average = revenue_window.mean()\ndaily['MA_3observations'] = moving_average\ndaily\nlast_three = daily['revenue'].tail(3)\nlast_three\nforecast = last_three.mean()\nforecast",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 10,
+      "title": "Visualization ผู้ชม การเลือกกราฟ และ Storyboard",
+      "unit": 5,
+      "files": [
+        "drinks_shop.csv"
+      ],
+      "objectives": [
+        "ระบุผู้ชม คำถาม และตัวชี้วัดก่อนเลือกกราฟ",
+        "รวมจำนวนแก้วและรายได้แยกตามเมนูด้วยคำสั่งทีละขั้น",
+        "เลือกกราฟและจัด Storyboard ที่มีหน่วย แหล่งข้อมูล และข้อจำกัด"
+      ],
+      "concept": [
+        "วันจันทร์ 180 นาที: ผู้ชม คำถาม และหลักฐาน",
+        "เกณฑ์เลือกกราฟให้ตอบคำถาม",
+        "วันอังคาร 120 นาที: ฝึกตั้งคำถามและทำ Storyboard"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nmenu_groups = df.groupby('menu')\nmenu_cups = menu_groups['cups']\ncups_total = menu_cups.sum()\ncups_total\nmenu_revenue = menu_groups['price']\nrevenue_total = menu_revenue.sum()\nsummary = revenue_total.to_frame(name='revenue')\nsummary['cups'] = cups_total\nsummary = summary.sort_values('revenue', ascending=False)\nsummary\naudience = 'ผู้จัดการร้านเครื่องดื่ม'\nquestion = 'เมนูใดขายจำนวนแก้วและมีรายได้สูงที่สุดในวันที่มีบันทึก?'\npd.DataFrame({'ผู้ชม': [audience], 'คำถาม': [question]})\nsummary['cups'].idxmax()\nsummary['revenue'].idxmax()\nstoryboard = pd.DataFrame({'ตำแหน่ง': ['ด้านบน', 'กลางซ้าย', 'กลางขวา', 'ด้านล่าง'], 'เนื้อหา': [question, 'กราฟแท่งเปรียบเทียบจำนวนขายตามเมนู หน่วยแก้ว', 'กราฟแท่งเปรียบเทียบรายได้ตามเมนู หน่วยบาท', 'แหล่งข้อมูล drinks_shop.csv; มีเฉพาะวันที่บันทึก และไม่มีต้นทุน']})\nstoryboard",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 11,
+      "title": "Visualization สร้างภาพข้อมูล",
+      "unit": 5,
+      "files": [
+        "drinks_shop.csv"
+      ],
+      "objectives": [
+        "สร้างกราฟแท่งเปรียบเทียบยอดขายจากข้อมูลสรุปได้",
+        "สร้างกราฟเส้นตามวันที่ที่มีข้อมูลและกำหนดชื่อแกนได้",
+        "สร้างกราฟกระจายเพื่อพิจารณาจำนวนแก้วและยอดเงินต่อรายการได้",
+        "ส่งออกกราฟแบบโต้ตอบเป็นไฟล์ HTML เพื่อเปิดภายหลังได้"
+      ],
+      "concept": [
+        "ส่วนประกอบของกราฟ",
+        "การอ่านค่าจากผลการจัดกลุ่ม",
+        "การตรวจกราฟก่อนเผยแพร่",
+        "การอ่านกราฟกระจาย"
+      ],
+      "code": "import pandas as pd\nimport plotly.graph_objects as go\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nrevenue = df.groupby('menu')['price'].sum()\nrevenue\nbar = go.Figure()\nbar.add_bar(x=revenue.index, y=revenue.values)\nbar.update_layout(title='ยอดขายรวมแยกตามเมนู', xaxis_title='เมนู', yaxis_title='ยอดขาย (บาท)')\nbar.show()\ndf['date'] = pd.to_datetime(df['date'])\ndaily = df.groupby('date')['price'].sum()\ndaily\nline = go.Figure()\nline.add_scatter(x=daily.index, y=daily.values, mode='lines+markers')\nline.update_layout(title='ยอดขายตามวันที่บันทึก', xaxis_title='วันที่', yaxis_title='ยอดขาย (บาท)')\nline.show()\nscatter = go.Figure()\nscatter.add_scatter(x=df['cups'], y=df['price'], text=df['menu'], mode='markers')\nscatter.update_layout(title='จำนวนแก้วและยอดเงินต่อรายการ', xaxis_title='จำนวนแก้วต่อรายการ', yaxis_title='ยอดเงินรวมรายการ (บาท)')\nscatter.show()\nscatter.write_html('W11_กราฟกระจาย.html', include_plotlyjs=True)\nbar.write_html('W11_กราฟแท่ง.html', include_plotlyjs=True)\nline.write_html('W11_กราฟเส้น.html', include_plotlyjs=True)",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 12,
+      "title": "Visualization Dashboard และการทดสอบ UX",
+      "unit": 5,
+      "files": [
+        "drinks_shop.csv"
+      ],
+      "objectives": [
+        "รวมตัวเลขยอดขาย กราฟแท่ง และกราฟเส้นใน Dashboard เดียวได้",
+        "เพิ่มตัวเลือกเปรียบเทียบข้อมูลทั้งหมดกับเมนูกาแฟเย็นได้",
+        "ตรวจว่าตัวเลขและกราฟทุกส่วนเปลี่ยนตามตัวเลือกเดียวกันได้"
+      ],
+      "concept": [
+        "องค์ประกอบ Dashboard สำหรับผู้จัดการร้าน",
+        "การจัดตำแหน่งกราฟ",
+        "หลักการของตัวเลือกข้อมูล",
+        "ตรวจสอบการใช้งาน Dashboard"
+      ],
+      "code": "import pandas as pd\nimport plotly.graph_objects as go\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nfrom plotly.subplots import make_subplots\ndf['date'] = pd.to_datetime(df['date'])\nby_menu = df.groupby('menu')['price'].sum()\nby_menu\ndaily = df.groupby('date')['price'].sum()\ndaily\ntotal = df['price'].sum()\nfig = make_subplots(rows=2, cols=2, specs=[[{'type':'indicator'}, {'type':'xy'}], [{'type':'xy', 'colspan':2}, None]])\nfig.add_trace(go.Indicator(mode='number', value=total, title={'text':'ยอดขายรวม (บาท)'}), row=1, col=1)\nfig.add_trace(go.Bar(x=by_menu.index, y=by_menu.values, name='ยอดขายรายเมนู'), row=1, col=2)\nfig.add_trace(go.Scatter(x=daily.index, y=daily.values, mode='lines+markers', name='ยอดขายรายวัน'), row=2, col=1)\nfig.update_layout(title='ยอดขายร้านเครื่องดื่ม: ทั้งหมด', height=650, showlegend=False)\nfig.show()\ncoffee = df.loc[df['menu'] == 'กาแฟเย็น']\ncoffee_menu = coffee.groupby('menu')['price'].sum()\ncoffee_daily = coffee.groupby('date')['price'].sum()\nall_changes = {'value':[total, None, None], 'x':[None, by_menu.index, daily.index], 'y':[None, by_menu.values, daily.values]}\ncoffee_changes = {'value':[coffee['price'].sum(), None, None], 'x':[None, coffee_menu.index, coffee_daily.index], 'y':[None, coffee_menu.values, coffee_daily.values]}\nbutton_all = {'label':'ทั้งหมด', 'method':'update', 'args':[all_changes, {'title.text':'ยอดขายร้านเครื่องดื่ม: ทั้งหมด'}]}\nbutton_coffee = {'label':'กาแฟเย็น', 'method':'update', 'args':[coffee_changes, {'title.text':'ยอดขายร้านเครื่องดื่ม: กาแฟเย็น'}]}\nfig.update_layout(updatemenus=[{'buttons':[button_all, button_coffee], 'x':0, 'y':1.2}])\nfig.show()\nfig.write_html('W12_Dashboard.html', include_plotlyjs=True)",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 13,
+      "title": "Data Storytelling และการนำเสนอเพื่อตัดสินใจ",
+      "unit": 6,
+      "files": [
+        "drinks_shop.csv"
+      ],
+      "objectives": [
+        "เชื่อมคำถาม ผลวิเคราะห์ และข้อเสนอแนะโดยใช้หลักฐานได้",
+        "คำนวณยอดขายและสัดส่วนเมนูที่มียอดขายสูงที่สุดได้",
+        "แยกข้อเท็จจริง สมมติฐาน และข้อจำกัดสำหรับการนำเสนอได้"
+      ],
+      "concept": [
+        "โครงสร้างการเล่าเรื่องด้วยข้อมูล",
+        "แยกผลวิเคราะห์ออกจากข้อเสนอแนะ",
+        "ลำดับเนื้อหาการนำเสนอ"
+      ],
+      "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nrevenue = df.groupby('menu')['price'].sum()\nranked = revenue.sort_values(ascending=False)\nranked\ntop_menu = revenue.idxmax()\ntop_menu\ntotal = revenue.sum()\ntop_revenue = revenue.max()\nshare = top_revenue / total * 100\nshare\nevidence = pd.DataFrame({'เมนู':[top_menu], 'ยอดขาย (บาท)':[top_revenue], 'สัดส่วนยอดขาย (%)':[share]})\nevidence\nevidence.to_csv('W13_หลักฐานนำเสนอ.csv', index=False, encoding='utf-8-sig')",
+      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
+      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "rubric": [
+        [
+          "ความถูกต้องของชิ้นงาน",
+          4
+        ],
+        [
+          "อธิบายเหตุผลและตรวจสอบผล",
+          3
+        ],
+        [
+          "ประยุกต์กับข้อมูลกลุ่มและส่งหลักฐาน",
+          3
+        ]
+      ],
+      "assessmentMode": "การปฏิบัติในคาบเรียน"
+    },
+    {
+      "week": 14,
+      "title": "นำเสนอโครงงานบูรณาการ",
+      "unit": 7,
+      "files": [],
+      "objectives": [
+        "สาธิต Pipeline ครบวงจรและตอบคำถามรายบุคคลได้",
+        "นำเสนอ Dashboard กับข้อเสนอแนะที่มีหลักฐานได้"
+      ],
+      "concept": [
+        "นำเสนอกลุ่มละ 12 นาทีและตอบคำถาม 5 นาที ปรับจำนวนกลุ่มตามชั้นเรียนจริง",
+        "โครงงาน 20 คะแนน ใช้รูบริกเดียวกันและตรวจบทบาทสมาชิก",
+        "ส่งข้อมูลที่เผยแพร่ได้ Notebook Dashboard สไลด์ และบันทึกแบ่งงาน"
+      ],
+      "code": "",
+      "challenge": "สาธิตผลจากข้อมูลจริงของกลุ่ม ตอบคำถามวิธี Cleaning สูตร KPI และข้อจำกัด",
+      "deliverable": "แฟ้มโครงงานและแบบประเมินรายบุคคล",
+      "rubric": [
+        [
+          "ข้อมูล คุณภาพ และความปลอดภัย",
+          4
+        ],
+        [
+          "แบบจำลอง การคำนวณ และการตรวจผล",
+          4
+        ],
+        [
+          "Dashboard และหลักฐาน UX",
+          4
+        ],
+        [
+          "Insight การตัดสินใจ และข้อจำกัด",
+          4
+        ],
+        [
+          "นำเสนอ ตอบคำถาม และบทบาทสมาชิก",
+          4
+        ]
+      ],
+      "assessmentMode": "การประเมินหรือโครงงานตามแผนเดิม"
+    },
+    {
+      "week": 15,
+      "title": "สอบปลายภาคและสรุปผลการเรียนรู้",
+      "unit": 8,
+      "files": [],
+      "objectives": [
+        "แสดงความรู้และการประยุกต์ใช้ตามสมรรถนะรายวิชาได้",
+        "ตรวจแฟ้มหลักฐานและสะท้อนการเรียนรู้ได้"
+      ],
+      "concept": [
+        "ปลายภาค 20 คะแนน: ปรนัย 40 ข้อ 10 คะแนน และอัตนัยสองข้อ 10 คะแนน เวลา 120 นาที",
+        "ข้อสอบเป็นข้อสอบรายวิชาที่ครูจัดทำ ไม่ใช่ข้อสอบรับรองมาตรฐานวิชาชีพจากส่วนกลาง",
+        "ตรวจเวลาเรียนและกรณีพิเศษตามระเบียบสถานศึกษาก่อนตัดสินผล"
+      ],
+      "code": "",
+      "challenge": "ทำข้อสอบรายบุคคลและเขียน Reflection สามข้อหลังสอบ",
+      "deliverable": "กระดาษคำตอบปลายภาคและ Reflection",
+      "rubric": [
+        [
+          "ปรนัย 40 ข้อ",
+          10
+        ],
+        [
+          "อัตนัยสองข้อ",
+          10
+        ]
+      ],
+      "assessmentMode": "การประเมินหรือโครงงานตามแผนเดิม"
+    }
+  ],
+  "teachingMethod": "แจกข้อมูล อัปโหลดเข้า Colab เขียนพร้อมผู้สอนทีละคำสั่ง ตรวจและแปลผลก่อนดำเนินการต่อ",
+  "weekdays": {
+    "mondayHours": 3,
+    "tuesdayHours": 2
+  },
+  "librariesByWeek": {
+    "1": [
+      "pandas"
+    ],
+    "2": [
+      "pandas"
+    ],
+    "3": [
+      "pandas"
+    ],
+    "4": [
+      "pandas"
+    ],
+    "5": [
+      "pandas"
+    ],
+    "6": [
+      "pandas"
+    ],
+    "7": [
+      "pandas"
+    ],
+    "9": [
+      "pandas"
+    ],
+    "10": [
+      "pandas"
+    ],
+    "11": [
+      "pandas",
+      "plotly"
+    ],
+    "12": [
+      "pandas",
+      "plotly"
+    ],
+    "13": [
+      "pandas"
+    ]
+  }
+}

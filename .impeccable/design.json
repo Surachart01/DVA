@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T15:30:34.755853+00:00",
+  "title": "Design System: DVA Teaching Slides",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "tonalRamp": [
+          "oklch(0.150 0.1068 227.48)",
+          "oklch(0.264 0.1068 227.48)",
+          "oklch(0.379 0.1068 227.48)",
+          "oklch(0.493 0.1068 227.48)",
+          "oklch(0.607 0.1068 227.48)",
+          "oklch(0.721 0.1068 227.48)",
+          "oklch(0.836 0.1068 227.48)",
+          "oklch(0.950 0.1068 227.48)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0397 253.64)",
+          "oklch(0.264 0.0397 253.64)",
+          "oklch(0.379 0.0397 253.64)",
+          "oklch(0.493 0.0397 253.64)",
+          "oklch(0.607 0.0397 253.64)",
+          "oklch(0.721 0.0397 253.64)",
+          "oklch(0.836 0.0397 253.64)",
+          "oklch(0.950 0.0397 253.64)"
+        ]
+      },
+      "body-ink": {
+        "role": "neutral",
+        "displayName": "Body Ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0401 253.22)",
+          "oklch(0.264 0.0401 253.22)",
+          "oklch(0.379 0.0401 253.22)",
+          "oklch(0.493 0.0401 253.22)",
+          "oklch(0.607 0.0401 253.22)",
+          "oklch(0.721 0.0401 253.22)",
+          "oklch(0.836 0.0401 253.22)",
+          "oklch(0.950 0.0401 253.22)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0378 248.56)",
+          "oklch(0.264 0.0378 248.56)",
+          "oklch(0.379 0.0378 248.56)",
+          "oklch(0.493 0.0378 248.56)",
+          "oklch(0.607 0.0378 248.56)",
+          "oklch(0.721 0.0378 248.56)",
+          "oklch(0.836 0.0378 248.56)",
+          "oklch(0.950 0.0378 248.56)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(0.150 0.0150 251.16)",
+          "oklch(0.264 0.0150 251.16)",
+          "oklch(0.379 0.0150 251.16)",
+          "oklch(0.493 0.0150 251.16)",
+          "oklch(0.607 0.0150 251.16)",
+          "oklch(0.721 0.0150 251.16)",
+          "oklch(0.836 0.0150 251.16)",
+          "oklch(0.950 0.0150 251.16)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0000 89.88)",
+          "oklch(0.264 0.0000 89.88)",
+          "oklch(0.379 0.0000 89.88)",
+          "oklch(0.493 0.0000 89.88)",
+          "oklch(0.607 0.0000 89.88)",
+          "oklch(0.721 0.0000 89.88)",
+          "oklch(0.836 0.0000 89.88)",
+          "oklch(0.950 0.0000 89.88)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "tonalRamp": [
+          "oklch(0.150 0.0069 247.90)",
+          "oklch(0.264 0.0069 247.90)",
+          "oklch(0.379 0.0069 247.90)",
+          "oklch(0.493 0.0069 247.90)",
+          "oklch(0.607 0.0069 247.90)",
+          "oklch(0.721 0.0069 247.90)",
+          "oklch(0.836 0.0069 247.90)",
+          "oklch(0.950 0.0069 247.90)"
+        ]
+      },
+      "subtle-surface": {
+        "role": "neutral",
+        "displayName": "Subtle Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0034 247.86)",
+          "oklch(0.264 0.0034 247.86)",
+          "oklch(0.379 0.0034 247.86)",
+          "oklch(0.493 0.0034 247.86)",
+          "oklch(0.607 0.0034 247.86)",
+          "oklch(0.721 0.0034 247.86)",
+          "oklch(0.836 0.0034 247.86)",
+          "oklch(0.950 0.0034 247.86)"
+        ]
+      },
+      "active-surface": {
+        "role": "primary",
+        "displayName": "Active Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0142 231.20)",
+          "oklch(0.264 0.0142 231.20)",
+          "oklch(0.379 0.0142 231.20)",
+          "oklch(0.493 0.0142 231.20)",
+          "oklch(0.607 0.0142 231.20)",
+          "oklch(0.721 0.0142 231.20)",
+          "oklch(0.836 0.0142 231.20)",
+          "oklch(0.950 0.0142 231.20)"
+        ]
+      },
+      "hover-surface": {
+        "role": "primary",
+        "displayName": "Hover Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0110 225.98)",
+          "oklch(0.264 0.0110 225.98)",
+          "oklch(0.379 0.0110 225.98)",
+          "oklch(0.493 0.0110 225.98)",
+          "oklch(0.607 0.0110 225.98)",
+          "oklch(0.721 0.0110 225.98)",
+          "oklch(0.836 0.0110 225.98)",
+          "oklch(0.950 0.0110 225.98)"
+        ]
+      },
+      "code-surface": {
+        "role": "neutral",
+        "displayName": "Code Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0342 250.88)",
+          "oklch(0.264 0.0342 250.88)",
+          "oklch(0.379 0.0342 250.88)",
+          "oklch(0.493 0.0342 250.88)",
+          "oklch(0.607 0.0342 250.88)",
+          "oklch(0.721 0.0342 250.88)",
+          "oklch(0.836 0.0342 250.88)",
+          "oklch(0.950 0.0342 250.88)"
+        ]
+      },
+      "code-toolbar": {
+        "role": "neutral",
+        "displayName": "Code Toolbar",
+        "tonalRamp": [
+          "oklch(0.150 0.0421 249.25)",
+          "oklch(0.264 0.0421 249.25)",
+          "oklch(0.379 0.0421 249.25)",
+          "oklch(0.493 0.0421 249.25)",
+          "oklch(0.607 0.0421 249.25)",
+          "oklch(0.721 0.0421 249.25)",
+          "oklch(0.836 0.0421 249.25)",
+          "oklch(0.950 0.0421 249.25)"
+        ]
+      },
+      "code-text": {
+        "role": "neutral",
+        "displayName": "Code Text",
+        "tonalRamp": [
+          "oklch(0.150 0.0155 247.99)",
+          "oklch(0.264 0.0155 247.99)",
+          "oklch(0.379 0.0155 247.99)",
+          "oklch(0.493 0.0155 247.99)",
+          "oklch(0.607 0.0155 247.99)",
+          "oklch(0.721 0.0155 247.99)",
+          "oklch(0.836 0.0155 247.99)",
+          "oklch(0.950 0.0155 247.99)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(0.150 0.1150 229.92)",
+          "oklch(0.264 0.1150 229.92)",
+          "oklch(0.379 0.1150 229.92)",
+          "oklch(0.493 0.1150 229.92)",
+          "oklch(0.607 0.1150 229.92)",
+          "oklch(0.721 0.1150 229.92)",
+          "oklch(0.836 0.1150 229.92)",
+          "oklch(0.950 0.1150 229.92)"
+        ]
+      },
+      "problem-surface": {
+        "role": "secondary",
+        "displayName": "Problem Surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0220 74.10)",
+          "oklch(0.264 0.0220 74.10)",
+          "oklch(0.379 0.0220 74.10)",
+          "oklch(0.493 0.0220 74.10)",
+          "oklch(0.607 0.0220 74.10)",
+          "oklch(0.721 0.0220 74.10)",
+          "oklch(0.836 0.0220 74.10)",
+          "oklch(0.950 0.0220 74.10)"
+        ]
+      },
+      "problem-ink": {
+        "role": "secondary",
+        "displayName": "Problem Ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0888 63.00)",
+          "oklch(0.264 0.0888 63.00)",
+          "oklch(0.379 0.0888 63.00)",
+          "oklch(0.493 0.0888 63.00)",
+          "oklch(0.607 0.0888 63.00)",
+          "oklch(0.721 0.0888 63.00)",
+          "oklch(0.836 0.0888 63.00)",
+          "oklch(0.950 0.0888 63.00)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Cover headings."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Ordinary slide headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Thai reading prose."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Teaching chrome and mode controls."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Executable command text."
+      },
+      "guided-code": {
+        "displayName": "Guided code",
+        "purpose": "Larger exact command text on guided writing pages."
+      },
+      "guided-code-mobile": {
+        "displayName": "Guided code mobile",
+        "purpose": "Guided command text below 480px."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-background",
+        "value": "background .15s",
+        "purpose": "Button state transition; removed for reduced motion."
+      },
+      {
+        "name": "drawer",
+        "value": "transform .18s ease-out",
+        "purpose": "Mobile sidebar entry; removed for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "workspace",
+        "value": "1200px"
+      },
+      {
+        "name": "drawer",
+        "value": "850px"
+      },
+      {
+        "name": "session-stack",
+        "value": "600px"
+      },
+      {
+        "name": "narrow",
+        "value": "480px"
+      }
+    ],
+    "focus": {
+      "value": "outline: 3px solid #0085b0; outline-offset: 3px",
+      "purpose": "Keyboard focus on buttons, links, and selects."
+    },
+    "surfaces": {
+      "coverGradient": "linear-gradient(145deg,#f8fbfd,#e6edf3)",
+      "drawerBackdrop": "#17263866"
+    },
+    "provenance": {
+      "source": [
+        "src/index.css",
+        "src/App.jsx",
+        "src/teachingSessions.js",
+        "PRODUCT.md",
+        ".impeccable/review/desktop-days.png",
+        ".impeccable/review/mobile-days.png",
+        ".impeccable/review/mobile-day-content.png",
+        ".impeccable/review/days-verdict.md",
+        ".impeccable/review/typing-desktop.png",
+        ".impeccable/review/typing-check-desktop.png",
+        ".impeccable/review/typing-mobile.png",
+        ".impeccable/review/typing-verdict.md"
+      ],
+      "mode": "scan",
+      "northStarStatus": "Descriptive documentation label; no seed workshop or comp approval occurred.",
+      "tonalRamps": "Synthesized OKLCH panel previews only; no generated ramp is an implementation token.",
+      "notCanonized": "Unused legacy week-button rules, one-off chart colors, and the global pale hover on solid selected demo buttons are not system guidance; the last can reduce white-text contrast."
+    }
+  },
+  "components": [
+    {
+      "name": "Default action",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Plain bordered classroom action.",
+      "html": "<button class=\"ds-button\">ไปวันเรียนที่ 2</button>",
+      "css": ".ds-button{font-family:Sarabun, 'Noto Sans Thai', sans-serif;font-size:1rem;background:var(--surface,#fff);color:#253548;border:1px solid var(--line,#dbe3ec);border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .15s}.ds-button:hover:not(:disabled){background:#eff8fc}.ds-button:focus-visible{outline:3px solid #0085b0;outline-offset:3px}.ds-button:disabled{opacity:.4;cursor:default}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}"
+    },
+    {
+      "name": "Selected demo choice",
+      "kind": "button",
+      "refersTo": "button-selected",
+      "description": "Accent-filled pressed state for an interactive demonstration.",
+      "html": "<button class=\"ds-choice\" aria-pressed=\"true\">Left Join</button>",
+      "css": ".ds-choice{font-family:Sarabun, 'Noto Sans Thai', sans-serif;font-size:1rem;background:var(--accent,#007da2);color:#fff;border:1px solid var(--accent,#007da2);border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .15s}.ds-choice:focus-visible{outline:3px solid #0085b0;outline-offset:3px}@media(max-width:480px){.ds-choice{min-height:44px}}@media(prefers-reduced-motion:reduce){.ds-choice{transition:none}}"
+    },
+    {
+      "name": "Daily navigation",
+      "kind": "nav",
+      "refersTo": "day-navigation-active",
+      "description": "Current day with a strong label and quieter activity.",
+      "html": "<nav><button class=\"ds-day\" aria-current=\"page\"><strong>วันเรียนที่ 1 · 3 คาบ</strong><span>ปฐมนิเทศ ตั้งคำถาม และสำรวจวงจรข้อมูล</span></button></nav>",
+      "css": ".ds-day{font-family:Sarabun, 'Noto Sans Thai', sans-serif;display:block;text-align:left;width:100%;border:0;border-radius:8px;background:#eaf5fb;color:var(--accent,#007da2);padding:10px;cursor:pointer;transition:background .15s}.ds-day strong{display:block;font-size:.82rem;line-height:1.5}.ds-day span{display:block;font-size:.78rem;line-height:1.5;margin-top:4px;color:var(--muted,#586b7e)}.ds-day:hover{background:#eff8fc}.ds-day:focus-visible{outline:3px solid #0085b0;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-day{transition:none}}"
+    },
+    {
+      "name": "Lesson paper",
+      "kind": "card",
+      "refersTo": "slide-paper",
+      "description": "White bordered reading surface.",
+      "html": "<article class=\"ds-paper\"><h1>จากข้อมูลสู่การตัดสินใจ</h1><p>กำหนดคำถามก่อนเลือกเครื่องมือ</p></article>",
+      "css": ".ds-paper{font-family:Sarabun, 'Noto Sans Thai', sans-serif;background:#fff;color:#253548;border:1px solid #e2e8f0;border-radius:12px;padding:40px 44px;max-width:1100px}.ds-paper h1{font-size:clamp(1.7rem,2.5vw,2.8rem);line-height:1.3;letter-spacing:-.01em;color:var(--ink,#172638);margin:0 0 28px}.ds-paper p{line-height:1.7}@media(max-width:1200px){.ds-paper{padding:32px}}@media(max-width:850px){.ds-paper{padding:26px}}@media(max-width:480px){.ds-paper{padding:22px}}"
+    },
+    {
+      "name": "Slide selector",
+      "kind": "input",
+      "refersTo": "slide-select",
+      "description": "Native select used to jump between slides.",
+      "html": "<label class=\"ds-jump\">หน้า <select aria-label=\"เลือกสไลด์\"><option>1. ปฐมนิเทศและก้าวแรกกับข้อมูล</option><option>2. เป้าหมายการเรียนรู้</option></select></label>",
+      "css": ".ds-jump{font-family:Sarabun, 'Noto Sans Thai', sans-serif;font-size:.8rem;color:var(--muted,#586b7e)}.ds-jump select{font:inherit;color:#253548;background:#f8fafc;border:1px solid var(--line,#dbe3ec);border-radius:6px;padding:8px;max-width:220px}.ds-jump select:focus-visible{outline:3px solid #0085b0;outline-offset:3px}@media(max-width:850px){.ds-jump select{max-width:160px}}@media(max-width:480px){.ds-jump select{max-width:130px;font-size:.8rem}}"
+    },
+    {
+      "name": "Command panel",
+      "kind": "custom",
+      "refersTo": "code-panel",
+      "description": "Monospace command with a distinct toolbar and copy control.",
+      "html": "<section class=\"ds-code\"><div class=\"ds-toolbar\"><span>Python · Google Colab</span><button>คัดลอกคำสั่ง</button></div><pre><code>import pandas as pd</code></pre></section>",
+      "css": ".ds-code{font-family:Sarabun, 'Noto Sans Thai', sans-serif;background:#182635;color:#eaf3fc;border-radius:10px;overflow:hidden;margin:24px 0}.ds-toolbar{display:flex;align-items:center;justify-content:space-between;background:#223548;color:#c5d8e9;padding:10px 16px;font-size:.8rem}.ds-toolbar button{font:inherit;font-size:.78rem;padding:8px 12px;background:#30465b;border:1px solid #536a80;color:#eef6ff;border-radius:8px;cursor:pointer;transition:background .15s}.ds-toolbar button:hover{background:#3a5269}.ds-toolbar button:focus-visible{outline:3px solid #0085b0;outline-offset:3px}.ds-code pre{margin:0;padding:22px;overflow:auto;max-height:390px;line-height:1.65;font-size:.95rem;tab-size:4}.ds-code code{font-family:\"SFMono-Regular\",Consolas,\"Liberation Mono\",monospace}@media(max-width:480px){.ds-code pre{font-size:.83rem;padding:16px}.ds-toolbar{padding:10px}}@media(prefers-reduced-motion:reduce){.ds-toolbar button{transition:none}}"
+    },
+    {
+      "name": "Guided command",
+      "kind": "custom",
+      "refersTo": "guided-command",
+      "description": "Exact typing command in the incumbent dark copy panel; larger lettering for guided writing.",
+      "html": "<div class=\"ds-guided-code\"><div class=\"ds-guided-toolbar\"><span>Python · Google Colab</span><button>คัดลอกคำสั่ง</button></div><pre><code>df = pd.read_csv('students.csv')</code></pre></div>",
+      "css": ".ds-guided-code{font-family:Sarabun,\"Noto Sans Thai\",sans-serif;background:#182635;color:#eaf3fc;border-radius:10px;overflow:hidden;margin:18px 0}.ds-guided-toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#223548;color:#c5d8e9;font-size:.8rem}.ds-guided-toolbar button{font:inherit;font-size:.78rem;background:#30465b;border:1px solid #536a80;color:#eef6ff;border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .15s}.ds-guided-toolbar button:hover{background:#3a5269}.ds-guided-toolbar button:focus-visible{outline:3px solid #0085b0;outline-offset:3px}.ds-guided-code pre{margin:0;padding:18px 22px;overflow:auto;max-height:390px;font-size:1.15rem;line-height:1.65;tab-size:4}.ds-guided-code code{font-family:\"SFMono-Regular\",Consolas,\"Liberation Mono\",monospace}@media(max-width:480px){.ds-guided-code pre{font-size:.95rem;padding:16px}.ds-guided-toolbar{padding:10px}.ds-guided-toolbar span{font-size:.72rem}}@media(prefers-reduced-motion:reduce){.ds-guided-toolbar button{transition:none}}"
+    },
+    {
+      "name": "Guided run and check",
+      "kind": "custom",
+      "refersTo": "guided-run",
+      "description": "Run instruction followed by distinct expected-result and recovery explanations on a checking page.",
+      "html": "<section class=\"ds-guided-check\"><p class=\"ds-guided-run\">กด Shift + Enter เพื่อรันเซลล์นี้</p><h2>ผลที่ควรเห็น</h2><p>ตัวแปรทางซ้ายเก็บ DataFrame แล้ว แต่ยังไม่แสดงตารางเอง</p><h2>ถ้าเขียนแล้วไม่ผ่าน</h2><p>FileNotFoundError: ตรวจชื่อไฟล์และอัปโหลดลง Colab</p></section>",
+      "css": ".ds-guided-check{font-family:Sarabun,\"Noto Sans Thai\",sans-serif;color:#253548}.ds-guided-check p{line-height:1.7;max-width:75ch;margin:0 0 16px}.ds-guided-check .ds-guided-run{color:var(--accent,#007da2);font-weight:700;margin-bottom:18px}.ds-guided-check h2{font-size:1.08rem;margin:18px 0 8px}"
+    },
+    {
+      "name": "Cumulative cell disclosure",
+      "kind": "custom",
+      "refersTo": "complete-command",
+      "description": "Optional native disclosure exposing the full cell draft through the current typing step.",
+      "html": "<details class=\"ds-complete\"><summary>ตรวจโค้ดในเซลล์นี้จนถึงขั้นนี้</summary><pre><code>import pandas as pd\ndf = pd.read_csv('students.csv')</code></pre></details>",
+      "css": ".ds-complete{font-family:Sarabun,\"Noto Sans Thai\",sans-serif;margin-top:24px;border-top:1px solid var(--line,#dbe3ec);padding-top:18px}.ds-complete summary{cursor:pointer;color:var(--accent,#007da2);font-size:.95rem}.ds-complete pre{background:#182635;color:#eaf3fc;border-radius:10px;margin:18px 0;padding:18px 22px;overflow:auto;max-height:500px;font-size:1.15rem;line-height:1.65;tab-size:4}.ds-complete code{font-family:\"SFMono-Regular\",Consolas,\"Liberation Mono\",monospace}@media(max-width:480px){.ds-complete pre{font-size:.95rem;padding:16px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Classroom Workbook",
+    "overview": "This is a scan of the shipped interface, not a seed or a user-approved visual exploration. The user-pinned NOS teaching reference supplies the teaching structure; the current code and review captures supply the visual facts. The descriptive metaphor below names what is visible rather than claiming a workshop decision.\n\nWhite lesson paper sits within a cool gray workspace. Thai typography is direct and readable, with cyan-blue marking orientation and selected actions. The permanent teaching chrome keeps navigation, content, and teacher notes within a single classroom workspace. Dark code panels make executable text visually distinct from explanatory prose.",
+    "keyCharacteristics": [
+      "Cool workspace with white lesson paper.",
+      "Sarabun for Thai content and navigation; monospace for code.",
+      "Flat borders and tonal fills rather than shadows.",
+      "Nested daily navigation and persistent teacher notes."
+    ],
+    "rules": [
+      {
+        "name": "Accent as Orientation",
+        "body": "Use the cyan-blue accent for active navigation, selected demo actions, teaching prompts, and results, as the current interface does.",
+        "section": "colors"
+      },
+      {
+        "name": "Code Has Its Own Voice",
+        "body": "Keep executable blocks in the dark panel with monospace type; keep their Thai explanations in the normal reading voice outside the panel.",
+        "section": "typography"
+      },
+      {
+        "name": "Flat Workspace",
+        "body": "Separate lesson paper, navigation, and controls with thin borders and tonal backgrounds; the shipped interface has no box shadows.",
+        "section": "elevation"
+      },
+      {
+        "name": "Write Then Check",
+        "body": "Keep the exact typing step on its writing page and its expected result and error recovery on the immediately following checking page.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do retain the Thai Sarabun family and generous prose line height.",
+      "Do preserve the unit → week → day navigation hierarchy and highlight the current day.",
+      "Do show the activity heading before its quieter scheduling metadata.",
+      "Do retain visible keyboard focus and reduced-motion behavior.",
+      "Do allow lesson content, long code, and wide tables to scroll within their intended regions."
+    ],
+    "donts": [
+      "Don't use color alone to identify a problem row; retain the written inspection result.",
+      "Don't turn the dark code panel into the background for ordinary explanation.",
+      "Don't replace the current lesson paper and teaching chrome with unrelated decorative components."
+    ]
+  }
+}
