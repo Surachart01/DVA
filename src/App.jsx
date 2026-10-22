@@ -128,7 +128,6 @@ export default function App(){
  <div className="lesson-modes" aria-label="รูปแบบสื่อ">{[['slides','สไลด์',BookOpen],...([8,14,15].includes(week.week)?[['lab','การประเมินและโครงงาน',FlaskConical]]:[]),['resources','ชุดเรียน',Download]].map(([id,label,Icon])=><button key={id} onClick={()=>setMode(id)} className={mode===id?'active':''} aria-pressed={mode===id}><Icon size={16}/>{label}</button>)}<span>{week.week===1?(day===0?'ผู้สอนสาธิตการใช้งาน Google Colab · ปฏิบัติการคำสั่ง pandas ในวันอังคาร':'ปฏิบัติการเขียนคำสั่ง pandas พร้อมผู้สอนทีละขั้นตอน'):resource.assessment}</span></div>
  {notice&&<p role="status" className="notice">{notice}<button onClick={()=>setNotice('')} aria-label="ปิดข้อความ"><X size={16}/></button></p>}
  <div className="lesson-scroll" id="lesson-content" tabIndex={-1}>
- <section className="session-banner" aria-label="แผนการสอนวันนี้"><div><h2>{session.title}</h2><p>สัปดาห์ {week.week} · {session.label} · {session.periods} คาบ · {session.allocation}</p></div><button onClick={()=>selectSession(weekIndex,day===0?1:0)}>{day===0?'ไปวันอังคาร':'กลับวันจันทร์'}<ArrowRight size={16}/></button></section>
  {week.week===8&&day===1&&<p className="session-note">วันนี้ใช้ผลสอบเดิมเพื่อให้ผลย้อนกลับและฝึกซ่อมเสริม ไม่สอบกลางภาคหรือเก็บคะแนนซ้ำ</p>}
  {week.week===15&&day===0&&<p className="session-note">วันนี้ทบทวนและตรวจความพร้อม ข้อสอบปลายภาค 120 นาทีอยู่ในวันอังคาร</p>}
  {mode==='slides'&&<article className={'slide-paper '+(slide.type==='cover'?'is-cover':slide.type==='guided'?'is-guided':'')} key={slide.id}><Slide slide={slide}/></article>}
