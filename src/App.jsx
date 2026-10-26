@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Check, CheckCircle2, Circle, Layers, Code2, Eye, Sparkles, Compass } from 'lucide-react';
+import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass } from 'lucide-react';
 import { teachingDeck } from './teachingDeck';
-import { labsData } from './labsData';
-import { courseResources } from './courseResources';
 import { sessionsFor } from './teachingSessions';
 
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล'};
@@ -225,14 +223,14 @@ function W2ClosingLabDemo({doneMap,onToggleDone}){
  const isDone=Boolean(doneMap?.[doneKey]);
  const completedCount=w2ClosingQuestions.filter(x=>doneMap?.[`w2lab-${x.id}`]).length;
  return <section className="demo fn-explorer">
-  <div className="exercise-header-bar"><p className="demo-caption">เวลาทำแบบฝึกหัด 40 นาที · คะแนนเต็ม 10 คะแนน (5 ข้อ ข้อละ 2 คะแนน) · พิมพ์คำสั่งและบันทึกคำตอบลงในส่วนท้ายของไฟล์ <code>W02.ipynb</code></p><span className="progress-pill">ความคืบหน้า: {completedCount}/5 ข้อ</span></div>
+  <div className="exercise-header-bar"><p className="demo-caption">เวลาทำแบบฝึกหัด 40 นาที · คะแนนเต็ม 10 คะแนน (5 ข้อ ข้อละ 2 คะแนน) · พิมพ์คำสั่งในโปรแกรม Google Colab และบันทึกคำตอบลงในเอกสารใบงาน</p><span className="progress-pill">ความคืบหน้า: {completedCount}/5 ข้อ</span></div>
   <div className="interactive-question-cards five-cols">{w2ClosingQuestions.map(x=>{const k=`w2lab-${x.id}`;const checked=Boolean(doneMap?.[k]);return <button key={x.id} className={`q-card ${activeQ===x.id?'selected':''} ${checked?'is-done':''}`} onClick={()=>setActiveQ(x.id)} aria-pressed={activeQ===x.id}><div className="q-card-top"><span className="q-badge">ข้อที่ {x.id} ({x.score})</span>{checked?<CheckCircle2 size={18} className="done-icon"/>:<Circle size={18} className="todo-icon"/>}</div><strong>{x.title.replace(/^ข้อที่ \d+: /,'')}</strong></button>})}</div>
   <div className="fn-detail" aria-live="polite">
    <div className="fn-detail-head"><h3>{q.title}</h3><div className="fn-detail-actions"><span>คะแนน {q.score}</span>{onToggleDone&&<button type="button" className={'check-done-btn '+(isDone?'is-done':'')} onClick={()=>onToggleDone(doneKey)}>{isDone?<CheckCircle2 size={16}/>:<Circle size={16}/>}{isDone?'สถานะ: ดำเนินการเสร็จแล้ว':'บันทึกว่าดำเนินการเสร็จแล้ว'}</button>}</div></div>
    <p className="concept-body">{q.task}</p>
    <div className="fn-meta-grid">
     <div><h4>ตารางข้อมูลที่ใช้</h4><p>ใช้ตารางข้อมูล <code>df_clean</code> และไฟล์ <code>nvc_tech_store_clean.csv</code> ที่ได้จากการฝึกปฏิบัติขั้นตอนที่ 1–10</p></div>
-    <div><h4>สิ่งที่ต้องบันทึกในไฟล์ Notebook</h4><p>1) คำสั่งภาษา Python ที่รันผลลัพธ์เรียบร้อยแล้ว และ 2) คำตอบสรุปผลลัพธ์ที่ได้จากตารางข้อมูล</p></div>
+    <div><h4>สิ่งที่ต้องบันทึก</h4><p>1) คำสั่งภาษา Python ที่รันผลลัพธ์ใน Google Colab และ 2) คำตอบสรุปผลลัพธ์ในเอกสารใบงาน</p></div>
    </div>
   </div>
   <div className="google-docs-callout">
@@ -479,10 +477,10 @@ function buildSessionModules(slides,weekNum,dayNum){
  }).filter(m=>m.indices.length>0);
 }
 export default function App(){
- const[weekIndex,setWeekIndex]=useState(1);const[day,setDay]=useState(0);const[index,setIndex]=useState(0);const[mode,setMode]=useState('slides');const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
+ const[weekIndex,setWeekIndex]=useState(1);const[day,setDay]=useState(0);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
  const[doneMap,setDoneMap]=useState(()=>{try{return JSON.parse(localStorage.getItem('dva_interactive_done')||'{}')}catch{return {}}});
  function toggleDone(key){setDoneMap(prev=>{const next={...prev,[key]:!prev[key]};try{localStorage.setItem('dva_interactive_done',JSON.stringify(next))}catch{}return next})}
- const week=teachingDeck[weekIndex];const session=sessionsFor(week)[day];const slides=session.slides;const slide=slides[index]??slides[0];const lab=labsData.find(l=>l.weekId===week.week);const resource=courseResources[week.week];const preparationOnly=(week.week===8&&day===1)||(week.week===15&&day===0);
+ const week=teachingDeck[weekIndex];const session=sessionsFor(week)[day];const slides=session.slides;const slide=slides[index]??slides[0];
  const modules=useMemo(()=>buildSessionModules(slides,week.week,day),[slides,week.week,day]);
  const activeModule=modules.find(m=>m.indices.includes(index))??modules[0];
  const guidedSteps=useMemo(()=>{
@@ -510,64 +508,57 @@ export default function App(){
  }
  function jumpToStep(stepNum){
   const st=guidedSteps.find(g=>g.step===stepNum);
-  if(st?.writeIdx!=null){setIndex(st.writeIdx);setMode('slides');}
+  if(st?.writeIdx!=null){setIndex(st.writeIdx);}
  }
- useEffect(()=>{document.getElementById('lesson-content')?.scrollTo({top:0})},[weekIndex,day,index,mode]);
- useEffect(()=>{if(week.week===1&&mode==='lab')setMode('slides')},[week.week,mode]);
+ useEffect(()=>{document.getElementById('lesson-content')?.scrollTo({top:0})},[weekIndex,day,index]);
  const go=(delta)=>setIndex(i=>Math.max(0,Math.min(slides.length-1,i+delta)));
- function selectSession(i,d){setWeekIndex(i);setDay(d);setIndex(0);setMode('slides');setSidebar(false)}
+ function selectSession(i,d){setWeekIndex(i);setDay(d);setIndex(0);setSidebar(false)}
  async function toggleFull(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{setNotice('เบราว์เซอร์นี้ไม่รองรับการแสดงผลเต็มหน้าจอ สามารถปรับขยายขนาดหน้าต่างเบราว์เซอร์แทนได้')}}
  useEffect(()=>{function change(){setFull(Boolean(document.fullscreenElement))}document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change)},[]);
- useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, button, a, select, [contenteditable="true"]'))return;if(e.key==='Escape')setSidebar(false);if(mode==='slides'&&['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,mode,slides.length]);
+ useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, button, a, select, [contenteditable="true"]'))return;if(e.key==='Escape')setSidebar(false);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
  const isPracticeSlide=slide.type==='guided'||slide.type==='guided-check';
  return <div className="teaching-app"><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
  <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).filter(d=>!(w.week===2&&d.day===1)).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
- <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><div className="mode-Seg"><button onClick={()=>setMode('slides')} className={mode==='slides'?'active':''} aria-pressed={mode==='slides'}><Layers size={15}/> เนื้อหาบทเรียนและฝึกปฏิบัติ</button><button onClick={()=>setMode('resources')} className={mode==='resources'?'active':''} aria-pressed={mode==='resources'}><Download size={15}/> เอกสารและไฟล์ประกอบการเรียน</button></div><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
- {mode==='slides'&&(
-  <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
-   <div className="module-tabs">
-    {modules.map(m=>(
-     <button key={m.id} type="button" className={'module-tab '+(activeModule?.id===m.id?'active':'')} onClick={()=>setIndex(m.firstIndex)}>
-      <strong>{m.label}</strong>
-      <small>{m.sub}</small>
-     </button>
-    ))}
+ <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
+ <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
+  <div className="module-tabs">
+   {modules.map(m=>(
+    <button key={m.id} type="button" className={'module-tab '+(activeModule?.id===m.id?'active':'')} onClick={()=>setIndex(m.firstIndex)}>
+     <strong>{m.label}</strong>
+     <small>{m.sub}</small>
+    </button>
+   ))}
+  </div>
+  {!isPracticeSlide&&activeModule?.indices.length>1&&(
+   <div className="subtopic-pills" aria-label="หัวข้อย่อยในส่วนนี้">
+    {activeModule.indices.map((sIdx,pos)=>{
+     const s=slides[sIdx];
+     return <button key={s.id} type="button" className={'subtopic-pill '+(index===sIdx?'active':'')} onClick={()=>setIndex(sIdx)}>
+      <span>{pos+1}. {s.title}</span>
+     </button>;
+    })}
    </div>
-   {!isPracticeSlide&&activeModule?.indices.length>1&&(
-    <div className="subtopic-pills" aria-label="หัวข้อย่อยในส่วนนี้">
-     {activeModule.indices.map((sIdx,pos)=>{
-      const s=slides[sIdx];
-      return <button key={s.id} type="button" className={'subtopic-pill '+(index===sIdx?'active':'')} onClick={()=>setIndex(sIdx)}>
-       <span>{pos+1}. {s.title}</span>
+  )}
+  {isPracticeSlide&&guidedSteps.length>0&&(
+   <div className="step-Interactive-strip" aria-label="ตัวเลือกขั้นตอนการฝึกปฏิบัติ">
+    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ:</span>
+    <div className="step-Direct-buttons">
+     {guidedSteps.map(g=>{
+      const active=slide.step===g.step;
+      const done=Boolean(doneMap[`step-${g.writeId}`]);
+      return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(g.writeIdx)} title={g.title}>
+       {done&&<Check size={12}/>} ขั้นตอนที่ {g.step}
       </button>;
      })}
     </div>
-   )}
-   {isPracticeSlide&&guidedSteps.length>0&&(
-    <div className="step-Interactive-strip" aria-label="ตัวเลือกขั้นตอนการฝึกปฏิบัติ">
-     <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ:</span>
-     <div className="step-Direct-buttons">
-      {guidedSteps.map(g=>{
-       const active=slide.step===g.step;
-       const done=Boolean(doneMap[`step-${g.writeId}`]);
-       return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(g.writeIdx)} title={g.title}>
-        {done&&<Check size={12}/>} ขั้นตอนที่ {g.step}
-       </button>;
-      })}
-     </div>
-    </div>
-   )}
-  </div>
- )}
+   </div>
+  )}
+ </div>
  {notice&&<p role="status" className="notice">{notice}<button onClick={()=>setNotice('')} aria-label="ปิดข้อความ"><X size={16}/></button></p>}
  <div className="lesson-scroll" id="lesson-content" tabIndex={-1}>
  {week.week===8&&day===1&&<p className="session-note">คาบเรียนนี้ใช้ผลการประเมินเดิมเพื่อให้ข้อเสนอแนะและฝึกซ่อมเสริม โดยไม่มีการสอบหรือเก็บคะแนนซ้ำ</p>}
  {week.week===15&&day===0&&<p className="session-note">คาบเรียนนี้เป็นการทบทวนเนื้อหาและตรวจสอบความพร้อม ส่วนการสอบปลายภาค (120 นาที) จะจัดสอบในวันอังคาร</p>}
- {mode==='slides'&&<article className={'slide-paper '+(slide.type==='cover'?'is-cover':isPracticeSlide?'is-studio':'')} key={slide.id}><Slide slide={slide} pairSlide={pairSlide} onSwitchTab={handleSwitchStudioTab} onJumpStep={jumpToStep} doneMap={doneMap} onToggleDone={toggleDone}/></article>}
- {mode==='lab'&&week.week===1&&<article className="slide-paper"><h1>การฝึกปฏิบัติประจำสัปดาห์</h1><p>เลือกหัวข้อเนื้อหาบทเรียนด้านบนเพื่อพิมพ์คำสั่งตามลำดับขั้นตอน และบันทึกไฟล์ Notebook สำหรับส่งงาน</p></article>}
- {mode==='lab'&&preparationOnly&&<article className="slide-paper"><h1>{session.title}</h1><p>{session.allocation}</p><ul className="teaching-list">{(week.week===8?['ทบทวนผลการประเมินและคำอธิบายรายบุคคลตามข้อเสนอแนะของผู้สอน','ฝึกปฏิบัติเพิ่มเติมเฉพาะประเด็นที่ยังไม่ผ่านเกณฑ์ พร้อมอธิบายหลักการ','บันทึกสิ่งที่ปรับปรุงและส่งหลักฐานการซ่อมเสริมตามที่ผู้สอนกำหนด']:['ทบทวนกระบวนการวิเคราะห์ข้อมูลและเลือกอธิบายหลักฐานจากโครงงาน','ตรวจสอบไฟล์ Notebook แฟ้มสะสมผลงาน และเวลาเรียนร่วมกับผู้สอน','เตรียมความพร้อมสำหรับการสอบปลายภาครายบุคคลในวันอังคาร (เวลา 120 นาที)']).map(x=><li key={x}>{x}</li>)}</ul><p>กิจกรรมในคาบเรียนนี้ไม่มีการคิดคะแนนใบงานเพิ่มเติม</p></article>}
- {mode==='lab'&&[8,14,15].includes(week.week)&&!preparationOnly&&<article className="slide-paper"><h1>{session.title}</h1><p>{session.allocation}</p><p>{resource.assessment}</p><h2>ขั้นตอนการเตรียมความพร้อมและการปฏิบัติ</h2><ul className="teaching-list">{(week.week===8?['ทบทวนเนื้อหาจากไฟล์ฝึกปฏิบัติและไฟล์ Notebook ที่เรียนก่อนเริ่มสอบ','ทำข้อสอบวัดผลกลางภาครายบุคคลตามฉบับที่ผู้สอนกำหนด ใช้เวลา 120 นาที','ส่งไฟล์หลักฐานตามคำชี้แจง และรับฟังข้อเสนอแนะในวันอังคาร']:week.week===14?['ตรวจสอบไฟล์ข้อมูล ไฟล์ Notebook กระดานสรุปผลข้อมูล (Dashboard) สไลด์นำเสนอ และหน้าที่ของสมาชิกในกลุ่ม','นำเสนอโครงงานกลุ่มละ 12 นาที และตอบคำถาม 5 นาทีตามลำดับที่ผู้สอนกำหนด','อธิบายวิธีการจัดเตรียมข้อมูล การคำนวณตัวชี้วัด และข้อจำกัดของข้อมูลโดยอ้างอิงหลักฐานจากตาราง']:['ทำข้อสอบวัดผลปลายภาครายบุคคล ใช้เวลา 120 นาที','ปฏิบัติตามคำชี้แจงและส่งไฟล์งานตามช่องทางที่ผู้สอนกำหนด','สรุปสิ่งที่ได้เรียนรู้ภายหลังการประเมิน']).map(item=><li key={item}>{item}</li>)}</ul><h2>เกณฑ์การให้คะแนน</h2><table><thead><tr><th scope="col">รายการประเมิน</th><th scope="col">คะแนน</th></tr></thead><tbody>{week.week===8&&<tr><td>แบบทดสอบความรู้</td><td>5</td></tr>}{lab.rubric.map(r=><tr key={r.item}><td>{r.item}</td><td>{r.score}</td></tr>)}</tbody></table><a className="download-action" href={resource.notebook} download><Download size={18}/>ดาวน์โหลดไฟล์ Notebook สัปดาห์ที่ {String(week.week).padStart(2,'0')}</a></article>}
- {mode==='resources'&&<article className="slide-paper"><h1>เอกสารและไฟล์ประกอบการเรียน สัปดาห์ที่ {week.week}</h1><p>{week.week===1?'ดาวน์โหลดไฟล์ข้อมูลและไฟล์ Notebook สำหรับฝึกปฏิบัติเขียนคำสั่งภาษา Python และไลบรารี pandas ตามลำดับขั้นตอน':'ดาวน์โหลดไฟล์ข้อมูลและไฟล์ Notebook เพื่อเปิดใช้งานในโปรแกรม Google Colab และฝึกปฏิบัติเขียนคำสั่งตามลำดับขั้นตอน'}</p><a className="resource-file" href={resource.notebook} download><FileText/>ไฟล์ Notebook สำหรับฝึกปฏิบัติ (W{String(week.week).padStart(2,'0')}.ipynb)<Download size={18}/></a>{resource.files.filter(f=>!f.name.includes('ตัวอย่าง')).map(f=><a className="resource-file" key={f.name} href={f.url} download><FileText/>{f.name}<Download size={18}/></a>)}<a className="resource-file" href="ชุดเรียน/ชุดข้อมูล/พจนานุกรมข้อมูล.md" download><FileText/>เอกสารคำอธิบายชุดข้อมูลและโครงสร้างคอลัมน์ (Data Dictionary)<Download size={18}/></a></article>}
+ <article className={'slide-paper '+(slide.type==='cover'?'is-cover':isPracticeSlide?'is-studio':'')} key={slide.id}><Slide slide={slide} pairSlide={pairSlide} onSwitchTab={handleSwitchStudioTab} onJumpStep={jumpToStep} doneMap={doneMap} onToggleDone={toggleDone}/></article>
  </div>
- <footer className="lesson-footer"><div className="footer-navigation"><span className="keyboard-hint">คลิกเลือกส่วนของเนื้อหาและขั้นตอนด้านบน หรือใช้ปุ่มลูกศร ← → บนแป้นพิมพ์เพื่อเปลี่ยนหน้า</span><button onClick={()=>go(-1)} disabled={index===0||mode!=='slides'}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump">หัวข้อที่<select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value));setMode('slides')}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button onClick={()=>go(1)} disabled={index===slides.length-1||mode!=='slides'}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
+ <footer className="lesson-footer"><div className="footer-navigation"><span className="keyboard-hint">คลิกเลือกส่วนของเนื้อหาและขั้นตอนด้านบน หรือใช้ปุ่มลูกศร ← → บนแป้นพิมพ์เพื่อเปลี่ยนหน้า</span><button onClick={()=>go(-1)} disabled={index===0}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump">หัวข้อที่<select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value))}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button onClick={()=>go(1)} disabled={index===slides.length-1}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
 }
