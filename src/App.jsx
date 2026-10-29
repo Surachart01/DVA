@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass } from 'lucide-react';
+import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Copy, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass } from 'lucide-react';
 import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
 
@@ -38,7 +38,7 @@ function StepMotion({config}){
   <div className="motion-controls"><button onClick={()=>setActive(i=>Math.max(0,i-1))} disabled={active===0}>ย้อนหนึ่งขั้น</button><span>ขั้นที่ {active+1} จาก {steps.length}</span><button onClick={()=>setActive(i=>Math.min(steps.length-1,i+1))} disabled={active===steps.length-1}>ขั้นถัดไป</button></div>
  </section>
 }
-function Pipeline(){const[active,setActive]=useState(0);const stages=[['Get Data','กำหนดคำถาม กลุ่มเป้าหมาย แหล่งที่มา และสิทธิ์การใช้งานข้อมูล พร้อมนำเข้าไฟล์ CSV/Excel'],['ETL','ตรวจสอบคุณภาพข้อมูล รายงานปัญหา เลือกวิธีจัดการข้อมูล และบันทึก Cleaning Log'],['Data Model','กำหนดความสัมพันธ์ของตาราง เชื่อมโยงข้อมูล คำนวณตัวชี้วัด (KPI) และระบุข้อจำกัด'],['Visualization','ออกแบบทัศนภาพข้อมูลตามกลุ่มเป้าหมาย สร้างแผนภูมิและ Dashboard พร้อมประเมินการใช้งาน'],['Decision','สรุปข้อค้นพบ (Insight) และข้อเสนอแนะที่สามารถตรวจสอบย้อนกลับไปยังข้อมูลต้นทางได้']];return <section className="demo"><div className="pipeline">{stages.map(([name],i)=><button key={name} className={active===i?'selected':''} onClick={()=>setActive(i)} aria-pressed={active===i}><span>{i+1}</span>{name}</button>)}</div><p className="demo-result">{stages[active][1]}</p><p className="fine-print">เลือกแต่ละขั้นตอนเพื่อดูหลักฐานการปฏิบัติงาน โดยในกระบวนการจริงสามารถย้อนกลับไปปรับปรุงข้อมูลในขั้นตอนก่อนหน้าได้</p></section>}
+function Pipeline(){const[active,setActive]=useState(0);const stages=[['Get Data','กำหนดคำถาม กลุ่มเป้าหมาย แหล่งที่มา และสิทธิ์การใช้งานข้อมูล พร้อมนำเข้าไฟล์ CSV/Excel'],['ETL','ตรวจสอบคุณภาพข้อมูล รายงานปัญหา เลือกวิธีจัดการข้อมูล และบันทึกขั้นตอนการทำความสะอาดข้อมูล'],['Data Analysis','คำนวณค่าสถิติพื้นฐาน คัดกรองและจัดกลุ่มข้อมูล คำนวณตัวชี้วัด (KPI) และสรุปผลการวิเคราะห์'],['Visualization','ออกแบบทัศนภาพข้อมูลตามกลุ่มเป้าหมาย สร้างแผนภูมิและ Dashboard พร้อมประเมินการใช้งาน'],['Decision','สรุปข้อค้นพบ (Insight) และข้อเสนอแนะที่สามารถตรวจสอบย้อนกลับไปยังข้อมูลต้นทางได้']];return <section className="demo"><div className="pipeline">{stages.map(([name],i)=><button key={name} className={active===i?'selected':''} onClick={()=>setActive(i)} aria-pressed={active===i}><span>{i+1}</span>{name}</button>)}</div><p className="demo-result">{stages[active][1]}</p><p className="fine-print">เลือกแต่ละขั้นตอนเพื่อดูหลักฐานการปฏิบัติงาน โดยในกระบวนการจริงสามารถย้อนกลับไปปรับปรุงข้อมูลในขั้นตอนก่อนหน้าได้</p></section>}
 const fnCatalog=[
  {step:1,group:'extract',period:'ขั้นตอนที่ 1 จาก 9 · การนำเข้าข้อมูล',token:'import pandas as pd',code:'import pandas as pd',purpose:'นำเข้าไลบรารี pandas โดยกำหนดชื่อย่อเป็น pd เพื่อใช้งานคำสั่งสำหรับจัดการข้อมูลตาราง',result:'ระบบพร้อมสำหรับการเรียกใช้คำสั่ง pd.read_csv() และคำสั่งจัดการตาราง DataFrame',caution:'ต้องรันคำสั่งนี้ใหม่ทุกครั้งเมื่อเริ่มต้นสภาพแวดล้อมการทำงาน (Runtime) ใหม่ใน Google Colab'},
  {step:2,group:'extract',period:'ขั้นตอนที่ 2 จาก 9 · การนำเข้าข้อมูล',token:"pd.read_csv(..., dtype=...)",code:"df = pd.read_csv('nvc_tech_store.csv', dtype={'customer_phone': 'string'})\ndf",purpose:'อ่านข้อมูลจากไฟล์ CSV เข้าสู่ตัวแปรตาราง df พร้อมกำหนดชนิดข้อมูลหมายเลขโทรศัพท์ให้เป็นข้อความ',result:'ได้ตารางขนาด 36 แถว 7 คอลัมน์ โดยหมายเลขโทรศัพท์ยังคงแสดงเลข 08 นำหน้าครบถ้วน',caution:'หากไม่กำหนดพารามิเตอร์ dtype ระบบจะแปลงหมายเลขโทรศัพท์เป็นตัวเลขและตัดเลข 0 นำหน้าออก'},
@@ -122,20 +122,20 @@ function WarmupDrillDemo({doneMap,onToggleDone}){
  </section>;
 }
 const w2EtlCatalog=[
- {step:1,group:'diagnose',period:'ขั้นตอนที่ 1 จาก 10 · การเตรียมตารางข้อมูลต้นฉบับ',token:'pd.read_csv(..., dtype=...)',code:"import pandas as pd\ndf = pd.read_csv('nvc_tech_store.csv', dtype={'customer_phone': 'string'})\ndf.shape",purpose:'นำเข้าตารางข้อมูลต้นฉบับ df ขนาด (36, 7) พร้อมกำหนดชนิดข้อมูลหมายเลขโทรศัพท์ให้พร้อมสำหรับกระบวนการ ETL',result:'(36, 7) หมายถึง ตารางข้อมูลต้นฉบับมี 36 แถว 7 คอลัมน์ พร้อมสำหรับการคัดกรองและจัดเตรียมข้อมูล',caution:'ตรวจสอบว่าได้อัปโหลดไฟล์ nvc_tech_store.csv เข้าสู่โปรแกรม Google Colab เรียบร้อยแล้ว'},
- {step:2,group:'diagnose',period:'ขั้นตอนที่ 2 จาก 10 · การคัดกรองแถวที่มีปัญหา',token:"df[df['total_price'].isna()]",code:"df[df['total_price'].isna()]",purpose:'คัดกรองเฉพาะแถวที่มีค่าว่างในคอลัมน์ยอดเงินรวม (total_price) ออกมาแสดงผลเพื่อตรวจสอบรายการที่มีปัญหา',result:'พบ 2 รายการ ได้แก่ รหัส ORD-107 (เว็บแคม Full HD) และรหัส ORD-125 (สายแลน Cat6)',caution:'ต้องระบุเครื่องหมายวงเล็บเหลี่ยมให้ครบทั้งส่วนการคัดกรองตาราง df[...] และการอ้างอิงชื่อคอลัมน์'},
- {step:3,group:'diagnose',period:'ขั้นตอนที่ 3 จาก 10 · การตรวจสอบข้อมูลซ้ำซ้อน',token:'df.duplicated().sum()',code:'df.duplicated().sum()',purpose:'นับจำนวนแถวที่มีการบันทึกข้อมูลซ้ำซ้อนกับแถวก่อนหน้าในทุกคอลัมน์',result:'พบข้อมูลที่บันทึกซ้ำซ้อนเกินจำนวนจริง 2 แถว',caution:'หากไม่ลบแถวที่บันทึกข้อมูลซ้ำซ้อน จะทำให้การคำนวณยอดจำหน่ายรวมและจำนวนคำสั่งซื้อนับซ้ำซ้อนเกินจำนวนจริง'},
- {step:4,group:'diagnose',period:'ขั้นตอนที่ 4 จาก 10 · การตรวจสอบข้อมูลซ้ำซ้อน',token:'df[df.duplicated(keep=False)]',code:'df[df.duplicated(keep=False)]',purpose:'แสดงแถวที่มีการบันทึกข้อมูลซ้ำซ้อนทั้งหมด (ทั้งแถวต้นฉบับและแถวที่ซ้ำ) เพื่อเปรียบเทียบความถูกต้องก่อนลบข้อมูล',result:'แสดงรายการที่บันทึกข้อมูลซ้ำซ้อนรวม 4 แถว (2 คู่รายการ) ได้แก่ รหัส ORD-105 และรหัส ORD-118',caution:'การกำหนดพารามิเตอร์ keep=False ช่วยให้แสดงทั้งแถวแรกและแถวที่ซ้ำควบคู่กันเพื่อตรวจสอบเปรียบเทียบ'},
- {step:5,group:'diagnose',period:'ขั้นตอนที่ 5 จาก 10 · การตรวจสอบความสม่ำเสมอของข้อความ',token:"df['category'].value_counts()",code:"df['category'].value_counts()",purpose:'นับจำนวนรายการในแต่ละหมวดหมู่สินค้าเพื่อตรวจสอบความสม่ำเสมอของข้อความและอักขระช่องว่างส่วนเกิน',result:"พบหมวดหมู่ 'อุปกรณ์ต่อพ่วง' (13 รายการ) แยกจาก 'อุปกรณ์ต่อพ่วง ' ที่มีอักขระช่องว่างต่อท้ายข้อความ (2 รายการ)",caution:'อักขระช่องว่างต่อท้ายข้อความทำให้โปรแกรมแยกนับข้อมูลเป็นคนละหมวดหมู่'},
- {step:6,group:'transform',period:'ขั้นตอนที่ 6 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'.str.strip()',code:"df['category'] = df['category'].str.strip()\ndf['category'].value_counts()",purpose:'ลบอักขระช่องว่างส่วนเกินบริเวณด้านหน้าและด้านหลังของข้อความในคอลัมน์ category',result:"หมวดหมู่ 'อุปกรณ์ต่อพ่วง' ถูกรวมเป็นหมวดหมู่เดียวกันจำนวน 15 รายการ ครบ 3 หมวดหมู่มาตรฐาน",caution:"ต้องระบุคำสั่งกำหนดค่ากลับเข้าสู่คอลัมน์เดิม (df['category'] = ...) เพื่อให้ข้อมูลที่แก้ไขแล้วถูกบันทึกทับในตาราง"},
- {step:7,group:'transform',period:'ขั้นตอนที่ 7 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'.drop_duplicates()',code:'df_clean = df.drop_duplicates().copy()\ndf_clean.shape',purpose:'ลบแถวที่มีการบันทึกข้อมูลซ้ำซ้อนออกและจัดเก็บลงในตัวแปรตารางใหม่ชื่อ df_clean',result:'ขนาดของตารางลดลงจาก (36, 7) เหลือ (34, 7)',caution:'ควรจัดเก็บในตัวแปรตารางใหม่เพื่อรักษาตารางข้อมูลต้นฉบับ (df) ไว้สำหรับการตรวจสอบเปรียบเทียบ'},
- {step:8,group:'transform',period:'ขั้นตอนที่ 8 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'.dropna(subset=...)',code:"df_clean = df_clean.dropna(subset=['quantity', 'total_price'])\ndf_clean.shape",purpose:'ลบเฉพาะแถวที่มีค่าว่างในคอลัมน์จำนวนชิ้นหรือยอดเงินรวม โดยยังคงเก็บรักษาแถวที่ขาดเฉพาะหมายเลขโทรศัพท์ไว้',result:'ขนาดของตารางลดลงจาก (34, 7) เหลือ (31, 7)',caution:'หากไม่ระบุพารามิเตอร์ subset ระบบจะลบรายการที่มีมูลค่าการซื้อขายจริงแต่ไม่ได้ระบุหมายเลขโทรศัพท์ออกไปด้วย'},
- {step:9,group:'transform',period:'ขั้นตอนที่ 9 จาก 10 · การคัดกรองค่าที่อยู่นอกเกณฑ์ที่กำหนด',token:'.between(1, 20)',code:"df_clean = df_clean[df_clean['quantity'].between(1, 20) & (df_clean['total_price'] <= 10000)]\nround(df['total_price'].mean(), 2), round(df_clean['total_price'].mean(), 2)",purpose:'คัดกรองเฉพาะรายการที่มีจำนวนชิ้น 1–20 ชิ้น และยอดเงินรวมไม่เกิน 10,000 บาท พร้อมเปรียบเทียบค่าเฉลี่ยก่อนและหลังการจัดเตรียมข้อมูล',result:'ได้ตารางข้อมูลที่ผ่านการจัดเตรียมแล้วจำนวน 29 แถว โดยค่าเฉลี่ยปรับจาก 3,613.82 บาท เป็น 754.83 บาท',caution:'การเชื่อมหลายเงื่อนไขในไลบรารี pandas ต้องใช้เครื่องหมาย & และใส่วงเล็บครอบแต่ละเงื่อนไขย่อยเสมอ'},
- {step:10,group:'load',period:'ขั้นตอนที่ 10 จาก 10 · การส่งออกข้อมูลที่ผ่านการจัดเตรียมแล้ว',token:'.to_csv(..., index=False)',code:"df_clean.to_csv('nvc_tech_store_clean.csv', index=False)\ndf_clean.head()",purpose:'บันทึกตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว (df_clean) ออกเป็นไฟล์ CSV ใหม่',result:'ได้ไฟล์ nvc_tech_store_clean.csv (ขนาด 29 แถว 7 คอลัมน์) พร้อมสำหรับการวิเคราะห์และนำเสนอข้อมูล',caution:'ต้องระบุพารามิเตอร์ index=False เพื่อไม่ให้ระบบบันทึกลำดับแถวเป็นคอลัมน์เกินมาในไฟล์ CSV'}
+ {step:1,group:'diagnose',period:'ขั้นตอนที่ 1 จาก 10 · การเตรียมตารางข้อมูลต้นฉบับ',token:'pd.read_csv(..., dtype=...)',code:"import pandas as pd\ndf = pd.read_csv('nvc_tech_store.csv', dtype={'customer_phone': 'string'})\ndf.shape",purpose:'นำเข้าข้อมูลจากไฟล์ CSV เข้าสู่ตัวแปรตาราง df พร้อมกำหนดชนิดข้อมูลหมายเลขโทรศัพท์เป็นข้อความ และตรวจสอบขนาดตารางต้นฉบับ',result:'(36, 7) หมายถึง ตารางข้อมูลต้นฉบับมี 36 แถว 7 คอลัมน์ พร้อมสำหรับการคัดกรองและจัดเตรียมข้อมูล',caution:'ต้องกำหนด customer_phone เป็น string ตั้งแต่นำเข้าข้อมูล เพื่อรักษาเลข 0 นำหน้าหมายเลขโทรศัพท์'},
+ {step:2,group:'diagnose',period:'ขั้นตอนที่ 2 จาก 10 · การคัดกรองแถวที่มีปัญหา',token:'df[df[...].isna()]',code:"df[df['total_price'].isna()]",purpose:'คัดกรองและแสดงเฉพาะแถวข้อมูลที่มีค่าว่าง (Missing Values) ในคอลัมน์ยอดเงินรวม (total_price) เพื่อตรวจสอบรายการที่มีปัญหา',result:'พบ 2 รายการที่มีค่าว่างในคอลัมน์ยอดเงินรวม ได้แก่ รหัส ORD-107 และรหัส ORD-125',caution:'ต้องระบุเครื่องหมายวงเล็บเหลี่ยมให้ครบทั้งส่วนการคัดกรองตารางด้านนอกและการอ้างอิงชื่อคอลัมน์ด้านใน'},
+ {step:3,group:'diagnose',period:'ขั้นตอนที่ 3 จาก 10 · การตรวจสอบข้อมูลซ้ำซ้อน',token:'df.duplicated().sum()',code:'df.duplicated().sum()',purpose:'ตรวจนับจำนวนแถวที่มีการบันทึกข้อมูลซ้ำซ้อนกันทุกคอลัมน์ในตารางข้อมูลต้นฉบับ',result:'พบข้อมูลที่บันทึกซ้ำซ้อนเกินจำนวนจริง 2 แถว',caution:'หากไม่ลบแถวที่บันทึกข้อมูลซ้ำซ้อน จะทำให้การคำนวณยอดจำหน่ายรวมและจำนวนคำสั่งซื้อนับซ้ำซ้อนเกินจำนวนจริง'},
+ {step:4,group:'diagnose',period:'ขั้นตอนที่ 4 จาก 10 · การตรวจสอบข้อมูลซ้ำซ้อน',token:'df.duplicated(keep=False)',code:'df[df.duplicated(keep=False)]',purpose:'แสดงแถวที่มีการบันทึกข้อมูลซ้ำซ้อนทั้งหมด (ทั้งแถวต้นฉบับและแถวที่ซ้ำ) เพื่อตรวจสอบเปรียบเทียบความถูกต้องก่อนลบข้อมูล',result:'แสดงรายการที่บันทึกข้อมูลซ้ำซ้อนรวม 4 แถว (2 คู่รายการ) ได้แก่ รหัส ORD-105 และรหัส ORD-118',caution:'การกำหนดพารามิเตอร์ keep=False ช่วยให้เห็นทั้งแถวแรกและแถวที่ซ้ำคู่กันอย่างชัดเจน'},
+ {step:5,group:'diagnose',period:'ขั้นตอนที่ 5 จาก 10 · การตรวจสอบความสม่ำเสมอของข้อความ',token:'value_counts()',code:"df['category'].value_counts()",purpose:'ตรวจนับความถี่ของข้อมูลในคอลัมน์หมวดหมู่สินค้า (category) เพื่อตรวจสอบความสม่ำเสมอของการสะกดคำและอักขระช่องว่างส่วนเกิน',result:"พบหมวดหมู่ 'อุปกรณ์ต่อพ่วง' (13 รายการ) แยกจาก 'อุปกรณ์ต่อพ่วง ' ที่มีอักขระช่องว่างต่อท้ายข้อความ (2 รายการ)",caution:'อักขระช่องว่างต่อท้ายข้อความทำให้โปรแกรมแยกนับข้อมูลเป็นคนละหมวดหมู่'},
+ {step:6,group:'transform',period:'ขั้นตอนที่ 6 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'.str.strip()',code:"df['category'] = df['category'].str.strip()\ndf['category'].value_counts()",purpose:'ตัดอักขระช่องว่างส่วนเกินด้านหน้าและด้านหลังข้อความในคอลัมน์หมวดหมู่สินค้า และตรวจสอบผลการนับความถี่อีกครั้ง',result:"หมวดหมู่ 'อุปกรณ์ต่อพ่วง' ถูกรวมเป็นหมวดหมู่เดียวกันจำนวน 15 รายการ ครบ 3 หมวดหมู่มาตรฐาน",caution:'ต้องกำหนดค่ากลับเข้าสู่ df[\'category\'] เพื่อให้ข้อมูลที่ปรับแก้แล้วถูกบันทึกทับในคอลัมน์เดิม'},
+ {step:7,group:'transform',period:'ขั้นตอนที่ 7 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'drop_duplicates().copy()',code:'df_clean = df.drop_duplicates().copy()\ndf_clean.shape',purpose:'ลบแถวที่บันทึกข้อมูลซ้ำซ้อนออก และแยกจัดเก็บเป็นตารางใหม่ชื่อ df_clean โดยไม่กระทบตารางข้อมูลต้นฉบับ',result:'ขนาดของตารางลดลงจาก (36, 7) เหลือ (34, 7)',caution:'ควรจัดเก็บในตัวแปรตารางใหม่ (df_clean) เพื่อรักษาตารางข้อมูลต้นฉบับ (df) ไว้สำหรับการตรวจสอบเปรียบเทียบ'},
+ {step:8,group:'transform',period:'ขั้นตอนที่ 8 จาก 10 · การปรับรูปแบบและการทำความสะอาดข้อมูล',token:'dropna(subset=[...])',code:"df_clean = df_clean.dropna(subset=['quantity', 'total_price'])\ndf_clean.shape",purpose:'ตัดเฉพาะแถวที่มีค่าว่างในคอลัมน์สำคัญที่ใช้คำนวณยอดขาย ได้แก่ จำนวนชิ้น (quantity) และยอดเงินรวม (total_price)',result:'ขนาดของตารางลดลงจาก (34, 7) เหลือ (31, 7) โดยยังคงเก็บรักษาแถวที่ขาดเฉพาะหมายเลขโทรศัพท์ไว้',caution:'ต้องระบุพารามิเตอร์ subset เพื่อไม่ให้โปรแกรมลบแถวที่ขาดเพียงหมายเลขโทรศัพท์แต่ยังมีข้อมูลยอดขายครบถ้วน'},
+ {step:9,group:'transform',period:'ขั้นตอนที่ 9 จาก 10 · การคัดกรองค่าที่อยู่นอกเกณฑ์ที่กำหนด',token:'.between(1, 20)',code:"df_clean = df_clean[df_clean['quantity'].between(1, 20) & (df_clean['total_price'] <= 10000)]\nprint(df_clean.shape)\nround(df_clean['total_price'].mean(), 2)",purpose:'คัดกรองเฉพาะรายการที่มีจำนวนชิ้น 1–20 ชิ้น และมียอดเงินรวมไม่เกิน 10,000 บาท เพื่อตัดค่าที่อยู่นอกเกณฑ์ที่กำหนดออก',result:'ได้ตารางข้อมูลที่ผ่านการจัดเตรียมแล้วจำนวน 29 แถว โดยค่าเฉลี่ยปรับจาก 3,613.82 บาท เป็น 754.83 บาท',caution:'การเชื่อมหลายเงื่อนไขในไลบรารี pandas ต้องใช้เครื่องหมาย & และใส่วงเล็บครอบเงื่อนไขเปรียบเทียบ'},
+ {step:10,group:'load',period:'ขั้นตอนที่ 10 จาก 10 · การส่งออกข้อมูลที่ผ่านการจัดเตรียมแล้ว',token:'to_csv(..., index=False)',code:"df_clean.to_csv('nvc_tech_store_clean.csv', index=False)\ndf_clean.head()",purpose:'ส่งออกตารางข้อมูลที่ผ่านการจัดเตรียมแล้วเป็นไฟล์ CSV ใหม่สำหรับนำไปใช้งานต่อ โดยไม่บันทึกหมายเลขดัชนีแถวเป็นคอลัมน์เพิ่ม',result:'ได้ไฟล์ nvc_tech_store_clean.csv (ขนาด 29 แถว 7 คอลัมน์) พร้อมสำหรับการวิเคราะห์และนำเสนอข้อมูล',caution:'ต้องระบุพารามิเตอร์ index=False เสมอ เพื่อป้องกันไม่ให้เกิดคอลัมน์ Unnamed: 0 เมื่อนำไฟล์ไปเปิดใช้งานต่อ'}
 ];
 const etlTheoryStages=[
  {id:'E',badge:'ขั้นตอนที่ 1: Extract (E)',title:'Extract — การดึงและนำเข้าข้อมูลจากแหล่งต้นทาง',desc:'การรวบรวมและอ่านข้อมูลจากแหล่งจัดเก็บข้อมูลต้นทาง (เช่น ไฟล์ CSV, ไฟล์ Excel หรือระบบฐานข้อมูล) เข้าสู่โปรแกรมประมวลผลในรูปแบบตารางข้อมูล (DataFrame) พร้อมกำหนดชนิดข้อมูลเบื้องต้นให้เหมาะสม',input:'ไฟล์ข้อมูลต้นฉบับ nvc_tech_store.csv (36 แถว 7 คอลัมน์)',process:'อ่านไฟล์ด้วยคำสั่ง pd.read_csv() และกำหนดชนิดข้อมูลหมายเลขโทรศัพท์ให้เป็นข้อความ (string)',output:'ตารางข้อมูลต้นฉบับ df ในหน่วยความจำ พร้อมสำหรับการตรวจสอบคุณภาพข้อมูล',commands:['import pandas as pd',"pd.read_csv('nvc_tech_store.csv', dtype={'customer_phone': 'string'})",'df.shape']},
- {id:'T',badge:'ขั้นตอนที่ 2: Transform (T)',title:'Transform — การปรับรูปแบบและทำความสะอาดข้อมูล',desc:'ขั้นตอนสำคัญที่สุดในการตรวจสอบ คัดกรอง และแก้ไขข้อผิดพลาดของข้อมูล 4 รูปแบบ ได้แก่ การตัดอักขระช่องว่างส่วนเกิน การลบข้อมูลที่บันทึกซ้ำซ้อน การจัดการข้อมูลสูญหาย และการคัดกรองค่าที่อยู่นอกเกณฑ์ที่กำหนด',input:'ตารางข้อมูลต้นฉบับ df (36 แถว · มีข้อมูลซ้ำ ค่าว่าง ช่องว่างส่วนเกิน และค่าผิดปกติ)',process:'ตรวจสอบแถวที่มีปัญหาและปรับปรุงข้อมูลทีละประเด็น โดยแยกจัดเก็บในตัวแปรตาราง df_clean',output:'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว df_clean (29 แถว · ข้อมูลถูกต้องตามเกณฑ์มาตรฐาน)',commands:["df['category'].str.strip()",'.drop_duplicates()',".dropna(subset=['quantity', 'total_price'])",".between(1, 20) & (df_clean['total_price'] <= 10000)"]},
+ {id:'T',badge:'ขั้นตอนที่ 2: Transform (T)',title:'Transform — การปรับรูปแบบและทำความสะอาดข้อมูล',desc:'ขั้นตอนสำคัญที่สุดในการตรวจสอบ คัดกรอง และแก้ไขข้อผิดพลาดของข้อมูล 4 รูปแบบ ได้แก่ การตัดอักขระช่องว่างส่วนเกิน การลบข้อมูลที่บันทึกซ้ำซ้อน การจัดการข้อมูลสูญหาย และการคัดกรองค่าที่อยู่นอกเกณฑ์ที่กำหนด',input:'ตารางข้อมูลต้นฉบับ df (36 แถว · มีข้อมูลซ้ำ ค่าว่าง ช่องว่างส่วนเกิน และค่าผิดปกติ)',process:'ตรวจสอบแถวที่มีปัญหาและปรับปรุงข้อมูลทีละประเด็น โดยแยกจัดเก็บในตัวแปรตาราง df_clean',output:'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว df_clean (29 แถว · ข้อมูลถูกต้องตามเกณฑ์มาตรฐาน)',commands:["df['category'].str.strip()",'df.drop_duplicates()',".dropna(subset=['quantity', 'total_price'])",'.between(1, 20)']},
  {id:'L',badge:'ขั้นตอนที่ 3: Load (L)',title:'Load — การจัดเก็บและส่งออกข้อมูลที่พร้อมใช้งาน',desc:'การนำตารางข้อมูลที่ผ่านการปรับรูปแบบและทำความสะอาดเรียบร้อยแล้ว ไปจัดเก็บเป็นไฟล์ข้อมูลชุดใหม่ที่มีความน่าเชื่อถือ พร้อมสำหรับนำไปคำนวณสถิติหรือสร้างแผนภูมินำเสนอข้อมูล',input:'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว df_clean (29 แถว 7 คอลัมน์)',process:'บันทึกออกเป็นไฟล์ CSV ใหม่โดยกำหนดพารามิเตอร์ index=False เพื่อไม่ให้มีคอลัมน์ลำดับแถวเกินมา',output:'ไฟล์ข้อมูล nvc_tech_store_clean.csv ที่พร้อมนำไปใช้วิเคราะห์และสรุปรายงาน',commands:["df_clean.to_csv('nvc_tech_store_clean.csv', index=False)",'df_clean.head()']}
 ];
 const etlIssueCases=[
@@ -210,11 +210,11 @@ function W2EtlExplorerDemo({onJumpStep}){
  </section>;
 }
 const w2ClosingQuestions=[
- {id:1,score:'2 คะแนน',title:'ข้อที่ 1: เปรียบเทียบขนาดของตารางก่อนและหลังการจัดเตรียมข้อมูล',task:'เขียนคำสั่งตรวจสอบขนาดของตารางข้อมูลต้นฉบับ (df.shape) เปรียบเทียบกับตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว (df_clean.shape) พร้อมระบุว่ามีแถวข้อมูลที่ถูกคัดกรองออกไปทั้งหมดกี่แถว'},
- {id:2,score:'2 คะแนน',title:'ข้อที่ 2: ตรวจสอบจำนวนข้อมูลสูญหายที่คงเหลือในตาราง df_clean',task:'เขียนคำสั่งตรวจสอบจำนวนค่าว่างคงเหลือด้วยคำสั่ง df_clean.isna().sum() และระบุว่าคอลัมน์ใดที่ยังคงมีค่าว่างเหลืออยู่ จำนวนกี่แถว พร้อมอธิบายเหตุผลที่ไม่ลบแถวดังกล่าวออก'},
- {id:3,score:'2 คะแนน',title:'ข้อที่ 3: สรุปจำนวนรายการแยกตามหมวดหมู่สินค้าหลังทำความสะอาดข้อมูล',task:"เขียนคำสั่งนับจำนวนรายการสินค้าแต่ละหมวดหมู่ด้วยคำสั่ง df_clean['category'].value_counts() และระบุจำนวนรายการของทั้ง 3 หมวดหมู่"},
- {id:4,score:'2 คะแนน',title:'ข้อที่ 4: ตรวจสอบค่าสถิติพื้นฐานของตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว',task:'เขียนคำสั่งคำนวณค่าสถิติพื้นฐานด้วยคำสั่ง df_clean.describe() และระบุค่าเฉลี่ย (mean) ค่าต่ำสุด (min) และค่าสูงสุด (max) ของคอลัมน์ total_price ภายหลังการจัดเตรียมข้อมูล'},
- {id:5,score:'2 คะแนน',title:'ข้อที่ 5: ตรวจสอบความถูกต้องของไฟล์ CSV ที่ส่งออก',task:"เขียนคำสั่งอ่านไฟล์ CSV ที่ส่งออกไว้ขึ้นมาแสดงข้อมูลตัวอย่าง 5 แถวแรก ด้วยคำสั่ง pd.read_csv('nvc_tech_store_clean.csv').head() เพื่อยืนยันว่าไฟล์มี 7 คอลัมน์ครบถ้วน"}
+ {id:1,score:'2 คะแนน',title:'ข้อที่ 1: เปรียบเทียบขนาดของตารางก่อนและหลังการจัดเตรียมข้อมูล',task:'ให้ผู้เรียนเขียนคำสั่งแสดงขนาดของตารางข้อมูลต้นฉบับ (df.shape) เปรียบเทียบกับตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว (df_clean.shape) พร้อมระบุว่ามีแถวข้อมูลที่ถูกคัดกรองออกไปทั้งหมดกี่แถว'},
+ {id:2,score:'2 คะแนน',title:'ข้อที่ 2: ตรวจสอบจำนวนข้อมูลสูญหายที่คงเหลือในตาราง df_clean',task:'ให้ผู้เรียนเขียนคำสั่ง df_clean.isna().sum() เพื่อตรวจสอบจำนวนค่าว่างคงเหลือ และระบุว่าคอลัมน์ใดที่ยังคงมีค่าว่างเหลืออยู่ จำนวนกี่แถว พร้อมอธิบายเหตุผลที่ไม่ลบแถวดังกล่าวออก'},
+ {id:3,score:'2 คะแนน',title:'ข้อที่ 3: สรุปจำนวนรายการแยกตามหมวดหมู่สินค้าหลังทำความสะอาดข้อมูล',task:"ให้ผู้เรียนเขียนคำสั่ง df_clean['category'].value_counts() เพื่อตรวจสอบจำนวนรายการสินค้าในแต่ละหมวดหมู่ และระบุจำนวนรายการของทั้ง 3 หมวดหมู่"},
+ {id:4,score:'2 คะแนน',title:'ข้อที่ 4: ตรวจสอบค่าสถิติพื้นฐานของตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว',task:'ให้ผู้เรียนเขียนคำสั่ง df_clean.describe() เพื่อคำนวณค่าสถิติพื้นฐาน และระบุค่าเฉลี่ย (mean) ค่าต่ำสุด (min) และค่าสูงสุด (max) ของคอลัมน์ total_price ภายหลังการจัดเตรียมข้อมูล'},
+ {id:5,score:'2 คะแนน',title:'ข้อที่ 5: ตรวจสอบความถูกต้องของไฟล์ CSV ที่ส่งออก',task:"ให้ผู้เรียนเขียนคำสั่ง pd.read_csv('nvc_tech_store_clean.csv').head() เพื่ออ่านไฟล์ที่ส่งออกไว้กลับมาแสดงตัวอย่าง 5 แถวแรก และยืนยันว่าไฟล์มี 7 คอลัมน์ครบถ้วน"}
 ];
 function W2ClosingLabDemo({doneMap,onToggleDone}){
  const[activeQ,setActiveQ]=useState(1);
@@ -249,7 +249,303 @@ function W2ClosingLabDemo({doneMap,onToggleDone}){
   </div>
  </section>;
 }
-function Code({code}){const[copied,setCopied]=useState(false);const[error,setError]=useState('');async function copy(){try{await navigator.clipboard.writeText(code);setCopied(true);setError('');setTimeout(()=>setCopied(false),2200)}catch{setError('คัดลอกอัตโนมัติไม่ได้ ให้เลือกข้อความในกรอบแล้วคัดลอก')}}return <div className="code-block"><div className="code-toolbar"><span><Code2 size={15}/> Python · Google Colab</span><button onClick={copy}>{copied?<Check size={14}/>:<FileText size={14}/>} {copied?'คัดลอกแล้ว':'คัดลอกคำสั่ง'}</button></div><pre><code>{code}</code></pre>{error&&<p role="status">{error}</p>}</div>}
+
+const w2ExcelCatalog = [
+  {
+    "step": 1,
+    "group": "extract",
+    "title": "ขั้นตอนที่ 1: การนำเข้าไลบรารี pandas และการสำรวจรายชื่อแผ่นงานในไฟล์ Excel",
+    "code": "import pandas as pd\nexcel_book = pd.ExcelFile('nvc_store_sales.xlsx')\nexcel_book.sheet_names",
+    "desc": "เริ่มต้นสมุดงานใหม่ด้วยการนำเข้าไลบรารี pandas ในชื่อย่อ pd จากนั้นเปิดอ่านโครงสร้างไฟล์สมุดงาน Excel (nvc_store_sales.xlsx) ด้วยฟังก์ชัน pd.ExcelFile() และตรวจสอบรายชื่อแผ่นงานย่อยทั้งหมดภายในไฟล์ด้วยแอตทริบิวต์ .sheet_names",
+    "target": "ไฟล์ nvc_store_sales.xlsx บรรจุข้อมูลแยกออกเป็น 3 แผ่นงาน ได้แก่ 'Products' (ตารางสินค้าหลัก), 'Daily_Sales' (ยอดขายสาขาหลัก) และ 'Branch_Orders_Dirty' (รายการขายสาขาย่อยที่ต้องทำความสะอาดข้อมูล)"
+  },
+  {
+    "step": 2,
+    "group": "extract",
+    "title": "ขั้นตอนที่ 2: การนำเข้าชีต Branch_Orders_Dirty และตรวจสอบข้อมูลตัวอย่าง",
+    "code": "branch_df = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Branch_Orders_Dirty')\nprint('ขนาดตาราง:', branch_df.shape)\nbranch_df.head(8)",
+    "desc": "อ่านเฉพาะแผ่นงาน Branch_Orders_Dirty ซึ่งเป็นข้อมูลที่ใช้ทำความสะอาดในบทเรียนนี้ แล้วตรวจขนาดตารางและข้อมูลตัวอย่าง",
+    "target": "ได้ตาราง branch_df จำนวน 22 แถว 6 คอลัมน์ก่อนทำความสะอาด"
+  },
+  {
+    "step": 3,
+    "group": "extract",
+    "title": "ขั้นตอนที่ 3: การสำรวจชนิดข้อมูล (.dtypes) จำนวนค่าว่าง (.isna().sum) และค่าสถิติพื้นฐาน (.describe)",
+    "code": "print(branch_df.dtypes)\nprint('--- จำนวนค่าว่างในแต่ละคอลัมน์ ---')\nprint(branch_df.isna().sum())\nbranch_df.describe()",
+    "desc": "ทบทวนขั้นตอนการสำรวจโครงสร้างตารางพื้นฐานตั้งแต่ต้น โดยตรวจสอบชนิดข้อมูลด้วย .dtypes ตรวจนับจำนวนข้อมูลสูญหายแยกตามรายคอลัมน์ด้วย .isna().sum() และคำนวณค่าสถิติเชิงพรรณนาด้วย .describe()",
+    "target": "พบว่าคอลัมน์ discount_text มีชนิดเป็น object และมีค่าว่าง 6 แถว ส่วนคอลัมน์ quantity มีค่าว่าง 2 แถว และจากผลลัพธ์ .describe() พบว่า quantity มีค่าต่ำสุด (min) ติดลบที่ -3 แก้ว และค่าสูงสุด (max) สูงถึง 50 แก้ว"
+  },
+  {
+    "step": 4,
+    "group": "text",
+    "title": "ขั้นตอนที่ 4: เทคนิคที่ 1: การจัดมาตรฐานรหัสสินค้าด้วย .str.strip() และ .str.upper()",
+    "code": "branch_df['product_id'] = branch_df['product_id'].str.strip().str.upper()\nbranch_df['product_id'].value_counts()",
+    "desc": "ตัดอักขระช่องว่างด้านหน้าและด้านหลังรหัสสินค้า แล้วแปลงเป็นตัวพิมพ์ใหญ่เพื่อให้รหัสเดียวกันมีรูปแบบตรงกัน ก่อนตรวจจำนวนด้วย .value_counts()",
+    "target": "รหัสสินค้าหลังจัดรูปแบบเป็นมาตรฐาน P001 ถึง P006 ครบ 6 รหัส โดยรหัสเดียวกันไม่ถูกนับแยกเพราะช่องว่างหรือตัวพิมพ์เล็ก–ใหญ่"
+  },
+  {
+    "step": 5,
+    "group": "text",
+    "title": "ขั้นตอนที่ 5: เทคนิคที่ 2: การจัดกลุ่มคำศัพท์ที่เขียนต่างกันให้เป็นมาตรฐานเดียวด้วย .replace()",
+    "code": "payment_map = {'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'QR PromptPay': 'พร้อมเพย์', 'สด': 'เงินสด'}\nbranch_df['payment_method'] = branch_df['payment_method'].str.strip().replace(payment_map)\nbranch_df['payment_method'].value_counts()",
+    "desc": "สร้างพจนานุกรม (Dictionary) จับคู่คำศัพท์ที่เขียนแตกต่างกันให้เป็นคำมาตรฐานเดียวกัน แล้วใช้ฟังก์ชัน .replace() แทนที่ค่าในคอลัมน์ payment_method พร้อมตรวจสอบจำนวนรายการแต่ละช่องทาง",
+    "target": "ช่องทางการชำระเงินที่เคยแยกเป็น 6 รูปแบบ ถูกรวมกลุ่มเป็นมาตรฐานเดียวกันเหลือเพียง 2 ช่องทางหลัก ได้แก่ 'พร้อมเพย์' (14 รายการ) และ 'เงินสด' (8 รายการ)"
+  },
+  {
+    "step": 6,
+    "group": "text",
+    "title": "ขั้นตอนที่ 6: เทคนิคที่ 3: การจัดการค่าว่างด้วยการเติมค่ามาตรฐาน (.fillna) แทนการลบแถว",
+    "code": "branch_df['discount_text'] = branch_df['discount_text'].fillna('0 บาท')\nbranch_df['quantity'] = branch_df['quantity'].fillna(1)\nbranch_df.isna().sum()",
+    "desc": "เติมส่วนลดที่ว่างด้วยข้อความ 0 บาท และจำนวนที่ว่างด้วยค่าทดแทน 1 แก้วตามสมมติฐานที่กำหนดเฉพาะชุดฝึกนี้ เพื่อฝึกใช้ .fillna() และคงจำนวนแถวไว้ ต้องแยกค่าทดแทนออกจากค่าที่ตรวจสอบยืนยันแล้วในการใช้งานจริง",
+    "target": "จำนวนค่าว่างในทุกคอลัมน์กลายเป็น 0 รายการ โดยที่ตารางยังคงมีข้อมูลครบทั้ง 22 แถว ไม่สูญเสียรายการขายไปจากการลบแถว"
+  },
+  {
+    "step": 7,
+    "group": "numeric",
+    "title": "ขั้นตอนที่ 7: เทคนิคที่ 4: การตัดหน่วยข้อความออกจากตัวเลขและแปลงชนิดข้อมูล (.str.replace & .astype)",
+    "code": "branch_df['discount'] = branch_df['discount_text'].str.replace(' บาท', '', regex=False).astype(float)\nbranch_df[['order_id', 'discount_text', 'discount']].head(6)",
+    "desc": "สกัดเฉพาะตัวเลขออกจากคอลัมน์ discount_text โดยใช้ .str.replace() ลบคำว่า ' บาท' ออก แล้วแปลงชนิดข้อมูลจากข้อความให้เป็นตัวเลขทศนิยม (float) ด้วย .astype(float) เก็บในคอลัมน์ใหม่ชื่อ discount",
+    "target": "ได้คอลัมน์ใหม่ discount ที่มีชนิดข้อมูลเป็น float64 (เช่น 10.0, 0.0, 5.0) พร้อมสำหรับนำไปหักลบออกจากยอดขายรวมได้อย่างถูกต้อง"
+  },
+  {
+    "step": 8,
+    "group": "numeric",
+    "title": "ขั้นตอนที่ 8: เทคนิคที่ 5: การแก้ไขค่าติดลบด้วยค่าสัมบูรณ์ (.abs) และการจำกัดเพดานค่า (.clip)",
+    "code": "branch_df['quantity'] = branch_df['quantity'].abs().clip(upper=10).astype(int)\nbranch_df['quantity'].describe()",
+    "desc": "สาธิต .abs() เพื่อแปลงค่าติดลบเป็นค่าบวก และ .clip(upper=10) เพื่อจำกัดจำนวนไม่เกิน 10 แก้วตามกติกาสมมติของแบบฝึก จากนั้นแปลงเป็นจำนวนเต็มด้วย .astype(int) การจำกัดเพดานไม่ใช่การกู้คืนค่าจริงจากต้นทาง",
+    "target": "คอลัมน์ quantity มีค่าต่ำสุด (min) เท่ากับ 1 แก้ว และค่าสูงสุด (max) เท่ากับ 10 แก้ว ค่าเฉลี่ยอยู่ที่ประมาณ 2.55 แก้วต่อรายการ โดยไม่มีค่าติดลบหรือค่าที่สูงเกินเกณฑ์หลงเหลืออยู่"
+  },
+  {
+    "step": 9,
+    "group": "numeric",
+    "title": "ขั้นตอนที่ 9: เทคนิคที่ 6: การลบข้อมูลซ้ำโดยระบุคอลัมน์คีย์หลัก (.drop_duplicates(subset=...))",
+    "code": "branch_clean = branch_df.drop_duplicates(subset=['order_id'], keep='first').copy()\nprint('ขนาดตารางก่อนลบซ้ำ:', branch_df.shape)\nprint('ขนาดตารางหลังลบซ้ำ:', branch_clean.shape)",
+    "desc": "ลบแถวที่มีรหัสคำสั่งซื้อ (order_id) ซ้ำซ้อนกัน โดยระบุพารามิเตอร์ subset=['order_id'] เพื่อตรวจสอบการซ้ำเฉพาะคอลัมน์คีย์หลัก และเก็บแถวแรกไว้ด้วย keep='first' ลงในตารางใหม่ชื่อ branch_clean",
+    "target": "ขนาดตารางลดลงจาก (22, 7) เหลือ (20, 7) เนื่องจากรหัสคำสั่งซื้อที่ซ้ำกัน 2 คู่ (BR-104 และ BR-112) ถูกลบแถวที่ซ้ำออกเหลือรหัสละ 1 แถว"
+  },
+  {
+    "step": 10,
+    "group": "export",
+    "title": "ขั้นตอนที่ 10: เทคนิคที่ 7: การแปลงชนิดข้อมูลวันที่ด้วย pd.to_datetime()",
+    "code": "branch_clean['sale_date'] = pd.to_datetime(branch_clean['sale_date'])\nprint(branch_clean['sale_date'].dtype)\nbranch_clean[['order_id', 'sale_date']].head(6)",
+    "desc": "แปลง sale_date จากข้อความให้เป็นชนิดข้อมูลวันที่ เพื่อให้รูปแบบข้อมูลสม่ำเสมอก่อนส่งออก",
+    "target": "คอลัมน์ sale_date เป็นชนิดข้อมูล datetime และมีข้อมูลรายการขาย 20 แถวเท่าเดิม"
+  },
+  {
+    "step": 11,
+    "group": "export",
+    "title": "ขั้นตอนที่ 11: การตรวจสอบคุณภาพข้อมูลหลังทำความสะอาด",
+    "code": "print('ขนาดตาราง:', branch_clean.shape)\nprint('ค่าว่างในแต่ละคอลัมน์:')\nprint(branch_clean.isna().sum())\nprint('รหัสคำสั่งซื้อซ้ำ:', branch_clean.duplicated(subset=['order_id']).sum())\nbranch_clean['quantity'].describe()",
+    "desc": "ตรวจจำนวนแถว ค่าว่าง รหัสคำสั่งซื้อซ้ำ และช่วงค่าจำนวนสินค้า เพื่อยืนยันผลตามเงื่อนไขของชุดฝึกก่อนส่งออก",
+    "target": "ตารางมี 20 แถว 7 คอลัมน์ ไม่มีค่าว่างหรือรหัสคำสั่งซื้อซ้ำ และ quantity อยู่ในช่วง 1–10 ตามกติกาสมมติของชุดฝึก"
+  },
+  {
+    "step": 12,
+    "group": "export",
+    "title": "ขั้นตอนที่ 12: การส่งออกตารางข้อมูลที่ผ่านการทำความสะอาดเป็นไฟล์ CSV",
+    "code": "output_file = 'nvc_branch_orders_clean.csv'\nbranch_clean.to_csv(output_file, index=False, encoding='utf-8-sig')\nexported_df = pd.read_csv(output_file)\nprint('ขนาดตารางที่อ่านกลับ:', exported_df.shape)\nexported_df.head()",
+    "desc": "บันทึก branch_clean เป็นไฟล์ nvc_branch_orders_clean.csv โดยไม่เพิ่มลำดับแถว แล้วอ่านกลับเพื่อตรวจว่าข้อมูลส่งออกครบถ้วน",
+    "target": "ได้ไฟล์ nvc_branch_orders_clean.csv จำนวน 20 แถว 7 คอลัมน์ ไม่มีคอลัมน์ลำดับแถวเพิ่มเติม"
+  }
+];
+
+const w2ExcelConcepts = [
+  {
+    "id": "0",
+    "title": "การจัดการไฟล์ Excel หลายแผ่นงาน (Multi-sheet Workbook) และการสำรวจปัญหาข้อมูลจริง",
+    "items": [
+      "โครงสร้างสมุดงาน Excel: nvc_store_sales.xlsx มี 3 แผ่นงาน ได้แก่ Products, Daily_Sales และ Branch_Orders_Dirty โดยบทเรียนนี้นำเข้าเฉพาะ Branch_Orders_Dirty เพื่อทำความสะอาดและส่งออกข้อมูล ส่วนอีก 2 แผ่นงานยังไม่ใช้",
+      "การสำรวจรายชื่อแผ่นงานก่อนนำเข้าข้อมูล: ใช้คำสั่ง pd.ExcelFile('nvc_store_sales.xlsx').sheet_names เพื่อตรวจสอบรายชื่อแผ่นงานทั้งหมด จากนั้นใช้ pd.read_excel(..., sheet_name='...') เพื่อเจาะจงนำเข้าเฉพาะแผ่นงานที่ต้องการ",
+      "การวิเคราะห์ลักษณะปัญหาข้อมูลที่หลากหลายในชีต Branch_Orders_Dirty: ข้อมูลที่รวบรวมจากหลายสาขามักมีรูปแบบไม่สม่ำเสมอ ทั้งตัวพิมพ์เล็ก-ใหญ่ไม่ตรงกัน คำศัพท์คนละรูปแบบ ตัวเลขปนหน่วยข้อความ ค่าว่างที่ไม่ควรลบทิ้ง และตัวเลขติดลบที่ต้องตรวจสอบความหมายก่อนแก้ไข"
+    ]
+  },
+  {
+    "id": "1",
+    "title": "เทคนิคการทำความสะอาดข้อมูลขั้นประยุกต์ 7 รูปแบบ (Multi-Technique Data Cleaning)",
+    "items": [
+      "เทคนิคด้านข้อความและหมวดหมู่ (Text & Categorical Cleaning): 1) ใช้ .str.strip().str.upper() จัดรูปแบบรหัสสินค้าให้เป็นตัวพิมพ์ใหญ่และไม่มีอักขระช่องว่างส่วนเกิน 2) ใช้ .replace({...}) แปลงคำศัพท์ช่องทางชำระเงินที่เขียนต่างกัน (เช่น 'โอน', 'โอนเงิน', 'QR PromptPay') ให้เป็นมาตรฐานเดียวกัน และ 3) ใช้ .str.replace(' บาท', '').astype(float) ตัดหน่วยเงินออกจากตัวเลข",
+      "เทคนิคด้านค่าว่างและค่าตัวเลข (Imputation & Numeric Cleaning): 4) ใช้ .fillna() เติมค่าทดแทนตามสมมติฐานของชุดฝึก 5) สาธิต .abs() และ .clip(upper=10) ตามกติกาสมมติ ก่อนใช้กับข้อมูลจริงต้องตรวจสอบต้นทางและบันทึกเหตุผล การจำกัดเพดานไม่ใช่การยืนยันค่าที่ถูกต้อง",
+      "เทคนิคด้านคีย์หลักและวันที่ (Key Deduplication & Datetime): 6) ใช้ .drop_duplicates(subset=['order_id'], keep='first') ลบรายการที่รหัสคำสั่งซื้อซ้ำซ้อนโดยยึดคีย์หลักเป็นเกณฑ์ และ 7) ใช้ pd.to_datetime() แปลงข้อความวันที่ให้เป็นชนิดข้อมูล datetime64 มาตรฐาน"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "การตรวจสอบข้อมูลหลังทำความสะอาดและการส่งออกไฟล์ CSV",
+    "items": [
+      "ตรวจสอบคุณภาพก่อนส่งออก: ตรวจจำนวนแถว ค่าว่าง รหัสคำสั่งซื้อซ้ำ ชนิดข้อมูลวันที่ และช่วงค่าจำนวนสินค้าตามเงื่อนไขของชุดฝึก",
+      "ส่งออกไฟล์ CSV: ใช้ branch_clean.to_csv() พร้อม index=False เพื่อไม่เพิ่มคอลัมน์ลำดับแถว และ encoding=\"utf-8-sig\" สำหรับภาษาไทย",
+      "ตรวจสอบไฟล์ที่ส่งออก: อ่านไฟล์กลับด้วย pd.read_csv() แล้วตรวจขนาดตาราง ชื่อคอลัมน์ และข้อมูลตัวอย่างก่อนดาวน์โหลด"
+    ]
+  }
+];
+
+function W2ExcelExplorerDemo({onJumpStep}){
+ const[tab,setTab]=useState('steps');
+ const[group,setGroup]=useState('all');
+ const[selectedConcept,setSelectedConcept]=useState('0');
+ const[selectedStep,setSelectedStep]=useState(1);
+ const groups=[['all','ทั้งหมด (ขั้นตอนที่ 1–12)'],['extract','1. เริ่มต้นสำรวจและนำเข้า Excel (1–3)'],['text','2. เทคนิค Clean ข้อความและค่าว่าง (4–6)'],['numeric','3. เทคนิค Clean ตัวเลขและคีย์ซ้ำ (7–9)'],['export','4. ตรวจสอบและส่งออกข้อมูล (10–12)']];
+ const visible=group==='all'?w2ExcelCatalog:w2ExcelCatalog.filter(s=>s.group===group);
+ const concept=w2ExcelConcepts.find(c=>c.id===selectedConcept)??w2ExcelConcepts[0];
+ const step=visible.find(s=>s.step===selectedStep)??visible[0];
+ return <section className="demo fn-explorer">
+  <p className="demo-caption">ภาพรวมเนื้อหาและการฝึกปฏิบัติ (2 ชั่วโมง · 120 นาที): เริ่มต้นสมุดงานใหม่จากศูนย์ (ขั้นตอนที่ 1–12) พร้อมเจาะลึก 7 เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบบนไฟล์ Excel หลายชีต</p>
+  <div className="choice-row">
+   <button type="button" className={tab==='steps'?'selected':''} onClick={()=>setTab('steps')} aria-pressed={tab==='steps'}>1. สรุป 12 ขั้นตอนปฏิบัติการตั้งแต่เริ่มต้น (ขั้นตอนที่ 1–12)</button>
+   <button type="button" className={tab==='concepts'?'selected':''} onClick={()=>setTab('concepts')} aria-pressed={tab==='concepts'}>2. ทฤษฎีและสรุป 7 เทคนิคการ Clean ข้อมูล (3 หัวข้อ)</button>
+  </div>
+  {tab==='concepts'?(
+   <>
+    <div className="choice-row" style={{marginTop:'12px'}}>
+     {w2ExcelConcepts.map(c=>(
+      <button key={c.id} type="button" className={selectedConcept===c.id?'selected':''} onClick={()=>setSelectedConcept(c.id)} aria-pressed={selectedConcept===c.id}>{c.title}</button>
+     ))}
+    </div>
+    <div className="fn-detail" aria-live="polite">
+     <div className="fn-detail-head"><h3>{concept.title}</h3></div>
+     <ul className="concept-list" style={{paddingLeft:'20px',margin:'12px 0'}}>
+      {concept.items.map((it,idx)=><li key={idx} style={{marginBottom:'8px'}}>{it}</li>)}
+     </ul>
+    </div>
+   </>
+  ):(
+   <>
+    <div className="choice-row" style={{marginTop:'10px'}}>
+     {groups.map(([gid,glabel])=>(
+      <button key={gid} type="button" className={group===gid?'selected':''} onClick={()=>{setGroup(gid);const first=(gid==='all'?w2ExcelCatalog:w2ExcelCatalog.filter(s=>s.group===gid))[0];if(first)setSelectedStep(first.step)}} aria-pressed={group===gid}>{glabel}</button>
+     ))}
+    </div>
+    <div className="interactive-question-cards four-cols" style={{marginTop:'10px'}}>
+     {visible.map(s=>(
+      <button key={s.step} type="button" className={'q-card '+(step.step===s.step?'selected':'')} onClick={()=>setSelectedStep(s.step)} aria-pressed={step.step===s.step}>
+       <div className="q-card-top"><span className="q-badge">ขั้นตอนที่ {s.step}</span></div>
+       <strong>{s.title}</strong>
+       <small>{s.target}</small>
+      </button>
+     ))}
+    </div>
+    <div className="fn-detail" aria-live="polite">
+     <div className="fn-detail-head"><h3>{step.title}</h3>{onJumpStep&&<button type="button" className="jump-step-btn" onClick={()=>onJumpStep(step.step)}>ไปยังสไลด์ปฏิบัตินี้ <ArrowRight size={14}/></button>}</div>
+     <Code code={step.code}/>
+     <p className="concept-body">{step.desc}</p>
+     <div className="fn-meta-grid">
+      <div><h4>ผลลัพธ์ที่ได้จากการรันคำสั่ง</h4><p>{step.target}</p></div>
+     </div>
+    </div>
+   </>
+  )}
+ </section>;
+}
+
+const w2TuesdayLabQuestions = [
+  {
+    "id": 1,
+    "score": "2.0 คะแนน",
+    "title": "ข้อที่ 1: การสำรวจแผ่นงานและการจัดมาตรฐานรหัสหนังสือ (.str.strip().str.upper())",
+    "task": "สร้างสมุดงานใหม่ใน Google Colab อัปโหลดไฟล์ชุดข้อมูลใหม่ nvc_bookstore_dirty.xlsx เขียนคำสั่งสำรวจรายชื่อแผ่นงานด้วย pd.ExcelFile() จากนั้นอ่านชีต Online_Orders_Dirty ลงในตัวแปร orders และจัดมาตรฐานคอลัมน์ book_id ด้วย .str.strip().str.upper() พร้อมแสดงจำนวนรายการของแต่ละรหัสหนังสือด้วย .value_counts()",
+    "functions": [
+      "pd.ExcelFile('nvc_bookstore_dirty.xlsx').sheet_names",
+      "orders['book_id'] = orders['book_id'].str.strip().str.upper()",
+      "orders['book_id'].value_counts()"
+    ]
+  },
+  {
+    "id": 2,
+    "score": "2.0 คะแนน",
+    "title": "ข้อที่ 2: การจัดกลุ่มช่องทางชำระเงินด้วย .replace() และการสกัดตัวเลขค่าจัดส่ง",
+    "task": "เขียนคำสั่งจัดมาตรฐานคอลัมน์ payment_channel ด้วย .replace({'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}) และจัดการคอลัมน์ shipping_fee_text โดยเติมค่าว่างด้วย .fillna('0 บาท') ตัดคำว่า ' บาท' ออกด้วย .str.replace() และแปลงเป็นชนิด float เก็บในคอลัมน์ใหม่ชื่อ shipping_fee",
+    "functions": [
+      "orders['payment_channel'].str.strip().replace(ch_map)",
+      "orders['shipping_fee_text'].fillna('0 บาท').str.replace(' บาท', '', regex=False).astype(float)"
+    ]
+  },
+  {
+    "id": 3,
+    "score": "2.0 คะแนน",
+    "title": "ข้อที่ 3: การแก้ไขจำนวนเล่มที่ติดลบและเกินเพดาน (.abs & .clip) และการลบรหัสคำสั่งซื้อซ้ำ",
+    "task": "เขียนคำสั่งจัดการคอลัมน์ qty โดยเติมค่าว่างด้วย .fillna(1) แก้ค่าติดลบและจำกัดเพดานสูงสุดไม่เกิน 10 เล่มด้วย .abs().clip(upper=10).astype(int) จากนั้นลบแถวที่มีรหัสคำสั่งซื้อ (order_id) ซ้ำด้วยคำสั่ง .drop_duplicates(subset=['order_id'], keep='first') เก็บในตาราง orders_clean พร้อมระบุจำนวนแถวก่อนและหลังลบซ้ำ",
+    "functions": [
+      "orders['qty'].fillna(1).abs().clip(upper=10).astype(int)",
+      "orders.drop_duplicates(subset=['order_id'], keep='first').copy()"
+    ]
+  },
+  {
+    "id": 4,
+    "score": "2.0 คะแนน",
+    "title": "ข้อที่ 4: การแปลงชนิดข้อมูลวันที่ (pd.to_datetime) และการคำนวณผลรวมหลังทำความสะอาด",
+    "task": "เขียนคำสั่งแปลงคอลัมน์ order_date ในตาราง orders_clean ให้เป็นชนิดข้อมูลวันที่ด้วย pd.to_datetime() จากนั้นตรวจสอบจำนวนค่าว่างคงเหลือด้วย .isna().sum() และคำนวณผลรวมจำนวนหนังสือที่สั่งซื้อทั้งหมด (qty) และผลรวมค่าจัดส่งทั้งหมด (shipping_fee)",
+    "functions": [
+      "pd.to_datetime(orders_clean['order_date'])",
+      "orders_clean['qty'].sum()",
+      "orders_clean['shipping_fee'].sum()"
+    ]
+  },
+  {
+    "id": 5,
+    "score": "2.0 คะแนน",
+    "title": "ข้อที่ 5: การส่งออกไฟล์ CSV ที่ทำความสะอาดแล้ว และการสรุปเลือกใช้เทคนิคการ Clean ข้อมูล",
+    "task": "เขียนคำสั่งส่งออกตาราง orders_clean เป็นไฟล์ชื่อ nvc_bookstore_clean.csv โดยกำหนด index=False พร้อมอธิบายสรุปว่า: เหตุใดในคอลัมน์ shipping_fee_text ที่มีค่าว่าง เราจึงเลือกใช้เทคนิค .fillna('0 บาท') แทนการใช้คำสั่ง .dropna()",
+    "functions": [
+      "orders_clean.to_csv('nvc_bookstore_clean.csv', index=False)",
+      "pd.read_csv('nvc_bookstore_clean.csv').head()"
+    ]
+  }
+];
+
+function W2TuesdayLabDemo({doneMap,onToggleDone}){
+ const[activeEx,setActiveEx]=useState(1);
+ const currentQ=w2TuesdayLabQuestions.find(q=>q.id===activeEx)??w2TuesdayLabQuestions[0];
+ const doneKey=`w2tue-lab-${activeEx}`;
+ const isDone=Boolean(doneMap?.[doneKey]);
+ const completedCount=w2TuesdayLabQuestions.filter(q=>doneMap?.[`w2tue-lab-${q.id}`]).length;
+ return <section className="demo fn-explorer">
+  <div className="exercise-header-bar">
+   <p className="demo-caption">แบบฝึกหัดปฏิบัติการท้ายคาบเรียนบนชุดข้อมูลใหม่ <code>nvc_bookstore_dirty.xlsx</code> (เวลา 30 นาที · 10 คะแนนดิบ → 2.5 คะแนนเก็บ) · ทำใน Google Colab และบันทึกคำตอบลงในใบงาน Google Docs (.docx)</p>
+   <span className="progress-pill">ความคืบหน้า: {completedCount}/{w2TuesdayLabQuestions.length} ข้อ</span>
+  </div>
+  <div className="interactive-question-cards five-cols">
+   {w2TuesdayLabQuestions.map(q=>{
+    const checked=Boolean(doneMap?.[`w2tue-lab-${q.id}`]);
+    return <button key={q.id} type="button" className={`q-card ${activeEx===q.id?'selected':''} ${checked?'is-done':''}`} onClick={()=>setActiveEx(q.id)} aria-pressed={activeEx===q.id}>
+     <div className="q-card-top"><span className="q-badge">{q.score}</span>{checked?<CheckCircle2 size={18} className="done-icon"/>:<Circle size={18} className="todo-icon"/>}</div>
+     <strong>ข้อที่ {q.id}</strong>
+    </button>;
+   })}
+  </div>
+  <div className="fn-detail" aria-live="polite">
+   <div className="fn-detail-head">
+    <h3>{currentQ.title}</h3>
+    <div className="fn-detail-actions">
+     {onToggleDone&&<button type="button" className={'check-done-btn '+(isDone?'is-done':'')} onClick={()=>onToggleDone(doneKey)}>{isDone?<CheckCircle2 size={16}/>:<Circle size={16}/>}{isDone?'สถานะ: ดำเนินการเสร็จแล้ว':'บันทึกว่าดำเนินการเสร็จแล้ว'}</button>}
+    </div>
+   </div>
+   <p className="concept-body">{currentQ.task}</p><p className="fine-print">แบบฝึกหัดนี้ใช้ชุดข้อมูลใหม่ ร้านหนังสือและเครื่องเขียน NVC Bookstore (nvc_bookstore_dirty.xlsx · 25 แถว) เพื่อให้ผู้เรียนฝึกประยุกต์ใช้เทคนิคการ Clean ข้อมูลทั้ง 7 รูปแบบด้วยตนเอง</p>
+   <div className="fn-meta-grid">
+    <div><h4>คำสั่ง/แนวทางที่ใช้</h4><code>{currentQ.functions.join('  |  ')}</code></div>
+    <div><h4>การส่งงาน</h4><p>บันทึกคำสั่งและสรุปคำตอบตามใบงาน 5 ข้อใน Google Docs (.docx)</p></div>
+   </div>
+  </div>
+  <div className="google-docs-callout">
+   <div className="google-docs-callout-info">
+    <FileText size={28}/>
+    <div>
+     <strong>ชุดแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (Dataset ใหม่: ร้านหนังสือ NVC Bookstore)</strong>
+     <p>1) ดาวน์โหลด Dataset ใหม่ <code>nvc_bookstore_dirty.xlsx</code> ไปเขียนโค้ดใน Google Colab  2) นำผลลัพธ์มาตอบในใบงาน Google Docs (5 ข้อ · 10 คะแนน)</p>
+    </div>
+   </div>
+   <div className="google-docs-callout-actions">
+    <a className="google-docs-callout-btn" href="ชุดเรียน/ชุดข้อมูล/nvc_bookstore_dirty.xlsx" download>
+     <Download size={15}/> 1. ดาวน์โหลด Dataset แบบฝึกหัดใหม่ (nvc_bookstore_dirty.xlsx)
+    </a>
+    <a className="google-docs-callout-btn secondary" href="ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_GoogleDocs.docx" download>
+     <FileText size={15}/> 2. ดาวน์โหลดใบงานแบบฝึกหัด 5 ข้อ (.docx)
+    </a>
+   </div>
+  </div>
+ </section>;
+}
+
+function Code({code}){return <div className="code-block" style={{userSelect:'none'}}><div className="code-toolbar"><span><Code2 size={15}/> คำสั่งภาษา Python (Google Colab)</span><span>พิมพ์คำสั่งด้วยตนเอง (ปิดการคัดลอกอัตโนมัติ)</span></div><pre style={{userSelect:'none'}}><code>{code}</code></pre></div>}
 function LessonOutput({output}){
  if(!output)return null;
  return <section className="lesson-output" aria-label={output.title??'ผลลัพธ์อ้างอิง'}>
@@ -317,7 +613,7 @@ function InteractiveContentSlide({slide,doneMap,onToggleDone}){
   {slide.animation&&<StepMotion config={slide.animation}/>}
  </>;
 }
-function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone}){
+function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone,projecting}){
  const isCheckView=slide.type==='guided-check';
  const writeSlide=isCheckView?(pairSlide??slide):slide;
  const checkSlide=isCheckView?slide:pairSlide;
@@ -326,7 +622,7 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
  const isDone=Boolean(doneMap?.[stepKey]);
  useEffect(()=>setActivePart(0),[writeSlide.id]);
  return <>
-  <h1>{writeSlide.title}</h1>
+  <h1>{projecting?writeSlide.title.replace(/เทคนิคที่ \d+: /, ''):writeSlide.title}</h1>
   <div className="step-studio">
    <div className="step-studio-top">
     <div className="step-badge-row">
@@ -342,54 +638,56 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
    {!isCheckView?(
     <div className="studio-workspace">
      <div className="studio-main-col">
+      {writeSlide.decisionRule&&<aside className="decision-rule"><strong>เงื่อนไขก่อนใช้คำสั่ง</strong><p>{writeSlide.decisionRule}</p></aside>}
+      <Code code={writeSlide.code}/>
       <div className="studio-instruction-banner">
        <div><strong>การปฏิบัติ:</strong> {writeSlide.instruction}</div>
        <span className="run-badge">{writeSlide.run}</span>
       </div>
-      <Code code={writeSlide.code}/>
       {writeSlide.parts?.length>0&&(
-       <section className="interactive-parts-box">
-        <div className="parts-header"><h2><Compass size={18}/> คลิกเลือกส่วนประกอบของคำสั่งเพื่อดูคำอธิบาย</h2><span>{writeSlide.parts.length} ส่วนประกอบ</span></div>
-        <div className="parts-token-pills">
+       <details className="interactive-parts-box" open={projecting?undefined:true}>
+        <summary>คำอธิบายส่วนประกอบของคำสั่ง</summary>
+        <div className="parts-header">
+         <h2>คลิกเลือกส่วนประกอบของคำสั่งเพื่อดูคำอธิบาย</h2>
+         <span>{writeSlide.parts.length} ส่วนประกอบ</span>
+        </div>
+        <div className="token-pill-row" role="tablist">
          {writeSlide.parts.map((part,i)=>(
-          <button key={part.token} type="button" className={activePart===i?'selected':''} onClick={()=>setActivePart(i)}>
+          <button key={part.token} type="button" role="tab" aria-selected={activePart===i} className={'token-pill '+(activePart===i?'selected':'')} onClick={()=>setActivePart(i)}>
+           <span className="token-idx">{i+1}</span>
            <code>{part.token}</code>
           </button>
          ))}
         </div>
-        <div className="parts-meaning-card">
-         <code>{writeSlide.parts[activePart]?.token}</code>
-         <p>{writeSlide.parts[activePart]?.meaning}</p>
-        </div>
-        <dl className="command-breakdown">
+        {writeSlide.parts[activePart]&&(
+         <div className="parts-meaning-card" aria-live="polite">
+          <code>{writeSlide.parts[activePart].token}</code>
+          <p>{writeSlide.parts[activePart].meaning}</p>
+         </div>
+        )}
+        <dl className="command-breakdown" aria-label="คำอธิบายส่วนประกอบของคำสั่งทั้งหมด">
          {writeSlide.parts.map((part,i)=>(
-          <div key={part.token} className={activePart===i?'is-active-row':''} onClick={()=>setActivePart(i)}>
+          <div key={part.token} className={'breakdown-item '+(activePart===i?'is-active':'')} onClick={()=>setActivePart(i)}>
            <dt><code>{part.token}</code></dt>
            <dd>{part.meaning}</dd>
           </div>
          ))}
         </dl>
-       </section>
+       </details>
       )}
      </div>
      <div className="studio-side-col">
-      <section className="studio-card meaning-card">
-       <h2>หน้าที่ของคำสั่ง</h2>
+      <details className="studio-card meaning-card" open={projecting?undefined:true}>
+       <summary>ความหมายของคำสั่ง</summary>
        <p>{writeSlide.meaning}</p>
-      </section>
+      </details>
       {checkSlide&&(
        <div className="studio-next-prompt">
-        <p>เมื่อพิมพ์คำสั่งในโปรแกรม Google Colab และกดปุ่ม <code>Shift + Enter</code> เรียบร้อยแล้ว สามารถคลิกดูผลลัพธ์เพื่อเปรียบเทียบได้ทันที</p>
+        <p>เมื่อพิมพ์คำสั่งและกด <code>Shift + Enter</code> ใน Google Colab แล้ว คลิกปุ่มด้านล่างเพื่อตรวจสอบผลลัพธ์</p>
         <button type="button" className="primary-switch-btn" onClick={()=>onSwitchTab('check')}>
-         <Eye size={18}/> ดูผลลัพธ์และคำอธิบายของขั้นตอนที่ {slide.step} <ArrowRight size={16}/>
+         <Eye size={18}/> ดูผลลัพธ์จากการรันคำสั่งขั้นตอนที่ {slide.step} <ArrowRight size={16}/>
         </button>
        </div>
-      )}
-      {writeSlide.completeCode&&(
-       <details className="complete-command">
-        <summary>แสดงคำสั่งทั้งหมดตั้งแต่ขั้นตอนที่ 1 ถึงขั้นตอนปัจจุบัน</summary>
-        <Code code={writeSlide.completeCode}/>
-       </details>
       )}
      </div>
     </div>
@@ -410,7 +708,7 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
        <p>{slide.mistake}</p>
       </section>
       <section className="studio-card checkpoint-card">
-       <h2>ประเด็นตรวจสอบความถูกต้อง</h2>
+       <h2>ประเด็นตรวจสอบความเข้าใจ</h2>
        <p>{slide.checkpoint??'เปรียบเทียบผลลัพธ์ในไฟล์ Notebook กับตัวอย่างด้านซ้ายมือ หากผลลัพธ์ยังไม่ตรงกัน ให้กลับไปตรวจสอบการสะกดคำสั่งอีกครั้ง'}</p>
       </section>
       <button type="button" className="secondary-switch-btn" onClick={()=>onSwitchTab('write')}>
@@ -422,13 +720,14 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
   </div>
  </>;
 }
-function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone}){
+function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,projecting}){
  switch(slide.type){
+ case 'knowledge-check':return <><h1>{slide.title}</h1><p>ตอบคำถามและอธิบายเหตุผล ก่อนตรวจสอบกับแนวคำตอบ</p><div className="knowledge-checks">{slide.questions.map((q,i)=><section key={q.question}><h2>{i+1}. {q.question}</h2><details><summary>แสดงแนวคำตอบ</summary><p>{q.answer}</p></details></section>)}</div></>;
  case 'cover':return <div className="cover-slide"><BookOpen size={42} strokeWidth={1.4}/><h1>{slide.title}</h1><p className="cover-subtitle">{slide.subtitle}</p><p>{slide.body}</p></div>;
  case 'content':case 'summary':return <InteractiveContentSlide slide={slide} doneMap={doneMap} onToggleDone={onToggleDone}/>;
  case 'concept':return <><h1>{slide.title}</h1><p className="concept-body">{slide.body}</p><div className="think-prompt"><h2>คำถามชวนคิดก่อนลงมือปฏิบัติ</h2><p>{slide.question}</p></div></>;
  case 'command':return <><h1>{slide.title}</h1><Code code={slide.command}/><div className="syntax-parts">{slide.parts.map(p=><div key={p.token}><code>{p.token}</code><p>{p.meaning}</p></div>)}</div><div className="think-prompt"><h2>ข้อควรระวังก่อนรันคำสั่ง</h2><p>{slide.caution}</p></div></>;
- case 'guided':case 'guided-check':return <InteractiveStepStudio slide={slide} pairSlide={pairSlide} onSwitchTab={onSwitchTab} doneMap={doneMap} onToggleDone={onToggleDone}/>;
+ case 'guided':case 'guided-check':return <InteractiveStepStudio projecting={projecting} slide={slide} pairSlide={pairSlide} onSwitchTab={onSwitchTab} doneMap={doneMap} onToggleDone={onToggleDone}/>;
  case 'code':return <><h1>{slide.title}</h1><p>อัปโหลดไฟล์ {slide.files.join(', ')||'ข้อมูลของกลุ่ม'} เข้าสู่โปรแกรม Google Colab แล้วรันคำสั่งตามลำดับ</p><Code code={slide.code}/><p className="fine-print">ตัวอย่างนี้ใช้สำหรับฝึกปฏิบัติ ผู้เรียนสามารถปรับเงื่อนไขให้สอดคล้องกับข้อมูลของตนเองได้</p></>;
  case 'lab':return <><h1>{slide.title}</h1><p className="lab-task">{slide.task}</p><h2>ผลงานที่ต้องส่ง</h2><p>{slide.deliverable}</p><div className="table-scroll"><table><thead><tr><th>เกณฑ์การประเมิน</th><th>คะแนน</th></tr></thead><tbody>{slide.rubric.map(([label,score])=><tr key={label}><td>{label}</td><td>{score}</td></tr>)}</tbody></table></div></>;
  case 'pipeline':return <><h1>{slide.title}</h1><Pipeline/></>;
@@ -437,6 +736,8 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone}){
  case 'w2-etl-theory':return <><h1>{slide.title}</h1><W2EtlTheoryDemo/></>;
  case 'w2-etl-explorer':return <><h1>{slide.title}</h1><W2EtlExplorerDemo onJumpStep={onJumpStep}/></>;
  case 'w2-closing-lab':return <><h1>{slide.title}</h1><W2ClosingLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
+ case 'w2-excel-explorer':return <><h1>{slide.title}</h1><W2ExcelExplorerDemo onJumpStep={onJumpStep}/></>;
+ case 'w2-tuesday-lab':return <><h1>{slide.title}</h1><W2TuesdayLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
  case 'quality':return <><h1>{slide.title}</h1><QualityDemo/></>;
  case 'merge':return <><h1>{slide.title}</h1><MergeDemo/></>;
  case 'forecast':return <><h1>{slide.title}</h1><ForecastDemo/></>;
@@ -446,6 +747,16 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone}){
  }
 }
 function buildSessionModules(slides,weekNum,dayNum){
+  if(weekNum===2&&dayNum===1){
+  return [
+   {id:'prep',label:'ส่วนที่ 1: เริ่มต้นสมุดงานใหม่และทฤษฎีไฟล์ Excel หลายชีต',sub:'สร้าง Notebook ใหม่จากศูนย์ ดาวน์โหลดชุดข้อมูล และสรุป 7 เทคนิคการ Clean ข้อมูล',match:(_,s)=>['w2-tuesday','w2-excel-explorer'].includes(s.id)||s.id.startsWith('w2-concept-1-')},
+   {id:'practice',label:'ส่วนที่ 2: ฝึกปฏิบัติเขียนคำสั่งตั้งแต่เริ่มต้น (ขั้นตอนที่ 1–12)',sub:'เริ่มตั้งแต่ import pandas สำรวจตาราง ทำความสะอาด 7 รูปแบบ ตรวจคุณภาพ และส่งออก CSV',match:(_,s)=>s.type==='guided'||s.type==='guided-check'},
+   {id:'lab',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบเรียนและสรุปบทเรียน',sub:'แบบฝึกหัดท้ายคาบวันพฤหัสบดี (30 นาที · 10 คะแนน) และสรุปบทเรียน',match:(_,s)=>['w2-tuesday-lab','w2-summary'].includes(s.id)||s.id.startsWith('w2-exercise-1-')}
+  ].map(m=>{
+   const indices=slides.map((s,i)=>m.match(i,s)?i:-1).filter(i=>i!==-1);
+   return {...m,indices,firstIndex:indices[0]??0};
+  }).filter(m=>m.indices.length>0);
+ }
  if(weekNum===2&&dayNum===0){
   return [
    {id:'prep',label:'ส่วนที่ 1: เตรียมความพร้อมและทบทวนก่อนเรียน',sub:'จุดประสงค์ ไฟล์ข้อมูล และแบบฝึกหัดทบทวน 9 ข้อ',match:(_,s)=>['w2-goals','w2-files','w2-data','w2-procedure','w2-warmup'].includes(s.id)},
@@ -477,7 +788,8 @@ function buildSessionModules(slides,weekNum,dayNum){
  }).filter(m=>m.indices.length>0);
 }
 export default function App(){
- const[weekIndex,setWeekIndex]=useState(1);const[day,setDay]=useState(0);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
+ const[weekIndex,setWeekIndex]=useState(1);const[day,setDay]=useState(1);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
+ const[projecting,setProjecting]=useState(false);
  const[doneMap,setDoneMap]=useState(()=>{try{return JSON.parse(localStorage.getItem('dva_interactive_done')||'{}')}catch{return {}}});
  function toggleDone(key){setDoneMap(prev=>{const next={...prev,[key]:!prev[key]};try{localStorage.setItem('dva_interactive_done',JSON.stringify(next))}catch{}return next})}
  const week=teachingDeck[weekIndex];const session=sessionsFor(week)[day];const slides=session.slides;const slide=slides[index]??slides[0];
@@ -510,16 +822,16 @@ export default function App(){
   const st=guidedSteps.find(g=>g.step===stepNum);
   if(st?.writeIdx!=null){setIndex(st.writeIdx);}
  }
- useEffect(()=>{document.getElementById('lesson-content')?.scrollTo({top:0})},[weekIndex,day,index]);
+ useEffect(()=>{document.getElementById('lesson-content')?.scrollTo({top:0})},[weekIndex,day,index,projecting]);
  const go=(delta)=>setIndex(i=>Math.max(0,Math.min(slides.length-1,i+delta)));
  function selectSession(i,d){setWeekIndex(i);setDay(d);setIndex(0);setSidebar(false)}
  async function toggleFull(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{setNotice('เบราว์เซอร์นี้ไม่รองรับการแสดงผลเต็มหน้าจอ สามารถปรับขยายขนาดหน้าต่างเบราว์เซอร์แทนได้')}}
  useEffect(()=>{function change(){setFull(Boolean(document.fullscreenElement))}document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change)},[]);
- useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, button, a, select, [contenteditable="true"]'))return;if(e.key==='Escape')setSidebar(false);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
+ useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, select, [contenteditable="true"]'))return;if(e.key===' '&&e.target.closest('button, a, summary'))return;if(e.key==='Escape'){setSidebar(false);setProjecting(false)}if(e.key.toLowerCase()==='p')setProjecting(v=>!v);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
  const isPracticeSlide=slide.type==='guided'||slide.type==='guided-check';
- return <div className="teaching-app"><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
- <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).filter(d=>!(w.week===2&&d.day===1)).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
- <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
+ return <div className={'teaching-app '+(projecting?'is-projecting':'')}><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
+ <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
+ <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><button className="projection-toggle" aria-pressed={projecting} onClick={()=>{setProjecting(v=>!v);setSidebar(false)}}><Eye size={18}/>{projecting?'ออกจากโหมดฉายสอน':'โหมดฉายสอน'}</button><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
  <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
   <div className="module-tabs">
    {modules.map(m=>(
@@ -556,9 +868,7 @@ export default function App(){
  </div>
  {notice&&<p role="status" className="notice">{notice}<button onClick={()=>setNotice('')} aria-label="ปิดข้อความ"><X size={16}/></button></p>}
  <div className="lesson-scroll" id="lesson-content" tabIndex={-1}>
- {week.week===8&&day===1&&<p className="session-note">คาบเรียนนี้ใช้ผลการประเมินเดิมเพื่อให้ข้อเสนอแนะและฝึกซ่อมเสริม โดยไม่มีการสอบหรือเก็บคะแนนซ้ำ</p>}
- {week.week===15&&day===0&&<p className="session-note">คาบเรียนนี้เป็นการทบทวนเนื้อหาและตรวจสอบความพร้อม ส่วนการสอบปลายภาค (120 นาที) จะจัดสอบในวันอังคาร</p>}
- <article className={'slide-paper '+(slide.type==='cover'?'is-cover':isPracticeSlide?'is-studio':'')} key={slide.id}><Slide slide={slide} pairSlide={pairSlide} onSwitchTab={handleSwitchStudioTab} onJumpStep={jumpToStep} doneMap={doneMap} onToggleDone={toggleDone}/></article>
+ <article className={'slide-paper '+(slide.type==='cover'?'is-cover':isPracticeSlide?'is-studio':'')} key={slide.id}><Slide projecting={projecting} slide={slide} pairSlide={pairSlide} onSwitchTab={handleSwitchStudioTab} onJumpStep={jumpToStep} doneMap={doneMap} onToggleDone={toggleDone}/></article>
  </div>
- <footer className="lesson-footer"><div className="footer-navigation"><span className="keyboard-hint">คลิกเลือกส่วนของเนื้อหาและขั้นตอนด้านบน หรือใช้ปุ่มลูกศร ← → บนแป้นพิมพ์เพื่อเปลี่ยนหน้า</span><button onClick={()=>go(-1)} disabled={index===0}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump">หัวข้อที่<select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value))}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button onClick={()=>go(1)} disabled={index===slides.length-1}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
+ <footer className="lesson-footer"><div className="footer-navigation"><span className="projection-position">{index+1} / {slides.length}</span><span className="keyboard-hint">กด P เพื่อสลับโหมดฉายสอน · คลิกเลือกส่วนของเนื้อหาและขั้นตอนด้านบน หรือใช้ปุ่มลูกศร ← → บนแป้นพิมพ์เพื่อเปลี่ยนหน้า</span><button onClick={()=>go(-1)} disabled={index===0}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump">หัวข้อที่<select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value))}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button onClick={()=>go(1)} disabled={index===slides.length-1}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
 }

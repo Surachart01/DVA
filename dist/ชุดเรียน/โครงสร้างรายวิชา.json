@@ -226,7 +226,7 @@
       "concept": [
         "วันจันทร์ 180 นาที: เข้าใจตารางก่อนเชื่อม",
         "คีย์และการเชื่อมตาราง",
-        "วันอังคาร 120 นาที: คำนวณแล้วตรวจความหมาย"
+        "วันพฤหัสบดี 120 นาที: คำนวณแล้วตรวจความหมาย"
       ],
       "code": "import pandas as pd\nproducts = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')\nproducts.head()\nsales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')\nsales.head()\nproducts['product_id'].is_unique\nsales['order_id'].is_unique\nmerged = sales.merge(products, on='product_id', how='left', validate='many_to_one', indicator=True)\nmerged.head()\nunmatched_mask = merged['_merge'] == 'left_only'\nunmatched_count = unmatched_mask.sum()\nunmatched_count\nmerged['total_amount'] = merged['quantity'] * merged['selling_price']\nmerged[['quantity', 'selling_price', 'total_amount']].head()\nunit_profit = merged['selling_price'] - merged['cost_price']\nmerged['total_profit'] = merged['quantity'] * unit_profit\nmerged[['order_id', 'total_amount', 'total_profit']].head()\nmerged['total_amount'].sum()\nmerged['total_profit'].sum()",
       "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
@@ -261,7 +261,7 @@
       ],
       "concept": [
         "วันจันทร์ 180 นาที: ทบทวนตารางและนิยาม KPI",
-        "วันอังคาร 120 นาที: แบ่งกลุ่มและจัดแกนตาราง"
+        "วันพฤหัสบดี 120 นาที: แบ่งกลุ่มและจัดแกนตาราง"
       ],
       "code": "import pandas as pd\nproducts = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Products')\nproducts.head()\nsales = pd.read_excel('nvc_store_sales.xlsx', sheet_name='Daily_Sales')\nsales.head()\nsales['order_id'].is_unique\nmerged = sales.merge(products, on='product_id', how='left', validate='many_to_one')\nmerged.head()\nmerged['total_amount'] = merged['quantity'] * merged['selling_price']\nmerged['total_profit'] = merged['quantity'] * (merged['selling_price'] - merged['cost_price'])\nmerged[['order_id', 'total_amount', 'total_profit']].head()\nmerged['total_amount'].sum()\nmerged['total_profit'].sum()\nmerged['quantity'].sum()\nmerged['total_amount'].mean()\ncategory_groups = merged.groupby('category')\ncategory_values = category_groups[['total_amount', 'total_profit']]\ncategory_values.sum()\npivot = merged.pivot_table(index='sale_date', columns='category', values='total_amount', aggfunc='sum', fill_value=0)\npivot",
       "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
@@ -335,7 +335,7 @@
       ],
       "concept": [
         "วันจันทร์ 180 นาที: วันที่และยอดรายวัน",
-        "วันอังคาร 120 นาที: ค่าเฉลี่ยและค่าฐาน"
+        "วันพฤหัสบดี 120 นาที: ค่าเฉลี่ยและค่าฐาน"
       ],
       "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\ndf['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='raise')\ndf.head()\ndate_groups = df.groupby('date')\ndate_revenue = date_groups['price']\ndaily_revenue = date_revenue.sum()\ndaily_revenue = daily_revenue.sort_index()\ndaily = daily_revenue.to_frame(name='revenue')\ndaily\nrevenue_window = daily['revenue'].rolling(window=3, min_periods=3)\nmoving_average = revenue_window.mean()\ndaily['MA_3observations'] = moving_average\ndaily\nlast_three = daily['revenue'].tail(3)\nlast_three\nforecast = last_three.mean()\nforecast",
       "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
@@ -371,7 +371,7 @@
       "concept": [
         "วันจันทร์ 180 นาที: ผู้ชม คำถาม และหลักฐาน",
         "เกณฑ์เลือกกราฟให้ตอบคำถาม",
-        "วันอังคาร 120 นาที: ฝึกตั้งคำถามและทำ Storyboard"
+        "วันพฤหัสบดี 120 นาที: ฝึกตั้งคำถามและทำ Storyboard"
       ],
       "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nmenu_groups = df.groupby('menu')\nmenu_cups = menu_groups['cups']\ncups_total = menu_cups.sum()\ncups_total\nmenu_revenue = menu_groups['price']\nrevenue_total = menu_revenue.sum()\nsummary = revenue_total.to_frame(name='revenue')\nsummary['cups'] = cups_total\nsummary = summary.sort_values('revenue', ascending=False)\nsummary\naudience = 'ผู้จัดการร้านเครื่องดื่ม'\nquestion = 'เมนูใดขายจำนวนแก้วและมีรายได้สูงที่สุดในวันที่มีบันทึก?'\npd.DataFrame({'ผู้ชม': [audience], 'คำถาม': [question]})\nsummary['cups'].idxmax()\nsummary['revenue'].idxmax()\nstoryboard = pd.DataFrame({'ตำแหน่ง': ['ด้านบน', 'กลางซ้าย', 'กลางขวา', 'ด้านล่าง'], 'เนื้อหา': [question, 'กราฟแท่งเปรียบเทียบจำนวนขายตามเมนู หน่วยแก้ว', 'กราฟแท่งเปรียบเทียบรายได้ตามเมนู หน่วยบาท', 'แหล่งข้อมูล drinks_shop.csv; มีเฉพาะวันที่บันทึก และไม่มีต้นทุน']})\nstoryboard",
       "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",

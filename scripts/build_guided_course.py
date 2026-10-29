@@ -131,11 +131,11 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
    'ปัญหาคุณภาพข้อมูล 4 รูปแบบที่ปรากฏในตารางข้อมูลต้นฉบับ: 1) ข้อมูลสูญหายหรือค่าว่างรวม 5 จุด 2) การบันทึกข้อมูลซ้ำซ้อน 2 คู่รายการ (ORD-105 และ ORD-118) 3) อักขระช่องว่างส่วนเกินต่อท้ายชื่อหมวดหมู่สินค้า และ 4) ค่าผิดปกติที่อยู่นอกเกณฑ์ที่กำหนด ได้แก่ จำนวนชิ้นติดลบ (-2 ชิ้น) และยอดเงินรวมสูงผิดปกติ (99,000 บาท)',
    'เป้าหมายของการจัดเตรียมข้อมูลในส่วนที่ 3 (ขั้นตอนที่ 1–10): คัดกรองและทำความสะอาดข้อมูลจากตารางข้อมูลต้นฉบับ (df จำนวน 36 แถว) ให้เป็นตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว (df_clean จำนวน 29 แถว) และส่งออกเป็นไฟล์ nvc_tech_store_clean.csv'
   ],0) if week==2 else content(week,'data','ลักษณะและโครงสร้างของชุดข้อมูลที่ใช้ฝึกปฏิบัติ',shape_summary(m_files)+['ศึกษารายชื่อคอลัมน์ ความหมายของข้อมูล และหน่วยวัดของแต่ละตัวแปรให้เข้าใจก่อนเริ่มวิเคราะห์ข้อมูล'],0),
-  content(week,'procedure','ลำดับขั้นตอนการเรียนรู้และการฝึกปฏิบัติในคาบเรียน',[
-   'ส่วนที่ 1 ทบทวนการสำรวจข้อมูลก่อนเรียน (30 นาที): เขียนคำสั่งสำรวจตารางข้อมูลต้นฉบับ nvc_tech_store.csv จำนวน 9 ข้อในโปรแกรม Google Colab และบันทึกผลลงในใบงาน Google Docs',
-   'ส่วนที่ 2 ศึกษาทฤษฎีและหลักการ ETL (30 นาที): ทำความเข้าใจองค์ประกอบ Extract – Transform – Load กรณีศึกษาปัญหาคุณภาพข้อมูล 4 รูปแบบ และภาพรวมคำสั่งทั้ง 10 ขั้นตอน',
-   'ส่วนที่ 3 ฝึกปฏิบัติเขียนคำสั่ง ETL ทีละขั้นตอน (80 นาที): พิมพ์คำสั่งภาษา Python แยกเป็นขั้นตอนละ 1 เซลล์ (ขั้นตอนที่ 1–10) รันคำสั่ง และตรวจสอบความถูกต้องของผลลัพธ์ควบคู่กับผู้สอน',
-   'ส่วนที่ 4 แบบฝึกหัดปฏิบัติการท้ายคาบเรียน (40 นาที · 10 คะแนน): เขียนคำสั่งตรวจสอบและสรุปผลจากตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว (df_clean) จำนวน 5 ข้อ พร้อมบันทึกไฟล์ส่งงาน'
+  content(week,'procedure','ลำดับการจัดเตรียมข้อมูลด้วยกระบวนการ ETL',[
+   'นำเข้าข้อมูล (Extract): อ่านไฟล์ CSV เข้าสู่ตาราง DataFrame และตรวจสอบชื่อคอลัมน์ ชนิดข้อมูล และขนาดตาราง',
+   'ตรวจสอบคุณภาพข้อมูล: ระบุค่าว่าง ข้อมูลซ้ำ รูปแบบข้อความที่ไม่ตรงกัน และค่าที่อยู่นอกเกณฑ์ ก่อนเลือกวิธีจัดการ',
+   'ปรับรูปแบบและคัดกรองข้อมูล (Transform): แก้ไขตามหลักฐานและเงื่อนไขที่กำหนด โดยเก็บตารางข้อมูลต้นฉบับไว้เปรียบเทียบ',
+   'ตรวจสอบและส่งออกข้อมูล (Load): เปรียบเทียบจำนวนแถวและค่าว่างก่อน–หลัง แล้วบันทึกไฟล์ CSV ด้วย index=False'
   ],0) if week==2 else content(week,'procedure','แนวทางการฝึกปฏิบัติเขียนคำสั่งภาษา Python',['ลำดับการเรียนรู้: ศึกษาหน้าที่ของคำสั่ง → พิมพ์คำสั่งใน Google Colab → รันคำสั่ง → ตรวจสอบและแปลความหมายของผลลัพธ์','พิมพ์คำสั่งแยกเป็นขั้นตอนละ 1 เซลล์ และตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป','คำสั่งที่เป็นการกำหนดค่าให้ตัวแปรจะไม่แสดงผลลัพธ์ทันที ผู้เรียนสามารถตรวจสอบผลลัพธ์ได้จากคำสั่งแสดงผลในขั้นตอนถัดไป'],0)]
  concepts={day:[content(week,f'concept-{day}-{i}',c['title'],c['items'],day) for i,c in enumerate(spec['concepts']) if c['day']==day] for day in (0,1)}
  if week==2:
@@ -145,12 +145,14 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
   slides.append({'id':'w2-etl-theory','type':'w2-etl-theory','title':'แผนภาพจำลองกระบวนการ ETL และกรณีศึกษาการแก้ไขปัญหาคุณภาพข้อมูล 4 รูปแบบ','teachingDays':[0],'speakerNotes':'ผู้สอนใช้แผนภาพนี้สรุปกระบวนการ Extract → Transform → Load และคลิกเปรียบเทียบตารางข้อมูลก่อนและหลังการแก้ไขปัญหาทั้ง 4 รูปแบบให้ผู้เรียนเข้าใจแนวคิดก่อนเริ่มเขียนคำสั่ง'})
   slides.append({'id':'w2-etl-explorer','type':'w2-etl-explorer','title':'สรุปคำสั่งการจัดเตรียมข้อมูล (ETL) ทั้ง 10 ขั้นตอน','teachingDays':[0],'speakerNotes':'ผู้สอนใช้หน้านี้แนะนำภาพรวมคำสั่งทั้ง 10 ขั้นตอนก่อนเริ่มพาผู้เรียนพิมพ์ทีละขั้นตอน'})
  switch=False
+ day2_learners=[];day2_references=[]
  intro=f'# {tag} — {old["title"]}\n\n## จุดประสงค์การเรียนรู้\n'+''.join('- '+g+'\n' for g in spec['goals'])+'\n## การเตรียมไฟล์ข้อมูล\n'+''.join('- '+f+'\n' for f in m_files)+'\nอัปโหลดไฟล์ข้อมูลผ่านเมนู Files ในโปรแกรม Google Colab แล้วพิมพ์คำสั่งและรันผลลัพธ์ตามลำดับทีละขั้นตอน\n\n'
  intro+='## โครงสร้างชุดข้อมูล\n'+''.join('- '+x+'\n' for x in shape_summary(m_files))
  learners=[md(intro)];references=[md(intro)];reader=[intro];teacher=[intro];namespace={};previous=os.getcwd();exports=[]
  with tempfile.TemporaryDirectory(prefix='dva-lessons-') as work:
   workdir=Path(work)
   for f in spec['files']:shutil.copy2(base/'ชุดข้อมูล'/f,workdir/f)
+  if week==2 and (base/'ชุดข้อมูล'/'nvc_coffee_shop.csv').exists():shutil.copy2(base/'ชุดข้อมูล'/'nvc_coffee_shop.csv',workdir/'nvc_coffee_shop.csv')
   os.chdir(workdir)
   try:
    if week==2:
@@ -198,9 +200,22 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
       w2_sheet_teacher='# เฉลยใบงานทบทวนก่อนเรียนและแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (สัปดาห์ที่ 2 วันจันทร์ · สำหรับผู้สอน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล\n**ชุดข้อมูลที่ใช้:** `nvc_tech_store.csv`\n\n---\n\n# ส่วนที่ 1: เฉลยแบบฝึกหัดทบทวนก่อนเรียน (30 นาที)\n\n'+'\n'.join(f'## {rt}\n- **โจทย์:** {rp}\n- **คำสั่งเฉลย:**\n```python\n{rc}\n```\n- **สรุปผล:** {ra}\n' for rt,rp,rc,ra in w2_rev_items)+'\n---\n\n# ส่วนที่ 2: เฉลยแบบฝึกหัดปฏิบัติการท้ายคาบเรียนวันจันทร์ (10 คะแนน)\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งเฉลย:**\n```python\n{qc}\n```\n- **แนวคำตอบ (2 คะแนน):** {qa}\n' for qt,qp,qc,qa in w2_ex_questions)
       (folder/'แบบฝึกหัดท้ายคาบ_สัปดาห์02_จันทร์.md').write_text(w2_sheet_student)
       (base/'สำหรับครู/เฉลยแบบฝึกหัดท้ายคาบ_สัปดาห์02_จันทร์.md').write_text(w2_sheet_teacher)
-     slides.append(content(week,'tuesday','การเตรียมความพร้อมก่อนเริ่มเรียนวันอังคาร',['เปิดไฟล์ Notebook ที่บันทึกไว้จากวันจันทร์ และตรวจสอบไฟล์ชุดข้อมูลในเมนู Files','หากระบบเริ่มต้นสภาพแวดล้อมการทำงาน (Runtime) ใหม่ ให้อัปโหลดไฟล์ข้อมูลและรันเซลล์คำสั่งของวันจันทร์ตามลำดับ','ตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มเรียนคำสั่งใหม่ในวันอังคาร'],1))
+     if week==2:
+      slides.append(content(week,'tuesday','การเริ่มต้นสร้างสมุดงานใหม่จากศูนย์และการเตรียมชุดข้อมูล (คาบเรียน 2 ชั่วโมง)',[
+       'สร้างสมุดงานใหม่จากศูนย์ (New Notebook): ให้ผู้เรียนเปิดโปรแกรม Google Colab และสร้างไฟล์สมุดงานใหม่ตั้งแต่ต้น (ไม่ทำต่อจากไฟล์เดิมของครั้งที่แล้ว) เพื่อฝึกทักษะการเริ่มต้นโปรเจกต์วิเคราะห์ข้อมูลซ้ำด้วยตนเอง',
+       'ดาวน์โหลดและอัปโหลดไฟล์ชุดข้อมูลใหม่ (nvc_store_sales.xlsx): ดาวน์โหลดไฟล์สมุดงาน Excel จากปุ่มด้านล่าง แล้วอัปโหลดเข้าสู่สมุดงานใหม่ผ่านเมนู Files → Upload (ใช้เฉพาะแผ่นงาน Branch_Orders_Dirty สำหรับฝึกเทคนิคการทำความสะอาดข้อมูล)',
+       'ฝึกปฏิบัติครบวงจรตั้งแต่ขั้นตอนที่ 1–12: เริ่มเขียนคำสั่งใหม่ตั้งแต่การนำเข้าไลบรารี import pandas as pd, การสำรวจโครงสร้างตารางพื้นฐาน (.shape, .head, .dtypes, .isna, .describe), การใช้เทคนิคทำความสะอาดข้อมูล 7 รูปแบบ ไปจนถึงการตรวจสอบคุณภาพและส่งออกไฟล์ CSV'
+      ],1,downloads=[
+       {'label':'1. ดาวน์โหลดไฟล์ชุดข้อมูลฝึกในคาบ (nvc_store_sales.xlsx)','url':'ชุดเรียน/ชุดข้อมูล/nvc_store_sales.xlsx'},
+       {'label':'2. ดาวน์โหลดไฟล์ชุดข้อมูลแบบฝึกหัดท้ายคาบ (nvc_bookstore_dirty.xlsx)','url':'ชุดเรียน/ชุดข้อมูล/nvc_bookstore_dirty.xlsx'},
+       {'label':'3. ดาวน์โหลดใบงานแบบฝึกหัดท้ายคาบ 5 ข้อ (Google Docs .docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_GoogleDocs.docx'}
+      ]))
+     else:
+      slides.append(content(week,'tuesday','การเตรียมความพร้อมก่อนเริ่มเรียน',['เปิดไฟล์ Notebook ที่ใช้เรียน และอัปโหลดไฟล์ชุดข้อมูลผ่านเมนู Files','หากระบบเริ่มต้นสภาพแวดล้อมการทำงานใหม่ ให้อัปโหลดไฟล์ข้อมูลและรันเซลล์คำสั่งตามลำดับ','ตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มเรียนคำสั่งใหม่'],1))
      slides.extend(concepts[1]);switch=True
-     learners.append(md('---\n\n# วันอังคาร\n\nตรวจสอบไฟล์ชุดข้อมูลและรันคำสั่งจากวันจันทร์ให้ครบถ้วนก่อนเริ่มคำสั่งใหม่\n'));references.append(md('---\n\n# วันอังคาร\n'));reader.append('\n# วันอังคาร\n')
+     if week==2:
+      slides.append({'id':'w2-excel-explorer','type':'w2-excel-explorer','title':'ภาพรวมเนื้อหาและสรุป 12 ขั้นตอนเทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ (เริ่มต้นใหม่ตั้งแต่ขั้นตอนที่ 1–12)','teachingDays':[1],'speakerNotes':'ผู้สอนใช้หน้านี้อธิบายภาพรวม 7 เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ และสรุป 12 ขั้นตอนการปฏิบัติการที่เริ่มต้นใหม่ตั้งแต่ขั้นตอนที่ 1–12'})
+     learners.append(md('---\n\n# คาบเรียนที่ 2 (เริ่มต้นสมุดงานใหม่จากศูนย์ · ขั้นตอนที่ 1–12)\n\nให้ผู้เรียนสร้างสมุดงานใหม่ อัปโหลดไฟล์ nvc_store_sales.xlsx และเริ่มเขียนคำสั่งตั้งแต่ขั้นตอนที่ 1 เป็นต้นไป\n'));references.append(md('---\n\n# คาบเรียนที่ 2 (ขั้นตอนที่ 1–12)\n'));reader.append('\n# คาบเรียนที่ 2 (ขั้นตอนที่ 1–12)\n')
     preview,nb_outputs=evaluate(s['code'],namespace,week,i)
     before=set(exports)
     for f in workdir.iterdir():
@@ -212,20 +227,25 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
      shutil.copy2(workdir/f,examples/copy_name)
      p=public/'ตัวอย่าง'/copy_name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(workdir/f,p)
      links.append({'label':'ดาวน์โหลดไฟล์ '+f,'url':'ชุดเรียน/ตัวอย่าง/'+copy_name})
+    step_num=(i-10) if (week==2 and s['day']==1) else i
     identifier=f'w{week}-write-{i}'
-    write={'id':identifier,'type':'guided','flow':'write-then-check','step':i,'title':f'ขั้นตอนที่ {i}: {s["title"]}','teachingDays':[s['day']],
-      'instruction':'ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์','code':s['code'],'meaning':s['meaning'],'parts':s['parts'],
-      'teacherAction':'อธิบายหน้าที่และส่วนประกอบของคำสั่ง จากนั้นสาธิตการรันคำสั่งให้ผู้เรียนปฏิบัติตาม',
-      'studentAction':'พิมพ์คำสั่งลงในเซลล์โค้ด รันคำสั่ง และตรวจสอบผลลัพธ์','run':'วิธีรันคำสั่ง: พิมพ์คำสั่งลงในเซลล์โค้ด แล้วกดปุ่ม Shift + Enter',
-      'speakerNotes':'สาธิตและอธิบายส่วนประกอบทีละรายการ รอให้ผู้เรียนเขียนและตรวจผลก่อนเริ่มคำสั่งถัดไป'}
-    check={'id':identifier+'-result','type':'guided-check','step':i,'title':f'ขั้นตอนที่ {i}: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย','teachingDays':[s['day']],
+    write={'id':identifier,'type':'guided','flow':'write-then-check','step':step_num,'title':f'ขั้นตอนที่ {step_num}: {s["title"]}','teachingDays':[s['day']],
+      'instruction':'ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์','code':s['code'],'meaning':s['meaning'],'parts':s['parts'],'decisionRule':s.get('decisionRule'),
+      'teacherAction':'อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน',
+      'studentAction':'พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง','run':'วิธีรันคำสั่ง: กดปุ่ม Shift + Enter',
+      'speakerNotes':'อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป'}
+    check={'id':identifier+'-result','type':'guided-check','step':step_num,'title':f'ขั้นตอนที่ {step_num}: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย','teachingDays':[s['day']],
       'code':s['code'],'output':preview,'expected':s['interpretation'],'interpretation':s['interpretation'],'mistake':s['mistake'],'checkpoint':s['checkpoint'],
       'speakerNotes':'เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ'}
     if links:check['downloads']=links
     slides.extend([write,check])
-    description=f'## ขั้นตอนที่ {i}: {s["title"]}\n\n{s["meaning"]}\n\n```python\n{s["code"]}\n```\n\n'+''.join(f'- `{p["token"]}`: {p["meaning"]}\n' for p in s['parts'])+'\nพิมพ์คำสั่งและกดปุ่ม Shift + Enter เพื่อรันคำสั่งและตรวจสอบผลลัพธ์\n'
+    description=f'## ขั้นตอนที่ {step_num}: {s["title"]}\n\n{s["meaning"]}\n\n```python\n{s["code"]}\n```\n\n'+''.join(f'- `{p["token"]}`: {p["meaning"]}\n' for p in s['parts'])+'\nพิมพ์คำสั่งและกดปุ่ม Shift + Enter เพื่อรันคำสั่งและตรวจสอบผลลัพธ์\n'
+    if s.get('decisionRule'):description+='\n**เงื่อนไขก่อนใช้คำสั่ง:** '+s['decisionRule']+'\n'
     checktext='### ผลลัพธ์และคำอธิบาย\n\n'+output_md(preview)+'\n'+s['interpretation']+'\n\n**ข้อควรระวังในการเขียนคำสั่ง:** '+s['mistake']+'\n\n**คำถามตรวจสอบความเข้าใจ:** '+s['checkpoint']+'\n'
     learners.extend([md(description),cell(),md(checktext)]);references.extend([md(description),cell(s['code'],i,nb_outputs),md(checktext)])
+    if week==2 and s['day']==1:
+     day2_learners.extend([md(description),cell(),md(checktext)])
+     day2_references.extend([md(description),cell(s['code'],step_num,nb_outputs),md(checktext)])
     reader.extend([description,checktext]);teacher.extend([description,checktext])
    # Validate both filter options against the actual Dashboard data.
    if week==12:
@@ -237,12 +257,39 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
      assert sum(changes['y'][1])==changes['value'][0]
      assert sum(changes['y'][2])==changes['value'][0]
   finally:os.chdir(previous)
- summary=content(week,'summary','สรุปและตรวจสอบความเข้าใจ',spec['goals']+['อธิบายหน้าที่ของคำสั่งและผลจากข้อมูลตัวอย่างได้','บันทึก Notebook และใช้ผลลัพธ์อ้างอิงทบทวนตามลำดับ'],1);summary['type']='summary';slides.append(summary)
+ if week==2:
+  slides.append({'id':'w2-tuesday-lab','type':'w2-tuesday-lab','title':'แบบฝึกหัดปฏิบัติการท้ายคาบเรียน (เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ · 10 คะแนน)','teachingDays':[1],'speakerNotes':'ให้ผู้เรียนลงมือทำแบบฝึกหัดท้ายคาบทั้ง 5 ข้อในโปรแกรม Google Colab โดยใช้ชุดข้อมูลใหม่ nvc_bookstore_dirty.xlsx (แผ่นงาน Online_Orders_Dirty) และบันทึกคำตอบลงในใบงาน Google Docs (เวลา 30 นาที · 10 คะแนน)'})
+  w2_tue_questions=[
+   ('ข้อที่ 1 (2 คะแนน): การสำรวจแผ่นงานและการจัดมาตรฐานรหัสหนังสือ (.str.strip().str.upper())', 'เขียนคำสั่งนำเข้าไลบรารี pandas สำรวจรายชื่อแผ่นงานในไฟล์ nvc_bookstore_dirty.xlsx ด้วย pd.ExcelFile() จากนั้นอ่านชีต Online_Orders_Dirty ลงในตัวแปร orders และจัดมาตรฐานคอลัมน์ book_id ด้วย .str.strip().str.upper() พร้อมแสดงจำนวนรายการของแต่ละรหัสหนังสือด้วย .value_counts()', "import pandas as pd\nprint(pd.ExcelFile('nvc_bookstore_dirty.xlsx').sheet_names)\norders = pd.read_excel('nvc_bookstore_dirty.xlsx', sheet_name='Online_Orders_Dirty')\norders['book_id'] = orders['book_id'].str.strip().str.upper()\norders['book_id'].value_counts()", 'ไฟล์มีแผ่นงาน Online_Orders_Dirty จำนวน 25 แถว และหลังจัดมาตรฐานรหัสหนังสือจะเหลือรหัสมาตรฐาน BK-101 ถึง BK-105 จำนวน 5 รหัส'),
+   ('ข้อที่ 2 (2 คะแนน): การจัดกลุ่มช่องทางชำระเงินด้วย .replace() และการสกัดตัวเลขค่าจัดส่ง', 'เขียนคำสั่งจัดมาตรฐานคอลัมน์ payment_channel ด้วย .replace() และจัดการคอลัมน์ shipping_fee_text โดยเติมค่าว่างด้วย .fillna(\'0 บาท\') ตัดคำว่า \' บาท\' ออกด้วย .str.replace() และแปลงเป็นชนิด float เก็บในคอลัมน์ใหม่ชื่อ shipping_fee', "channel_map = {'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}\norders['payment_channel'] = orders['payment_channel'].str.strip().replace(channel_map)\norders['shipping_fee_text'] = orders['shipping_fee_text'].fillna('0 บาท')\norders['shipping_fee'] = orders['shipping_fee_text'].str.replace(' บาท', '', regex=False).astype(float)", 'ช่องทางชำระเงินถูกรวมเป็นมาตรฐานเดียวกัน (พร้อมเพย์, COD, บัตรเครดิต) และได้คอลัมน์ตัวเลข shipping_fee พร้อมคำนวณ'),
+   ('ข้อที่ 3 (2 คะแนน): การแก้ไขจำนวนเล่มที่ติดลบและเกินเพดาน (.abs & .clip) และการลบรหัสคำสั่งซื้อซ้ำ', 'เขียนคำสั่งจัดการคอลัมน์ qty โดยเติมค่าว่างด้วย .fillna(1) แก้ค่าติดลบและจำกัดเพดานสูงสุดไม่เกิน 10 เล่มด้วย .abs().clip(upper=10).astype(int) จากนั้นลบแถวที่มีรหัสคำสั่งซื้อ (order_id) ซ้ำด้วยคำสั่ง .drop_duplicates(subset=[\'order_id\'], keep=\'first\') เก็บในตาราง orders_clean พร้อมระบุจำนวนแถวก่อนและหลังลบซ้ำ', "orders['qty'] = orders['qty'].fillna(1).abs().clip(upper=10).astype(int)\norders_clean = orders.drop_duplicates(subset=['order_id'], keep='first').copy()\nprint(orders.shape, orders_clean.shape)", 'ก่อนลบซ้ำมี 25 แถว หลังลบรหัสคำสั่งซื้อซ้ำ (ORD-305 และ ORD-312) เหลือ 23 แถว'),
+   ('ข้อที่ 4 (2 คะแนน): การแปลงชนิดข้อมูลวันที่ (pd.to_datetime) และการตรวจสอบคุณภาพข้อมูลหลังทำความสะอาด', 'เขียนคำสั่งแปลงคอลัมน์ order_date ในตาราง orders_clean ให้เป็นชนิดข้อมูลวันที่ด้วย pd.to_datetime() จากนั้นตรวจสอบจำนวนค่าว่างคงเหลือด้วย .isna().sum() และคำนวณผลรวมจำนวนหนังสือที่สั่งซื้อทั้งหมด (qty) และผลรวมค่าจัดส่งทั้งหมด (shipping_fee)', "orders_clean['order_date'] = pd.to_datetime(orders_clean['order_date'])\nprint(orders_clean.isna().sum())\nprint('Total qty:', orders_clean['qty'].sum())\nprint('Total shipping_fee:', orders_clean['shipping_fee'].sum())", 'ไม่มีค่าว่างคงเหลือในทุกคอลัมน์ (0 ทุกคอลัมน์) ผลรวมจำนวนหนังสือเท่ากับ 53 เล่ม และผลรวมค่าจัดส่งเท่ากับ 660.0 บาท'),
+   ('ข้อที่ 5 (2 คะแนน): การส่งออกไฟล์ CSV ที่ทำความสะอาดแล้ว และการสรุปเลือกใช้เทคนิคการ Clean ข้อมูล', 'เขียนคำสั่งส่งออกตาราง orders_clean เป็นไฟล์ชื่อ nvc_bookstore_clean.csv โดยกำหนด index=False พร้อมอธิบายสรุปว่า: เหตุใดในคอลัมน์ shipping_fee_text ที่มีค่าว่าง เราจึงเลือกใช้เทคนิค .fillna(\'0 บาท\') แทนการใช้คำสั่ง .dropna()', "orders_clean.to_csv('nvc_bookstore_clean.csv', index=False, encoding='utf-8-sig')\ncheck_df = pd.read_csv('nvc_bookstore_clean.csv')\ncheck_df.shape", 'ไฟล์ที่ส่งออกมีขนาด (23, 7) และเลือกใช้ .fillna(\'0 บาท\') เพราะรายการสั่งซื้อนั้นเป็นรายการที่มีผลสมบูรณ์ (เพียงแต่ได้รับสิทธิ์จัดส่งฟรี) หากใช้ .dropna() จะทำให้ข้อมูลยอดสั่งซื้อหนังสือในแถวนั้นสูญหายไป')
+  ]
+  w2_tue_assumptions='\n## สมมติฐานเฉพาะแบบฝึก\nกำหนดค่าว่างค่าจัดส่งเป็น 0 บาท จำนวนที่ว่างใช้ค่าทดแทน 1 เล่ม ค่าติดลบสมมติว่าเกิดจากเครื่องหมายผิด และจำกัดเพดานที่ 10 เล่มเพื่อสาธิตคำสั่งทำความสะอาดข้อมูล\n'
+  w2_tue_sheet_student='# ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (สัปดาห์ที่ 2 คาบที่ 2 · 2 ชั่วโมง · 10 คะแนน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล\n**ชุดข้อมูลที่ใช้:** `nvc_bookstore_dirty.xlsx` (แผ่นงาน `Online_Orders_Dirty`)\n\n---\n\n# คำชี้แจง\nให้ผู้เรียนเขียนคำสั่งภาษา Python ในโปรแกรม Google Colab แล้วนำโค้ดคำสั่งและผลลัพธ์มาบันทึกในใบงานนี้ (รวม 5 ข้อ · 10 คะแนนดิบ)\n\n---\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งที่ใช้:** `............................................................`\n- **สรุปคำตอบจากผลลัพธ์:** `............................................................`\n' for qt,qp,_,_ in w2_tue_questions)
+  w2_tue_sheet_teacher='# เฉลยใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (สัปดาห์ที่ 2 คาบที่ 2 · สำหรับผู้สอน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล\n**ชุดข้อมูลที่ใช้:** `nvc_bookstore_dirty.xlsx` (แผ่นงาน `Online_Orders_Dirty`)\n\n---\n\n# เฉลยคำสั่งและแนวคำตอบ (10 คะแนนดิบ)\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งเฉลย:**\n```python\n{qc}\n```\n- **แนวคำตอบ (2 คะแนน):** {qa}\n' for qt,qp,qc,qa in w2_tue_questions)
+  (folder/'แบบฝึกหัดท้ายคาบ_สัปดาห์02_พฤหัสบดี.md').write_text(w2_tue_sheet_student+w2_tue_assumptions)
+  (base/'สำหรับครู/เฉลยแบบฝึกหัดท้ายคาบ_สัปดาห์02_พฤหัสบดี.md').write_text(w2_tue_sheet_teacher)
+ summary=content(week,'summary','สรุปและตรวจสอบความเข้าใจ',spec['goals']+['อธิบายหน้าที่ของคำสั่งและผลจากข้อมูลตัวอย่างได้','บันทึก Notebook และใช้ผลลัพธ์อ้างอิงทบทวนตามลำดับ'],1);summary['type']='summary'
+ if week==2:
+  summary['type']='knowledge-check'
+  summary['questions']=[
+   {'question':'เหตุใดจึงต้องจัดมาตรฐานรหัสสินค้า', 'answer':'อักขระช่องว่างและตัวพิมพ์เล็ก–ใหญ่ที่ต่างกันทำให้รหัสเดียวกันถูกนับแยกเป็นหลายรูปแบบ จึงต้องจัดรูปแบบให้สม่ำเสมอ'},
+   {'question':'จำนวน 50 แก้วที่ยังไม่ยืนยัน ควรแก้เป็น 10 ทันทีหรือไม่', 'answer':'ไม่ควร ต้องตรวจสอบต้นทางก่อน การใช้ .clip(upper=10) ในบทเรียนเป็นกติกาสมมติเพื่อสาธิตการจำกัดเพดาน ไม่ใช่การยืนยันค่าจริง'},
+   {'question':'ก่อนส่งออกไฟล์ต้องตรวจอะไร และ index=False มีหน้าที่ใด', 'answer':'ตรวจจำนวนแถว ค่าว่าง ข้อมูลซ้ำ ชนิดข้อมูล และช่วงค่า ส่วน index=False ป้องกันการเพิ่มคอลัมน์ลำดับแถว ไฟล์ตัวอย่างที่อ่านกลับควรมี 20 แถว 7 คอลัมน์'}
+  ]
+ slides.append(summary)
  old['slides']=slides;old['files']=spec['files']
  end=md('## สรุป\n\nอธิบายคำสั่ง ผลลัพธ์ หน่วย และข้อจำกัด บันทึก Notebook สำหรับทบทวน\n')
  learners.append(end);references.append(end)
  for path in [base/'Notebook_ฝึกพิมพ์'/f'{tag}.ipynb',base/'Notebook_ผู้เรียน'/f'{tag}.ipynb',folder/f'{tag}_ฝึกพิมพ์.ipynb']:save_nb(path,learners)
  for path in [base/'สำหรับครู'/f'{tag}_แนวเฉลย.ipynb',base/'Notebook_ตัวอย่าง'/f'{tag}.ipynb',folder/f'{tag}_ตัวอย่าง.ipynb']:save_nb(path,references)
+ if week==2:
+  day2_intro=md('# การทำความสะอาดข้อมูลและส่งออกไฟล์ CSV\n\nคาบวันพฤหัสบดี 2 ชั่วโมง เริ่มสมุดงานใหม่ด้วย pandas และไฟล์ nvc_store_sales.xlsx โดยใช้เฉพาะชีต Branch_Orders_Dirty\n')
+  for path in [base/'Notebook_ฝึกพิมพ์/W02_พฤหัสบดี_ฝึกพิมพ์.ipynb',folder/'W02_พฤหัสบดี_ฝึกพิมพ์.ipynb']:save_nb(path,[day2_intro]+day2_learners)
+  for path in [base/'Notebook_ตัวอย่าง/W02_พฤหัสบดี_ตัวอย่าง.ipynb',folder/'W02_พฤหัสบดี_ตัวอย่าง.ipynb']:save_nb(path,[day2_intro]+day2_references)
+
  for file,body in [(folder/'เริ่มเรียนตรงนี้.md',intro+'\nทำตามสไลด์ทีละขั้น ใช้ Notebook ฝึกพิมพ์และเทียบ Notebook ตัวอย่าง เมื่อ Runtime เริ่มใหม่ให้อัปโหลดข้อมูลและเรียกใช้เซลล์ก่อนหน้าทั้งหมด\n'),(folder/f'บทเรียนสัปดาห์{week:02}_อ่านตามสไลด์.md','\n'.join(reader)),(base/'สำหรับครู'/f'{tag}_ลำดับฝึกเขียน.md','\n'.join(teacher))]:file.write_text(body)
  # Synchronize weekly ready-to-teach plans while retaining the incumbent assessment rubric.
  plan=next((base/'แผนรายสัปดาห์').glob(f'สัปดาห์ที่{week:02}_*.md'))
@@ -250,8 +297,8 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
  original=original.split(marker)[-1] if marker in original else original
  rubric_start=original.find('## 8.')
  rubric=original[rubric_start:] if rubric_start>=0 else ''
- plantext=f'# แผนการจัดการเรียนรู้ สัปดาห์ที่ {week}\n\n31901-2012 {old["title"]}\n\nวันจันทร์ 180 นาที: แนวคิดและตัวอย่าง 60 นาที เขียนพร้อมผู้สอน 120 นาที\nวันอังคาร 120 นาที: ทบทวน เขียนคำสั่งต่อ และตรวจผล\n\n## เป้าหมาย\n'+''.join('- '+g+'\n' for g in spec['goals'])+'\n## การเตรียม\n'+''.join('- '+f+'\n' for f in spec['files'])+'\n## วิธีจัดการเรียนรู้\nแจกไฟล์ข้อมูล → อัปโหลดเข้า Colab → อธิบายคำสั่ง → เขียนพร้อมกัน → เรียกใช้ → ตรวจผลและความเข้าใจ ก่อนดำเนินการถัดไป ไม่แยก Lab ในคาบปกติ\n\n'
- for day,label in [(0,'วันจันทร์'),(1,'วันอังคาร')]:
+ plantext=f'# แผนการจัดการเรียนรู้ สัปดาห์ที่ {week}\n\n31901-2012 {old["title"]}\n\nวันจันทร์ 180 นาที: แนวคิดและตัวอย่าง 60 นาที เขียนพร้อมผู้สอน 120 นาที\nวันพฤหัสบดี 120 นาที: ทบทวน เขียนคำสั่งต่อ และตรวจผล\n\n## เป้าหมาย\n'+''.join('- '+g+'\n' for g in spec['goals'])+'\n## การเตรียม\n'+''.join('- '+f+'\n' for f in spec['files'])+'\n## วิธีจัดการเรียนรู้\nแจกไฟล์ข้อมูล → อัปโหลดเข้า Colab → อธิบายคำสั่ง → เขียนพร้อมกัน → เรียกใช้ → ตรวจผลและความเข้าใจ ก่อนดำเนินการถัดไป ไม่แยก Lab ในคาบปกติ\n\n'
+ for day,label in [(0,'วันจันทร์'),(1,'วันพฤหัสบดี')]:
   plantext+='## '+label+'\n'+''.join(f'- {i}. {s["title"]}: `{s["code"]}`\n' for i,s in enumerate(spec['steps'],1) if s['day']==day)
  plantext+='\n## หลักฐานและการประเมินระหว่างเรียน\nNotebook ที่เขียนในคาบ การตรวจผลกับตัวอย่าง และการอธิบายหน้าที่/ข้อจำกัดของคำสั่ง ให้ผลย้อนกลับและทบทวนจุดที่ยังไม่ผ่าน โดยใช้เกณฑ์ประเมินประจำสัปดาห์เดิม\n'
  if rubric:plantext+='\n## เกณฑ์การประเมินเดิม\n'+rubric
@@ -260,9 +307,10 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
  resource=resources[str(week)];resource['notebook']=f'ชุดเรียน/Notebook_ฝึกพิมพ์/{tag}.ipynb';resource['practice']=True
  resource['assessment']='ประเมินการปฏิบัติในคาบเรียน 10 คะแนนดิบ × 0.25 = 2.5 คะแนนเก็บ'
  resource['files']=[{'name':f,'url':'ชุดเรียน/ชุดข้อมูล/'+f} for f in m_files]+([
+  {'name':'nvc_bookstore_dirty.xlsx (ชุดข้อมูลแบบฝึกหัดท้ายคาบที่ 2)','url':'ชุดเรียน/ชุดข้อมูล/nvc_bookstore_dirty.xlsx'},
   {'name':'ใบงานปฏิบัติการทบทวนก่อนเรียน 9 ข้อ (Google Docs .docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการ_ทบทวนก่อนเรียน_GoogleDocs.docx'},
-  {'name':'ใบงานปฏิบัติการรวมวันจันทร์สำหรับ Google Docs / Word (.docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการ_สัปดาห์ที่02_จันทร์_GoogleDocs.docx'},
-  {'name':'ใบงานทบทวนก่อนเรียนและแบบฝึกหัดท้ายคาบวันจันทร์ (.md)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/แบบฝึกหัดท้ายคาบ_สัปดาห์02_จันทร์.md'}
+  {'name':'ใบงานปฏิบัติการรวมคาบที่ 1 สำหรับ Google Docs / Word (.docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_GoogleDocs.docx'},
+  {'name':'ใบงานแบบฝึกหัดท้ายคาบที่ 2 สำหรับ Google Docs / Word (.docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_GoogleDocs.docx'}
  ] if week==2 else [])+[
   {'name':'Notebook ตัวอย่างพร้อมผลลัพธ์ '+tag,'url':f'ชุดเรียน/Notebook_ตัวอย่าง/{tag}.ipynb'},
   {'name':f'บทเรียนอ่านตามสไลด์ สัปดาห์ {week}','url':f'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์{week:02}/บทเรียนสัปดาห์{week:02}_อ่านตามสไลด์.md'},
@@ -294,33 +342,33 @@ if w1_spec_file.exists() and (not args.weeks or 1 in args.weeks):
    'การสรุปผล: อธิบายขั้นตอนการดำเนินงานและระบุหลักฐานจากข้อมูลที่ใช้ประกอบการตัดสินใจได้'
   ],'teachingDays':[0],'orientationMinutes':6},
   {'id':'w1-intro-7','type':'content','title':'กระบวนการวิเคราะห์และนำเสนอข้อมูล 4 ขั้นตอน','items':[
-   'ลำดับขั้นตอนหลัก: Get Data → ETL → Modeling → Visualization',
-   'ความหมายของทั้ง 4 ขั้นตอน: การรวบรวมข้อมูล → การจัดเตรียมข้อมูล → การจัดโครงสร้างและวิเคราะห์ข้อมูล → การนำเสนอข้อมูลด้วยภาพ',
-   'ตัวอย่างการดำเนินงานจริง: รวบรวมข้อมูลการขาย → ตรวจสอบและทำความสะอาดตารางข้อมูล → เชื่อมโยงข้อมูลสินค้าเพื่อสรุปยอดขาย → สร้างแผนภูมิเปรียบเทียบยอดขาย'
+   'ลำดับขั้นตอนหลัก: Get Data → ETL → Data Analysis → Visualization',
+   'ความหมายของทั้ง 4 ขั้นตอน: การรวบรวมข้อมูล → การจัดเตรียมและทำความสะอาดข้อมูล → การวิเคราะห์และสรุปผลข้อมูล → การนำเสนอข้อมูลด้วยภาพ',
+   'ตัวอย่างการดำเนินงานจริง: รวบรวมข้อมูลการขาย → ตรวจสอบและทำความสะอาดตารางข้อมูล → คำนวณค่าสถิติและสรุปยอดขายตามหมวดหมู่ → สร้างแผนภูมิเปรียบเทียบยอดขาย'
   ],'teachingDays':[0],'orientationMinutes':4,'animation':{
    'kind':'pipeline',
    'label':'กระบวนการทำงานตั้งแต่ต้นทางถึงการนำเสนอข้อมูล',
    'steps':[
-    {'title':'1. Get Data','input':'ประเด็นคำถาม: สินค้าใดมียอดขายสูงสุด','action':'รวบรวมไฟล์ข้อมูลรายการขายและข้อมูลสินค้า','output':'ไฟล์ข้อมูลต้นฉบับ'},
-    {'title':'2. ETL','input':'ไฟล์ข้อมูลต้นฉบับ','action':'ตรวจสอบค่าว่าง ข้อมูลซ้ำซ้อน และจัดรูปแบบให้ถูกต้อง','output':'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว'},
-    {'title':'3. Modeling','input':'ตารางรายการขายและตารางสินค้า','action':'เชื่อมโยงตารางด้วยรหัสสินค้าและคำนวณยอดขายรวม','output':'ตารางสรุปยอดขายแยกตามรายการสินค้า'},
-    {'title':'4. Visualization','input':'ตารางสรุปยอดขาย','action':'สร้างแผนภูมิแท่งเปรียบเทียบยอดขายแต่ละรายการ','output':'แผนภูมิพร้อมข้อเสนอแนะเพื่อประกอบการตัดสินใจ'}
+    {'title':'1. Get Data','input':'ประเด็นคำถาม: สินค้าใดมียอดขายสูงสุด','action':'รวบรวมไฟล์ข้อมูลรายการขายเข้าสู่โปรแกรม','output':'ตารางข้อมูลต้นฉบับ'},
+    {'title':'2. ETL','input':'ตารางข้อมูลต้นฉบับ','action':'ตรวจสอบค่าว่าง ข้อมูลซ้ำซ้อน และจัดรูปแบบให้ถูกต้อง','output':'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว'},
+    {'title':'3. Data Analysis','input':'ตารางข้อมูลที่ผ่านการจัดเตรียมแล้ว','action':'คำนวณค่าสถิติพื้นฐาน จัดกลุ่มข้อมูล และสรุปยอดขาย','output':'ตารางสรุปผลการวิเคราะห์ข้อมูล'},
+    {'title':'4. Visualization','input':'ตารางสรุปผลการวิเคราะห์ข้อมูล','action':'สร้างแผนภูมิแท่งเปรียบเทียบยอดขายแต่ละรายการ','output':'แผนภูมิพร้อมข้อเสนอแนะเพื่อประกอบการตัดสินใจ'}
    ]
   }},
   {'id':'w1-intro-8','type':'content','title':'ขั้นตอนที่ 1: การรวบรวมและนำเข้าข้อมูล (Get Data)','items':[
    'หน้าที่หลัก: รวบรวมและนำเข้าชุดข้อมูลที่เกี่ยวข้องกับประเด็นคำถามที่ต้องการศึกษา',
    'การตรวจสอบเบื้องต้น: พิจารณาแหล่งที่มาของข้อมูล ความหมายของแต่ละคอลัมน์ และชนิดของข้อมูลก่อนนำไปใช้งาน',
-   'ตัวอย่างการปฏิบัติ: การนำเข้าไฟล์ข้อมูลรายการคำสั่งซื้อ (CSV) และไฟล์ข้อมูลรายละเอียดสินค้า (Excel) เข้าสู่โปรแกรม'
+   'ตัวอย่างการปฏิบัติ: การนำเข้าไฟล์ข้อมูลรายการคำสั่งซื้อ (CSV) และไฟล์สมุดงานข้อมูลยอดขาย (Excel) เข้าสู่โปรแกรม'
   ],'teachingDays':[0],'orientationMinutes':8},
   {'id':'w1-intro-9','type':'content','title':'ขั้นตอนที่ 2: การจัดเตรียมและทำความสะอาดข้อมูล (ETL)','items':[
    'Extract (การดึงข้อมูล): นำข้อมูลจากแหล่งต้นทางเข้าสู่ระบบประมวลผลเพื่อเตรียมตรวจสอบ',
    'Transform (การแปลงและทำความสะอาดข้อมูล): ตรวจสอบค่าว่าง ข้อมูลซ้ำซ้อน และปรับปรุงรูปแบบข้อมูลให้ถูกต้องตามมาตรฐาน',
    'Load (การบันทึกข้อมูล): จัดเก็บตารางข้อมูลที่ผ่านการจัดเตรียมแล้วเพื่อนำไปใช้ในการวิเคราะห์ขั้นตอนถัดไป'
   ],'teachingDays':[0],'orientationMinutes':9},
-  {'id':'w1-intro-10','type':'content','title':'ขั้นตอนที่ 3: การจัดโครงสร้างและวิเคราะห์ข้อมูล (Modeling)','items':[
-   'การจัดโครงสร้างข้อมูล: กำหนดความสัมพันธ์และเชื่อมโยงข้อมูลระหว่างตารางที่เกี่ยวข้องกัน',
-   'การคำนวณตัวชี้วัด: กำหนดวิธีการคำนวณค่าสถิติและตัวชี้วัด (KPI) ให้สอดคล้องกับประเด็นคำถาม',
-   'ตัวอย่างการปฏิบัติ: การเชื่อมโยงตารางรายการขายกับตารางสินค้า เพื่อสรุปยอดขายรวมแยกตามหมวดหมู่สินค้า'
+  {'id':'w1-intro-10','type':'content','title':'ขั้นตอนที่ 3: การวิเคราะห์และสรุปผลข้อมูล (Data Analysis)','items':[
+   'การคำนวณค่าสถิติพื้นฐาน: คำนวณผลรวม ค่าเฉลี่ย ค่าสูงสุด ค่าต่ำสุด และสัดส่วนของข้อมูลเพื่อตอบประเด็นคำถาม',
+   'การจัดกลุ่มและสรุปผล: คัดกรองและจัดกลุ่มข้อมูลตามหมวดหมู่หรือช่วงเวลาเพื่อค้นหาแนวโน้มและตัวชี้วัดสำคัญ (KPI)',
+   'ตัวอย่างการปฏิบัติ: การจัดกลุ่มข้อมูลยอดขายเพื่อสรุปยอดขายรวมและจำนวนคำสั่งซื้อแยกตามหมวดหมู่สินค้า'
   ],'teachingDays':[0],'orientationMinutes':9},
   {'id':'w1-intro-11','type':'content','title':'ขั้นตอนที่ 4: การนำเสนอข้อมูลด้วยภาพ (Visualization)','items':[
    'การสร้างสื่อนำเสนอ: นำผลการวิเคราะห์ข้อมูลมาแสดงในรูปแบบแผนภูมิหรือ Dashboard ที่เข้าใจง่าย',
@@ -347,11 +395,11 @@ if w1_spec_file.exists() and (not args.weeks or 1 in args.weeks):
   'ส่วนที่ 2 แบบฝึกหัดท้ายคาบเรียน (30 นาที): ทำแบบฝึกหัดทบทวนความเข้าใจจำนวน 5 ข้อ (10 คะแนน) ในส่วนท้ายของไฟล์ Notebook'],1,downloads=[
   {'label':'ดาวน์โหลดไฟล์ข้อมูล nvc_tech_store.csv','url':'ชุดเรียน/ชุดข้อมูล/nvc_tech_store.csv'},
   {'label':'ดาวน์โหลดไฟล์ Notebook สำหรับฝึกปฏิบัติ (W01.ipynb)','url':'ชุดเรียน/Notebook_ฝึกพิมพ์/W01.ipynb'},
-  {'label':'ดาวน์โหลดใบงานแบบฝึกหัดท้ายคาบเรียน (.md)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/แบบฝึกหัดท้ายคาบ_สัปดาห์01_อังคาร.md'}])]
+  {'label':'ดาวน์โหลดใบงานแบบฝึกหัดท้ายคาบเรียน (.md)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/แบบฝึกหัดท้ายคาบ_สัปดาห์01_พฤหัสบดี.md'}])]
  for idx,c in enumerate(w1_spec['concepts']):
   tuesday_slides.append(content(1,f'concept-1-{idx}',c['title'],c['items'],1))
  tuesday_slides.append({'id':'w1-function-explorer','type':'function-explorer','title':'สรุปคำสั่งพื้นฐานทั้ง 9 คำสั่งสำหรับการนำเข้าและสำรวจข้อมูลตาราง','teachingDays':[1],'speakerNotes':'ผู้สอนใช้หน้านี้แสดงภาพรวมของ 9 ฟังก์ชันที่จะปฏิบัติการในวันนี้ (90 นาที) ก่อนทำแบบฝึกหัดท้ายคาบ (30 นาที)'})
- w1_intro='# W01 วันอังคาร (2 คาบ 120 นาที) — การนำเข้าข้อมูลและการสำรวจโครงสร้างตารางเบื้องต้น (ขั้นตอนที่ 1–9 และแบบฝึกหัดท้ายคาบ)\n\n## จุดประสงค์การเรียนรู้\n'+''.join('- '+g+'\n' for g in w1_spec['goals'])+'\n## ชุดข้อมูลสำหรับการฝึกปฏิบัติ\n- `nvc_tech_store.csv` (ข้อมูลรายการคำสั่งซื้อร้านอุปกรณ์ไอที NVC Tech Store จำนวน 36 แถว 7 คอลัมน์)\n\nอัปโหลดไฟล์ `nvc_tech_store.csv` เข้าสู่โปรแกรม Google Colab จากนั้นฝึกเขียนคำสั่งตามลำดับ (ขั้นตอนที่ 1–9 ใช้เวลา 90 นาที) และทำแบบฝึกหัดท้ายคาบเรียนจำนวน 5 ข้อ (ใช้เวลา 30 นาที)\n'
+ w1_intro='# W01 วันพฤหัสบดี (2 คาบ 120 นาที) — การนำเข้าข้อมูลและการสำรวจโครงสร้างตารางเบื้องต้น (ขั้นตอนที่ 1–9 และแบบฝึกหัดท้ายคาบ)\n\n## จุดประสงค์การเรียนรู้\n'+''.join('- '+g+'\n' for g in w1_spec['goals'])+'\n## ชุดข้อมูลสำหรับการฝึกปฏิบัติ\n- `nvc_tech_store.csv` (ข้อมูลรายการคำสั่งซื้อร้านอุปกรณ์ไอที NVC Tech Store จำนวน 36 แถว 7 คอลัมน์)\n\nอัปโหลดไฟล์ `nvc_tech_store.csv` เข้าสู่โปรแกรม Google Colab จากนั้นฝึกเขียนคำสั่งตามลำดับ (ขั้นตอนที่ 1–9 ใช้เวลา 90 นาที) และทำแบบฝึกหัดท้ายคาบเรียนจำนวน 5 ข้อ (ใช้เวลา 30 นาที)\n'
  w1_learners=[md(w1_intro)];w1_refs=[md(w1_intro)];w1_reader=[w1_intro];w1_codes=[];w1_ns={};w1_exports=[];prev1=os.getcwd()
  w1_ex_questions=[
   ('ข้อที่ 1 (2 คะแนน): การแสดงข้อมูลตัวอย่างส่วนต้นและส่วนท้ายของตาราง','เขียนคำสั่งแสดงข้อมูลตัวอย่าง 8 แถวแรกด้วยคำสั่ง `df.head(8)` และแสดงข้อมูล 3 แถวสุดท้ายด้วยคำสั่ง `df.tail(3)` พร้อมระบุรหัสคำสั่งซื้อ (`order_id`) ของแถวที่ลำดับแถว 7','df.head(8)\ndf.tail(3)','รหัสคำสั่งซื้อ (order_id) ของแถวที่ลำดับแถว 7 คือ ORD-107 (เว็บแคม Full HD)'),
@@ -410,19 +458,19 @@ if w1_spec_file.exists() and (not args.weeks or 1 in args.weeks):
  old1['slides']=monday_slides+tuesday_slides;old1['files']=w1_spec['files']
  end1=md('## สรุปและส่งงาน\n\nตรวจสอบว่าได้รันคำสั่งครบทั้ง 9 ขั้นตอน และทำแบบฝึกหัดท้ายคาบครบทั้ง 5 ข้อ จากนั้นบันทึกไฟล์ Notebook (`.ipynb`) ส่งตามช่องทางที่ผู้สอนกำหนด\n')
  w1_learners.append(end1);w1_refs.append(end1)
- ex_sheet_student='# ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (เวลา 30 นาที · 10 คะแนน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · **สัปดาห์ที่ 1 วันอังคาร**\n**ชุดข้อมูลที่ใช้:** `nvc_tech_store.csv` (ตารางข้อมูล `df`)\n\n---\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งที่ใช้:** `............................................................`\n- **สรุปคำตอบจากผลลัพธ์:** `............................................................`\n' for qt,qp,_,_ in w1_ex_questions)
- ex_sheet_teacher='# เฉลยใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (เวลา 30 นาที · 10 คะแนน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · **สัปดาห์ที่ 1 วันอังคาร (สำหรับผู้สอน)**\n**ชุดข้อมูลที่ใช้:** `nvc_tech_store.csv` (ตารางข้อมูล `df`)\n\n---\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งเฉลย:**\n```python\n{qc}\n```\n- **แนวคำตอบ (2 คะแนน):** {qa}\n' for qt,qp,qc,qa in w1_ex_questions)
- (folder1/'แบบฝึกหัดท้ายคาบ_สัปดาห์01_อังคาร.md').write_text(ex_sheet_student)
- (base/'สำหรับครู/เฉลยแบบฝึกหัดท้ายคาบ_สัปดาห์01_อังคาร.md').write_text(ex_sheet_teacher)
- for path in [base/'Notebook_ฝึกพิมพ์/W01.ipynb',base/'Notebook_ผู้เรียน/W01.ipynb',folder1/'W01_อังคาร_ฝึกเอง.ipynb']:save_nb(path,w1_learners)
- for path in [base/'สำหรับครู/W01_แนวเฉลย.ipynb',base/'Notebook_ตัวอย่าง/W01.ipynb',folder1/'W01_อังคาร_ตัวอย่าง.ipynb']:save_nb(path,w1_refs)
+ ex_sheet_student='# ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (เวลา 30 นาที · 10 คะแนน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · **สัปดาห์ที่ 1 วันพฤหัสบดี**\n**ชุดข้อมูลที่ใช้:** `nvc_tech_store.csv` (ตารางข้อมูล `df`)\n\n---\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งที่ใช้:** `............................................................`\n- **สรุปคำตอบจากผลลัพธ์:** `............................................................`\n' for qt,qp,_,_ in w1_ex_questions)
+ ex_sheet_teacher='# เฉลยใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (เวลา 30 นาที · 10 คะแนน)\n**รายวิชา:** 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · **สัปดาห์ที่ 1 วันพฤหัสบดี (สำหรับผู้สอน)**\n**ชุดข้อมูลที่ใช้:** `nvc_tech_store.csv` (ตารางข้อมูล `df`)\n\n---\n\n'+'\n'.join(f'## {qt}\n- **โจทย์:** {qp}\n- **คำสั่งเฉลย:**\n```python\n{qc}\n```\n- **แนวคำตอบ (2 คะแนน):** {qa}\n' for qt,qp,qc,qa in w1_ex_questions)
+ (folder1/'แบบฝึกหัดท้ายคาบ_สัปดาห์01_พฤหัสบดี.md').write_text(ex_sheet_student)
+ (base/'สำหรับครู/เฉลยแบบฝึกหัดท้ายคาบ_สัปดาห์01_พฤหัสบดี.md').write_text(ex_sheet_teacher)
+ for path in [base/'Notebook_ฝึกพิมพ์/W01.ipynb',base/'Notebook_ผู้เรียน/W01.ipynb',folder1/'W01_พฤหัสบดี_ฝึกเอง.ipynb']:save_nb(path,w1_learners)
+ for path in [base/'สำหรับครู/W01_แนวเฉลย.ipynb',base/'Notebook_ตัวอย่าง/W01.ipynb',folder1/'W01_พฤหัสบดี_ตัวอย่าง.ipynb']:save_nb(path,w1_refs)
  (folder1/'บทเรียนสัปดาห์01_อ่านตามสไลด์.md').write_text('\n'.join(w1_reader))
  resources['1']['notebook']='ชุดเรียน/Notebook_ฝึกพิมพ์/W01.ipynb';resources['1']['practice']=True
  resources['1']['assessment']='การฝึกปฏิบัติในชั้นเรียน 9 ขั้นตอน (90 นาที) และแบบฝึกหัดท้ายคาบเรียน 5 ข้อ (30 นาที · 10 คะแนน)'
  resources['1']['files']=[
   {'name':'ไฟล์ชุดข้อมูล nvc_tech_store.csv (36 แถว 7 คอลัมน์)','url':'ชุดเรียน/ชุดข้อมูล/nvc_tech_store.csv'},
-  {'name':'ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (5 ข้อ 10 คะแนน)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/แบบฝึกหัดท้ายคาบ_สัปดาห์01_อังคาร.md'},
-  {'name':'ไฟล์ Notebook สำหรับฝึกปฏิบัติ (W01.ipynb)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/W01_อังคาร_ฝึกเอง.ipynb'},
+  {'name':'ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (5 ข้อ 10 คะแนน)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/แบบฝึกหัดท้ายคาบ_สัปดาห์01_พฤหัสบดี.md'},
+  {'name':'ไฟล์ Notebook สำหรับฝึกปฏิบัติ (W01.ipynb)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/W01_พฤหัสบดี_ฝึกเอง.ipynb'},
   {'name':'ไฟล์ชุดข้อมูลตัวอย่าง students.csv (30 แถว)','url':'ชุดเรียน/ชุดข้อมูล/students.csv'},
   {'name':'เอกสารพจนานุกรมข้อมูล (คำอธิบายชุดข้อมูลและคอลัมน์)','url':'ชุดเรียน/ชุดข้อมูล/พจนานุกรมข้อมูล.md'},
   {'name':'เอกสารสรุปเนื้อหาประจำสัปดาห์ที่ 1','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/บทเรียนสัปดาห์01_อ่านตามสไลด์.md'}
@@ -435,7 +483,7 @@ for special_week in special:
  deck[week-1]['slides']=special_week['slides']
  folder=base/f'เรียนย้อนหลัง_สัปดาห์{week:02}';folder.mkdir(exist_ok=True)
  text=f'# สัปดาห์ที่ {week} — {deck[week-1]["title"]}\n\n'
- for s in special_week['slides']:text+='## '+('วันจันทร์' if s['teachingDays']==[0] else 'วันอังคาร')+' — '+s['title']+'\n'+''.join('- '+x+'\n' for x in s['items'])+'\n'
+ for s in special_week['slides']:text+='## '+('วันจันทร์' if s['teachingDays']==[0] else 'วันพฤหัสบดี')+' — '+s['title']+'\n'+''.join('- '+x+'\n' for x in s['items'])+'\n'
  (folder/'เริ่มเรียนตรงนี้.md').write_text(text)
  (folder/f'บทเรียนสัปดาห์{week:02}_อ่านตามสไลด์.md').write_text(text)
  plan=next((base/'แผนรายสัปดาห์').glob(f'สัปดาห์ที่{week:02}_*.md'))
@@ -444,7 +492,7 @@ for special_week in special:
  resource=resources[str(week)];resource['files']=[f for f in resource['files'] if 'ตัวอย่าง' not in f['name']]+[{'name':f'แนวทางเรียน สัปดาห์ {week}','url':f'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์{week:02}/เริ่มเรียนตรงนี้.md'}]
  report.append({'week':week,'commands':0,'slides':len(special_week['slides']),'status':'assessment/project'})
 # Preserve week one and add a common example Notebook download without changing its reviewed lessons.
-week1_example=base/'เรียนย้อนหลัง_สัปดาห์01/W01_อังคาร_ตัวอย่าง.ipynb';(base/'Notebook_ตัวอย่าง').mkdir(exist_ok=True);shutil.copy2(week1_example,base/'Notebook_ตัวอย่าง/W01.ipynb')
+week1_example=base/'เรียนย้อนหลัง_สัปดาห์01/W01_พฤหัสบดี_ตัวอย่าง.ipynb';(base/'Notebook_ตัวอย่าง').mkdir(exist_ok=True);shutil.copy2(week1_example,base/'Notebook_ตัวอย่าง/W01.ipynb')
 source.write_text('export const teachingDeck = '+json.dumps(deck,ensure_ascii=False,indent=2)+';\n')
 resources_file.write_text('export const courseResources = '+json.dumps(resources,ensure_ascii=False,indent=2)+';\n')
 report_path=base/'สำหรับครู/ผลตรวจบทเรียน15สัปดาห์.json'

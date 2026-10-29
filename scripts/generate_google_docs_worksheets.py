@@ -320,6 +320,84 @@ def generate_teacher_answer_key_docx(output_path: Path):
     doc.save(str(output_path))
     print(f"Generated {output_path}", flush=True)
 
+
+def generate_tuesday_worksheet_docx(output_path: Path):
+    doc = docx.Document()
+    for s in doc.sections:
+        s.top_margin = Inches(0.8)
+        s.bottom_margin = Inches(0.8)
+        s.left_margin = Inches(0.85)
+        s.right_margin = Inches(0.85)
+
+    add_styled_paragraph(doc, "ใบงานแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (Google Docs)", size_pt=20, bold=True, color_rgb=(14, 116, 144), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+    add_styled_paragraph(doc, "รายวิชา 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · สัปดาห์ที่ 2 คาบเรียนที่ 2 (2 ชั่วโมง · 120 นาที)", size_pt=16, bold=True, color_rgb=(51, 65, 85), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+    add_styled_paragraph(doc, "ชุดข้อมูลใหม่สำหรับแบบฝึกหัดท้ายคาบ: nvc_bookstore_dirty.xlsx (ใช้เฉพาะแผ่นงาน Online_Orders_Dirty จำนวน 25 แถว)", size_pt=14, bold=False, italic=True, color_rgb=(71, 85, 105), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+    
+    create_student_info_table(doc)
+
+    add_styled_paragraph(doc, "แบบฝึกหัดปฏิบัติการท้ายคาบเรียน: เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ (เวลา 30 นาที · 10 คะแนนดิบ)", size_pt=18, bold=True, color_rgb=(3, 105, 161), space_before=16, space_after=4)
+    add_styled_paragraph(doc, "คำชี้แจง: ให้ผู้เรียนสร้างสมุดงานใหม่ใน Google Colab อัปโหลดไฟล์ชุดข้อมูลใหม่ nvc_bookstore_dirty.xlsx แล้วเขียนคำสั่งทำความสะอาดข้อมูลตามเทคนิคที่ได้เรียนในคาบนี้ (รวม 5 ข้อ · ข้อละ 2 คะแนน)", size_pt=14, italic=True, color_rgb=(71, 85, 105), space_after=6)
+
+    tue_questions = [
+        ("ข้อที่ 1 (2 คะแนน): การสำรวจแผ่นงานและการจัดมาตรฐานรหัสหนังสือ (.str.strip().str.upper())",
+         "เขียนคำสั่งนำเข้าไลบรารี pandas สำรวจรายชื่อแผ่นงานในไฟล์ nvc_bookstore_dirty.xlsx ด้วย pd.ExcelFile() จากนั้นอ่านชีต Online_Orders_Dirty ลงในตัวแปร orders และจัดมาตรฐานคอลัมน์ book_id ด้วย .str.strip().str.upper() พร้อมแสดงจำนวนรายการของแต่ละรหัสหนังสือด้วย .value_counts()"),
+        ("ข้อที่ 2 (2 คะแนน): การจัดกลุ่มช่องทางชำระเงินด้วย .replace() และการสกัดตัวเลขค่าจัดส่ง",
+         "เขียนคำสั่งจัดมาตรฐานคอลัมน์ payment_channel ด้วย .replace({'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}) และจัดการคอลัมน์ shipping_fee_text โดยเติมค่าว่างด้วย .fillna('0 บาท') ตัดคำว่า ' บาท' ออกด้วย .str.replace() และแปลงเป็นชนิด float เก็บในคอลัมน์ใหม่ชื่อ shipping_fee"),
+        ("ข้อที่ 3 (2 คะแนน): การแก้ไขจำนวนเล่มที่ติดลบและเกินเพดาน (.abs & .clip) และการลบรหัสคำสั่งซื้อซ้ำ",
+         "เขียนคำสั่งจัดการคอลัมน์ qty โดยเติมค่าว่างด้วย .fillna(1) แก้ค่าติดลบและจำกัดเพดานสูงสุดไม่เกิน 10 เล่มด้วย .abs().clip(upper=10).astype(int) จากนั้นลบแถวที่มีรหัสคำสั่งซื้อ (order_id) ซ้ำด้วยคำสั่ง .drop_duplicates(subset=['order_id'], keep='first') เก็บในตาราง orders_clean พร้อมระบุจำนวนแถวก่อนและหลังลบซ้ำ"),
+        ("ข้อที่ 4 (2 คะแนน): การแปลงชนิดข้อมูลวันที่ (pd.to_datetime) และการตรวจสอบคุณภาพข้อมูลหลังทำความสะอาด",
+         "เขียนคำสั่งแปลงคอลัมน์ order_date ในตาราง orders_clean ให้เป็นชนิดข้อมูลวันที่ด้วย pd.to_datetime() จากนั้นตรวจสอบจำนวนค่าว่างคงเหลือด้วย .isna().sum() และคำนวณผลรวมจำนวนหนังสือที่สั่งซื้อทั้งหมด (qty) และผลรวมค่าจัดส่งทั้งหมด (shipping_fee)"),
+        ("ข้อที่ 5 (2 คะแนน): การส่งออกไฟล์ CSV ที่ทำความสะอาดแล้ว และการสรุปเลือกใช้เทคนิคการ Clean ข้อมูล",
+         "เขียนคำสั่งส่งออกตาราง orders_clean เป็นไฟล์ชื่อ nvc_bookstore_clean.csv โดยกำหนด index=False พร้อมอธิบายสรุปว่า: เหตุใดในคอลัมน์ shipping_fee_text ที่มีค่าว่าง เราจึงเลือกใช้เทคนิค .fillna('0 บาท') แทนการใช้คำสั่ง .dropna()")
+    ]
+    for idx, (t, p) in enumerate(tue_questions, 1):
+        add_styled_paragraph(doc, t, size_pt=15, bold=True, color_rgb=(30, 41, 59), space_before=6, space_after=2)
+        add_styled_paragraph(doc, f"โจทย์: {p}", size_pt=14, bold=False, color_rgb=(51, 65, 85), space_before=0, space_after=4)
+        create_answer_box(doc, "คำสั่งภาษา Python:", "# พิมพ์คำสั่งตรงนี้\n", is_code=True, min_height_lines=2)
+        create_answer_box(doc, "สรุปคำตอบจากผลลัพธ์ (2 คะแนน):", "[ พิมพ์คำตอบตรงนี้ ]", is_code=False, min_height_lines=2)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    doc.save(str(output_path))
+    print(f"Generated {output_path}", flush=True)
+
+def generate_tuesday_teacher_answer_key_docx(output_path: Path):
+    doc = docx.Document()
+    for s in doc.sections:
+        s.top_margin = Inches(0.8)
+        s.bottom_margin = Inches(0.8)
+        s.left_margin = Inches(0.85)
+        s.right_margin = Inches(0.85)
+
+    add_styled_paragraph(doc, "เฉลยแบบฝึกหัดปฏิบัติการท้ายคาบเรียน (สำหรับผู้สอน)", size_pt=20, bold=True, color_rgb=(180, 83, 9), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+    add_styled_paragraph(doc, "รายวิชา 31901-2012 การวิเคราะห์และนำเสนอข้อมูล · สัปดาห์ที่ 2 คาบเรียนที่ 2 (2 ชั่วโมง)", size_pt=16, bold=True, color_rgb=(51, 65, 85), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+    add_styled_paragraph(doc, "ชุดข้อมูลแบบฝึกหัด: nvc_bookstore_dirty.xlsx (คะแนนเต็ม 10 คะแนนดิบ → 2.5 คะแนนเก็บ)", size_pt=14, italic=True, color_rgb=(71, 85, 105), align=WD_ALIGN_PARAGRAPH.CENTER, space_after=12)
+
+    tue_keys = [
+        ("ข้อที่ 1 (2 คะแนน): การสำรวจแผ่นงานและการจัดมาตรฐานรหัสหนังสือ (.str.strip().str.upper())",
+         "import pandas as pd\nexcel = pd.ExcelFile('nvc_bookstore_dirty.xlsx')\nprint('รายชื่อชีต:', excel.sheet_names)\norders = pd.read_excel('nvc_bookstore_dirty.xlsx', sheet_name='Online_Orders_Dirty')\norders['book_id'] = orders['book_id'].str.strip().str.upper()\norders['book_id'].value_counts()",
+         "ไฟล์ nvc_bookstore_dirty.xlsx มี 2 แผ่นงาน ได้แก่ 'Books_Master' และ 'Online_Orders_Dirty' (25 แถว) ภายหลังใช้ .str.strip().str.upper() รหัสหนังสือถูกรวมเป็นรหัสมาตรฐาน B001 ถึง B006 ครบ 6 รายการ"),
+        ("ข้อที่ 2 (2 คะแนน): การจัดกลุ่มช่องทางชำระเงินด้วย .replace() และการสกัดตัวเลขค่าจัดส่ง",
+         "ch_map = {'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}\norders['payment_channel'] = orders['payment_channel'].str.strip().replace(ch_map)\norders['shipping_fee'] = orders['shipping_fee_text'].fillna('0 บาท').str.replace(' บาท', '', regex=False).astype(float)\nprint(orders['payment_channel'].value_counts())\norders[['order_id', 'shipping_fee_text', 'shipping_fee']].head()",
+         "ช่องทางชำระเงินถูกรวมเหลือ 2 ช่องทางมาตรฐาน ได้แก่ 'พร้อมเพย์' (16 รายการ) และ 'COD' (9 รายการ) และคอลัมน์ shipping_fee แปลงเป็นตัวเลขทศนิยม (float64) สำเร็จ"),
+        ("ข้อที่ 3 (2 คะแนน): การแก้ไขจำนวนเล่มที่ติดลบและเกินเพดาน (.abs & .clip) และการลบรหัสคำสั่งซื้อซ้ำ",
+         "orders['qty'] = orders['qty'].fillna(1).abs().clip(upper=10).astype(int)\norders_clean = orders.drop_duplicates(subset=['order_id'], keep='first').copy()\nprint('ก่อนลบซ้ำ:', orders.shape, '-> หลังลบซ้ำ:', orders_clean.shape)",
+         "ก่อนลบซ้ำมี 25 แถว หลังลบรหัส order_id ที่ซ้ำกัน 3 รายการ (BK-203, BK-210, BK-218) เหลือ 22 แถว โดยคอลัมน์ qty มีค่าระหว่าง 1 ถึง 10 เล่ม"),
+        ("ข้อที่ 4 (2 คะแนน): การแปลงชนิดข้อมูลวันที่ (pd.to_datetime) และการตรวจสอบคุณภาพข้อมูลหลังทำความสะอาด",
+         "orders_clean['order_date'] = pd.to_datetime(orders_clean['order_date'])\nprint('จำนวนหนังสือรวม (เล่ม):', orders_clean['qty'].sum())\nprint('ค่าจัดส่งรวม (บาท):', orders_clean['shipping_fee'].sum())",
+         "คอลัมน์ order_date เป็นชนิด datetime64[ns] มียอดสั่งซื้อหนังสือรวมทั้งสิ้น 51 เล่ม และมีค่าจัดส่งรวมทั้งสิ้น 440.0 บาท"),
+        ("ข้อที่ 5 (2 คะแนน): การส่งออกไฟล์ CSV ที่ทำความสะอาดแล้ว และการสรุปเลือกใช้เทคนิคการ Clean ข้อมูล",
+         "orders_clean.to_csv('nvc_bookstore_clean.csv', index=False)\npd.read_csv('nvc_bookstore_clean.csv').head()",
+         "ส่งออกไฟล์ nvc_bookstore_clean.csv (ขนาด 22 แถว) สำเร็จ เหตุผลที่ใช้ .fillna('0 บาท') แทน .dropna() เพราะค่าว่างในคอลัมน์ค่าจัดส่งหมายถึงรายการที่ได้รับสิทธิ์จัดส่งฟรี (ค่าส่ง 0 บาท) หากใช้ .dropna() จะทำให้ข้อมูลคำสั่งซื้อหนังสือจริงถูกลบทิ้งไปถึง 5 รายการ")
+    ]
+    for t, c, a in tue_keys:
+        add_styled_paragraph(doc, t, size_pt=15, bold=True, color_rgb=(30, 41, 59), space_before=4, space_after=2)
+        create_answer_box(doc, "คำสั่งเฉลยภาษา Python:", c, is_code=True, min_height_lines=2)
+        create_answer_box(doc, "แนวคำตอบ (2 คะแนน):", a, is_code=False, min_height_lines=2)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    doc.save(str(output_path))
+    print(f"Generated {output_path}", flush=True)
+
 if __name__ == "__main__":
     base = Path("/Users/surachartlimrattanaphun/Desktop/Teaching_NVC")
     dva = base / "วิชาการวิเคราะห์และนำเสนอข้อมูล"
@@ -334,4 +412,13 @@ if __name__ == "__main__":
 
     generate_teacher_answer_key_docx(teacher_dir / "เฉลยใบงานปฏิบัติการ_สัปดาห์ที่02_จันทร์_สำหรับผู้สอน.docx")
     generate_teacher_answer_key_docx(deliverables / "เฉลยใบงานปฏิบัติการ_สัปดาห์ที่02_จันทร์_สำหรับผู้สอน.docx")
+    for target_dir in [w2_retro, public_w2, deliverables]:
+        generate_tuesday_worksheet_docx(target_dir / "ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_GoogleDocs.docx")
+        generate_tuesday_worksheet_docx(target_dir / "ใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_พฤหัสบดี_GoogleDocs.docx")
+
+    generate_tuesday_teacher_answer_key_docx(teacher_dir / "เฉลยใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_สำหรับผู้สอน.docx")
+    generate_tuesday_teacher_answer_key_docx(deliverables / "เฉลยใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_อังคาร_สำหรับผู้สอน.docx")
+    generate_tuesday_teacher_answer_key_docx(teacher_dir / "เฉลยใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_พฤหัสบดี_สำหรับผู้สอน.docx")
+    generate_tuesday_teacher_answer_key_docx(deliverables / "เฉลยใบงานปฏิบัติการท้ายคาบ_สัปดาห์ที่02_พฤหัสบดี_สำหรับผู้สอน.docx")
+
     print("All Google Docs worksheets generated successfully.")

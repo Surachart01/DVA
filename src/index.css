@@ -251,3 +251,45 @@
  .google-docs-callout-actions{width:100%}
  .google-docs-callout-btn{width:100%;justify-content:center}
 }
+
+/* Projection keeps commands visible and leaves detailed explanations available on demand. */
+.projection-toggle{font-weight:700;color:var(--accent);white-space:nowrap}
+.projection-toggle[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
+.projection-position{display:none;color:var(--muted);font-variant-numeric:tabular-nums}
+.studio-main-col,.studio-side-col{min-width:0}
+.studio-main-col>.code-block:first-child{margin-top:0}
+.code-block pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;max-height:none}
+.checked-command-bar code{white-space:pre-wrap;overflow-wrap:anywhere}
+.interactive-parts-box>summary,.meaning-card>summary{cursor:pointer;font-weight:700;color:var(--accent);padding:4px 0}
+.interactive-parts-box[open]>summary,.meaning-card[open]>summary{margin-bottom:14px}
+.decision-rule{border:1px solid #e4c792;border-left:4px solid #b7791f;background:#fff4e6;color:#714310;border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.decision-rule p{margin:4px 0 0;line-height:1.5}
+.knowledge-checks{display:grid;gap:16px}
+.knowledge-checks section{border:1px solid var(--line);padding:16px 20px;border-radius:10px}
+.knowledge-checks h2{margin:0 0 12px;font-size:1.2rem;line-height:1.5}
+.knowledge-checks summary{cursor:pointer;color:var(--accent);font-weight:700}
+.knowledge-checks p{margin:12px 0 0}
+.is-projecting>.lesson-sidebar,.is-projecting>.mobile-menu,.is-projecting>.sidebar-backdrop,.is-projecting .interactive-module-bar{display:none}
+.is-projecting .lesson-header{padding:10px 24px;min-height:52px}
+.is-projecting .header-title strong{display:none}
+.is-projecting .lesson-scroll{padding:18px 24px}
+.is-projecting .slide-paper{max-width:1440px;min-height:0;padding:24px 32px;border-radius:8px}
+.is-projecting h1{font-size:clamp(1.5rem,2.3vw,2.2rem);margin-bottom:16px;line-height:1.35}
+.is-projecting .studio-workspace{grid-template-columns:minmax(0,1fr);gap:14px}
+.is-projecting .step-studio-top{margin-bottom:14px;padding-bottom:12px}
+.is-projecting .code-block pre{font-size:clamp(1.1rem,1.7vw,1.6rem);line-height:1.65;padding:20px 24px}
+.is-projecting .code-toolbar>span:last-child,.is-projecting .studio-instruction-banner>div,.is-projecting .check-done-btn{display:none}
+.is-projecting .studio-instruction-banner{border:0;background:transparent;padding:8px 0}
+.is-projecting .studio-side-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.is-projecting .studio-side-col>section p,.is-projecting .topic-card p{font-size:1.15rem}
+.is-projecting .studio-next-prompt{margin:0}
+.is-projecting .studio-next-prompt>p{display:none}
+.is-projecting .primary-switch-btn{width:100%}
+.is-projecting .footer-navigation{padding:8px 24px}
+.is-projecting .keyboard-hint,.is-projecting .slide-jump{display:none}
+.is-projecting .projection-position{display:block;margin-right:auto}
+.is-projecting .table-scroll{font-size:1.05rem}
+.is-projecting .topic-card.is-focused{box-shadow:none}
+@media(max-width:700px){.is-projecting .lesson-scroll{padding:10px}.is-projecting .slide-paper{padding:18px}.is-projecting .studio-side-col{grid-template-columns:1fr}.is-projecting .header-title{display:none}.projection-toggle{font-size:.85rem}.is-projecting .code-block pre{padding:14px;font-size:1rem}}
+
+.projection-toggle[aria-pressed="true"]:hover:not(:disabled){background:#006685;color:#fff}
