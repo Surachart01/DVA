@@ -293,3 +293,7 @@
 @media(max-width:700px){.is-projecting .lesson-scroll{padding:10px}.is-projecting .slide-paper{padding:18px}.is-projecting .studio-side-col{grid-template-columns:1fr}.is-projecting .header-title{display:none}.projection-toggle{font-size:.85rem}.is-projecting .code-block pre{padding:14px;font-size:1rem}}
 
 .projection-toggle[aria-pressed="true"]:hover:not(:disabled){background:#006685;color:#fff}
+
+.lab-rules{border:1px solid var(--line);border-radius:8px;padding:14px 18px}.lab-rules summary{cursor:pointer;font-weight:700;color:var(--accent)}.lab-rules li{line-height:1.7;margin:10px 0}.is-projecting .lab-rules li{font-size:1.1rem}
+
+.session-dataset{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:10px 0;padding:10px 14px;border:1px solid var(--accent);border-radius:8px;background:#eef9fc;font-size:.85rem}.session-dataset a{display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px;text-decoration:none;overflow-wrap:anywhere}.session-dataset a span{font-weight:700;text-decoration:underline}

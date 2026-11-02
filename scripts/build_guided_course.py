@@ -515,3 +515,8 @@ plan_sync=project/'scripts/sync_guided_plans.py'
 if plan_sync.exists():
  import subprocess,sys
  subprocess.run([sys.executable,str(plan_sync)],check=True)
+
+# Keep the standalone Monday lesson reproducible after the base course rebuild.
+if not args.weeks or 3 in args.weeks:
+ import subprocess,sys
+ subprocess.run([sys.executable,str(project/'scripts/build_advanced_cleansing.py')],check=True)

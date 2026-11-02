@@ -3,7 +3,9 @@ import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, Rotat
 import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
 
-const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล'};
+// Limit the current classroom view while retaining the complete course source.
+const visibleLesson = {week:3, day:0};
+const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
  const[check,setCheck]=useState('all');
@@ -38,7 +40,7 @@ function StepMotion({config}){
   <div className="motion-controls"><button onClick={()=>setActive(i=>Math.max(0,i-1))} disabled={active===0}>ย้อนหนึ่งขั้น</button><span>ขั้นที่ {active+1} จาก {steps.length}</span><button onClick={()=>setActive(i=>Math.min(steps.length-1,i+1))} disabled={active===steps.length-1}>ขั้นถัดไป</button></div>
  </section>
 }
-function Pipeline(){const[active,setActive]=useState(0);const stages=[['Get Data','กำหนดคำถาม กลุ่มเป้าหมาย แหล่งที่มา และสิทธิ์การใช้งานข้อมูล พร้อมนำเข้าไฟล์ CSV/Excel'],['ETL','ตรวจสอบคุณภาพข้อมูล รายงานปัญหา เลือกวิธีจัดการข้อมูล และบันทึกขั้นตอนการทำความสะอาดข้อมูล'],['Data Analysis','คำนวณค่าสถิติพื้นฐาน คัดกรองและจัดกลุ่มข้อมูล คำนวณตัวชี้วัด (KPI) และสรุปผลการวิเคราะห์'],['Visualization','ออกแบบทัศนภาพข้อมูลตามกลุ่มเป้าหมาย สร้างแผนภูมิและ Dashboard พร้อมประเมินการใช้งาน'],['Decision','สรุปข้อค้นพบ (Insight) และข้อเสนอแนะที่สามารถตรวจสอบย้อนกลับไปยังข้อมูลต้นทางได้']];return <section className="demo"><div className="pipeline">{stages.map(([name],i)=><button key={name} className={active===i?'selected':''} onClick={()=>setActive(i)} aria-pressed={active===i}><span>{i+1}</span>{name}</button>)}</div><p className="demo-result">{stages[active][1]}</p><p className="fine-print">เลือกแต่ละขั้นตอนเพื่อดูหลักฐานการปฏิบัติงาน โดยในกระบวนการจริงสามารถย้อนกลับไปปรับปรุงข้อมูลในขั้นตอนก่อนหน้าได้</p></section>}
+function Pipeline(){const[active,setActive]=useState(0);const stages=[['Get Data','กำหนดคำถาม กลุ่มเป้าหมาย แหล่งที่มา และสิทธิ์การใช้งานข้อมูล พร้อมนำเข้าไฟล์ CSV/Excel'],['ETL','ตรวจสอบคุณภาพข้อมูล รายงานปัญหา เลือกวิธีจัดการข้อมูล และบันทึกขั้นตอนการทำความสะอาดข้อมูล'],['Data Analysis','คำนวณค่าสถิติพื้นฐาน คัดกรองและจัดกลุ่มข้อมูล คำนวณตัวชี้วัด (KPI) และสรุปผลการวิเคราะห์'],['Visualization','ออกแบบภาพข้อมูลตามกลุ่มเป้าหมาย สร้างแผนภูมิและ Dashboard พร้อมประเมินการใช้งาน'],['Decision','สรุปข้อค้นพบ (Insight) และข้อเสนอแนะที่สามารถตรวจสอบย้อนกลับไปยังข้อมูลต้นทางได้']];return <section className="demo"><div className="pipeline">{stages.map(([name],i)=><button key={name} className={active===i?'selected':''} onClick={()=>setActive(i)} aria-pressed={active===i}><span>{i+1}</span>{name}</button>)}</div><p className="demo-result">{stages[active][1]}</p><p className="fine-print">เลือกแต่ละขั้นตอนเพื่อดูหลักฐานการปฏิบัติงาน โดยในกระบวนการจริงสามารถย้อนกลับไปปรับปรุงข้อมูลในขั้นตอนก่อนหน้าได้</p></section>}
 const fnCatalog=[
  {step:1,group:'extract',period:'ขั้นตอนที่ 1 จาก 9 · การนำเข้าข้อมูล',token:'import pandas as pd',code:'import pandas as pd',purpose:'นำเข้าไลบรารี pandas โดยกำหนดชื่อย่อเป็น pd เพื่อใช้งานคำสั่งสำหรับจัดการข้อมูลตาราง',result:'ระบบพร้อมสำหรับการเรียกใช้คำสั่ง pd.read_csv() และคำสั่งจัดการตาราง DataFrame',caution:'ต้องรันคำสั่งนี้ใหม่ทุกครั้งเมื่อเริ่มต้นสภาพแวดล้อมการทำงาน (Runtime) ใหม่ใน Google Colab'},
  {step:2,group:'extract',period:'ขั้นตอนที่ 2 จาก 9 · การนำเข้าข้อมูล',token:"pd.read_csv(..., dtype=...)",code:"df = pd.read_csv('nvc_tech_store.csv', dtype={'customer_phone': 'string'})\ndf",purpose:'อ่านข้อมูลจากไฟล์ CSV เข้าสู่ตัวแปรตาราง df พร้อมกำหนดชนิดข้อมูลหมายเลขโทรศัพท์ให้เป็นข้อความ',result:'ได้ตารางขนาด 36 แถว 7 คอลัมน์ โดยหมายเลขโทรศัพท์ยังคงแสดงเลข 08 นำหน้าครบถ้วน',caution:'หากไม่กำหนดพารามิเตอร์ dtype ระบบจะแปลงหมายเลขโทรศัพท์เป็นตัวเลขและตัดเลข 0 นำหน้าออก'},
@@ -91,14 +93,14 @@ function WarmupDrillDemo({doneMap,onToggleDone}){
  const doneKey=`warmup-${item.id}`;
  const isDone=Boolean(doneMap?.[doneKey]);
  return <section className="demo fn-explorer">
-  <p className="demo-caption">เปิดโปรแกรม Google Colab (สร้างสมุดงานใหม่ด้วยตนเอง) แล้วเขียนคำสั่งวิเคราะห์สำรวจข้อมูลทั้ง 9 ข้อ เพื่อทบทวนฟังก์ชันที่เรียนเมื่อสัปดาห์ที่ 1 นำโค้ดและผลลัพธ์ที่ได้ไปพิมพ์ตอบในเอกสารใบงาน Google Docs</p>
+  <p className="demo-caption">เปิดโปรแกรม Google Colab (สร้างNotebook ใหม่ด้วยตนเอง) แล้วเขียนคำสั่งวิเคราะห์สำรวจข้อมูลทั้ง 9 ข้อ เพื่อทบทวนฟังก์ชันที่เรียนเมื่อสัปดาห์ที่ 1 นำโค้ดและผลลัพธ์ที่ได้ไปพิมพ์ตอบในเอกสารใบงาน Google Docs</p>
   <div className="interactive-question-cards">{w2WarmupItems.map(x=>{const k=`warmup-${x.id}`;const checked=Boolean(doneMap?.[k]);return <button key={x.id} className={`q-card ${activeId===x.id?'selected':''} ${checked?'is-done':''}`} onClick={()=>setActiveId(x.id)} aria-pressed={activeId===x.id}><div className="q-card-top"><span className="q-badge">ทบทวนข้อที่ {x.id}</span>{checked?<CheckCircle2 size={18} className="done-icon"/>:<Circle size={18} className="todo-icon"/>}</div><strong>{x.title.replace(/^ข้อที่ \d+: /,'')}</strong><small>{x.functions.join(' · ')}</small></button>})}</div>
   <div className="fn-detail" aria-live="polite">
    <div className="fn-detail-head"><h3>{item.title}</h3><div className="fn-detail-actions"><span>คำสั่งที่ทบทวน: {item.functions.join(' · ')}</span>{onToggleDone&&<button type="button" className={'check-done-btn '+(isDone?'is-done':'')} onClick={()=>onToggleDone(doneKey)}>{isDone?<CheckCircle2 size={16}/>:<Circle size={16}/>}{isDone?'สถานะ: ดำเนินการเสร็จแล้ว':'บันทึกว่าดำเนินการเสร็จแล้ว'}</button>}</div></div>
    <p className="concept-body">{item.prompt}</p>
    <div className="fn-meta-grid">
     <div><h4>ชุดข้อมูลที่ใช้</h4><p>ไฟล์ <code>nvc_tech_store.csv</code> (อัปโหลดเข้าสู่โปรแกรม Google Colab)</p></div>
-    <div><h4>พื้นที่ปฏิบัติงาน</h4><p>เปิด Google Colab สร้างสมุดงานใหม่ (New Notebook) เขียนคำสั่งภาษา Python ด้วยตนเอง</p></div>
+    <div><h4>พื้นที่ปฏิบัติงาน</h4><p>เปิด Google Colab สร้าง Notebook ใหม่ เขียนคำสั่งภาษา Python ด้วยตนเอง</p></div>
     <div><h4>การบันทึกผลงาน</h4><p>คัดลอกคำสั่งที่รันสำเร็จและผลลัพธ์ นำไปพิมพ์ตอบลงในใบงาน Google Docs (9 ข้อ · 10 คะแนน)</p></div>
    </div>
   </div>
@@ -254,9 +256,9 @@ const w2ExcelCatalog = [
   {
     "step": 1,
     "group": "extract",
-    "title": "ขั้นตอนที่ 1: การนำเข้าไลบรารี pandas และการสำรวจรายชื่อแผ่นงานในไฟล์ Excel",
+    "title": "ขั้นตอนที่ 1: การนำเข้าไลบรารี pandas และการสำรวจรายชื่อ Sheetในไฟล์ Excel",
     "code": "import pandas as pd\nexcel_book = pd.ExcelFile('nvc_store_sales.xlsx')\nexcel_book.sheet_names",
-    "desc": "เริ่มต้นสมุดงานใหม่ด้วยการนำเข้าไลบรารี pandas ในชื่อย่อ pd จากนั้นเปิดอ่านโครงสร้างไฟล์สมุดงาน Excel (nvc_store_sales.xlsx) ด้วยฟังก์ชัน pd.ExcelFile() และตรวจสอบรายชื่อแผ่นงานย่อยทั้งหมดภายในไฟล์ด้วยแอตทริบิวต์ .sheet_names",
+    "desc": "เริ่มต้นNotebook ใหม่ด้วยการนำเข้าไลบรารี pandas ในชื่อย่อ pd จากนั้นเปิดอ่านโครงสร้างไฟล์ Excel (nvc_store_sales.xlsx) ด้วยฟังก์ชัน pd.ExcelFile() และตรวจสอบรายชื่อSheetทั้งหมดภายในไฟล์ด้วยแอตทริบิวต์ .sheet_names",
     "target": "ไฟล์ nvc_store_sales.xlsx บรรจุข้อมูลแยกออกเป็น 3 แผ่นงาน ได้แก่ 'Products' (ตารางสินค้าหลัก), 'Daily_Sales' (ยอดขายสาขาหลัก) และ 'Branch_Orders_Dirty' (รายการขายสาขาย่อยที่ต้องทำความสะอาดข้อมูล)"
   },
   {
@@ -278,7 +280,7 @@ const w2ExcelCatalog = [
   {
     "step": 4,
     "group": "text",
-    "title": "ขั้นตอนที่ 4: เทคนิคที่ 1: การจัดมาตรฐานรหัสสินค้าด้วย .str.strip() และ .str.upper()",
+    "title": "ขั้นตอนที่ 4: เทคนิคที่ 1: การปรับรูปแบบรหัสสินค้าด้วย .str.strip() และ .str.upper()",
     "code": "branch_df['product_id'] = branch_df['product_id'].str.strip().str.upper()\nbranch_df['product_id'].value_counts()",
     "desc": "ตัดอักขระช่องว่างด้านหน้าและด้านหลังรหัสสินค้า แล้วแปลงเป็นตัวพิมพ์ใหญ่เพื่อให้รหัสเดียวกันมีรูปแบบตรงกัน ก่อนตรวจจำนวนด้วย .value_counts()",
     "target": "รหัสสินค้าหลังจัดรูปแบบเป็นมาตรฐาน P001 ถึง P006 ครบ 6 รหัส โดยรหัสเดียวกันไม่ถูกนับแยกเพราะช่องว่างหรือตัวพิมพ์เล็ก–ใหญ่"
@@ -354,8 +356,8 @@ const w2ExcelConcepts = [
     "id": "0",
     "title": "การจัดการไฟล์ Excel หลายแผ่นงาน (Multi-sheet Workbook) และการสำรวจปัญหาข้อมูลจริง",
     "items": [
-      "โครงสร้างสมุดงาน Excel: nvc_store_sales.xlsx มี 3 แผ่นงาน ได้แก่ Products, Daily_Sales และ Branch_Orders_Dirty โดยบทเรียนนี้นำเข้าเฉพาะ Branch_Orders_Dirty เพื่อทำความสะอาดและส่งออกข้อมูล ส่วนอีก 2 แผ่นงานยังไม่ใช้",
-      "การสำรวจรายชื่อแผ่นงานก่อนนำเข้าข้อมูล: ใช้คำสั่ง pd.ExcelFile('nvc_store_sales.xlsx').sheet_names เพื่อตรวจสอบรายชื่อแผ่นงานทั้งหมด จากนั้นใช้ pd.read_excel(..., sheet_name='...') เพื่อเจาะจงนำเข้าเฉพาะแผ่นงานที่ต้องการ",
+      "โครงสร้างไฟล์ Excel: nvc_store_sales.xlsx มี 3 แผ่นงาน ได้แก่ Products, Daily_Sales และ Branch_Orders_Dirty โดยบทเรียนนี้นำเข้าเฉพาะ Branch_Orders_Dirty เพื่อทำความสะอาดและส่งออกข้อมูล ส่วนอีก 2 แผ่นงานยังไม่ใช้",
+      "การสำรวจรายชื่อ Sheetก่อนนำเข้าข้อมูล: ใช้คำสั่ง pd.ExcelFile('nvc_store_sales.xlsx').sheet_names เพื่อตรวจสอบรายชื่อ Sheetทั้งหมด จากนั้นใช้ pd.read_excel(..., sheet_name='...') เพื่อเจาะจงนำเข้าเฉพาะแผ่นงานที่ต้องการ",
       "การวิเคราะห์ลักษณะปัญหาข้อมูลที่หลากหลายในชีต Branch_Orders_Dirty: ข้อมูลที่รวบรวมจากหลายสาขามักมีรูปแบบไม่สม่ำเสมอ ทั้งตัวพิมพ์เล็ก-ใหญ่ไม่ตรงกัน คำศัพท์คนละรูปแบบ ตัวเลขปนหน่วยข้อความ ค่าว่างที่ไม่ควรลบทิ้ง และตัวเลขติดลบที่ต้องตรวจสอบความหมายก่อนแก้ไข"
     ]
   },
@@ -389,7 +391,7 @@ function W2ExcelExplorerDemo({onJumpStep}){
  const concept=w2ExcelConcepts.find(c=>c.id===selectedConcept)??w2ExcelConcepts[0];
  const step=visible.find(s=>s.step===selectedStep)??visible[0];
  return <section className="demo fn-explorer">
-  <p className="demo-caption">ภาพรวมเนื้อหาและการฝึกปฏิบัติ (2 ชั่วโมง · 120 นาที): เริ่มต้นสมุดงานใหม่จากศูนย์ (ขั้นตอนที่ 1–12) พร้อมเจาะลึก 7 เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบบนไฟล์ Excel หลายชีต</p>
+  <p className="demo-caption">ภาพรวมเนื้อหาและการฝึกปฏิบัติ (2 ชั่วโมง · 120 นาที): เริ่มต้นNotebook ใหม่จากศูนย์ (ขั้นตอนที่ 1–12) พร้อมเจาะลึก 7 เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบบนไฟล์ Excel หลายชีต</p>
   <div className="choice-row">
    <button type="button" className={tab==='steps'?'selected':''} onClick={()=>setTab('steps')} aria-pressed={tab==='steps'}>1. สรุป 12 ขั้นตอนปฏิบัติการตั้งแต่เริ่มต้น (ขั้นตอนที่ 1–12)</button>
    <button type="button" className={tab==='concepts'?'selected':''} onClick={()=>setTab('concepts')} aria-pressed={tab==='concepts'}>2. ทฤษฎีและสรุป 7 เทคนิคการ Clean ข้อมูล (3 หัวข้อ)</button>
@@ -441,8 +443,8 @@ const w2TuesdayLabQuestions = [
   {
     "id": 1,
     "score": "2.0 คะแนน",
-    "title": "ข้อที่ 1: การสำรวจแผ่นงานและการจัดมาตรฐานรหัสหนังสือ (.str.strip().str.upper())",
-    "task": "สร้างสมุดงานใหม่ใน Google Colab อัปโหลดไฟล์ชุดข้อมูลใหม่ nvc_bookstore_dirty.xlsx เขียนคำสั่งสำรวจรายชื่อแผ่นงานด้วย pd.ExcelFile() จากนั้นอ่านชีต Online_Orders_Dirty ลงในตัวแปร orders และจัดมาตรฐานคอลัมน์ book_id ด้วย .str.strip().str.upper() พร้อมแสดงจำนวนรายการของแต่ละรหัสหนังสือด้วย .value_counts()",
+    "title": "ข้อที่ 1: การตรวจสอบ Sheetและการปรับรูปแบบรหัสหนังสือ (.str.strip().str.upper())",
+    "task": "สร้างNotebook ใหม่ใน Google Colab อัปโหลดไฟล์ชุดข้อมูลใหม่ nvc_bookstore_dirty.xlsx เขียนคำสั่งสำรวจรายชื่อ Sheetด้วย pd.ExcelFile() จากนั้นอ่านชีต Online_Orders_Dirty ลงในตัวแปร orders และปรับรูปแบบคอลัมน์ book_id ด้วย .str.strip().str.upper() พร้อมแสดงจำนวนรายการของแต่ละรหัสหนังสือด้วย .value_counts()",
     "functions": [
       "pd.ExcelFile('nvc_bookstore_dirty.xlsx').sheet_names",
       "orders['book_id'] = orders['book_id'].str.strip().str.upper()",
@@ -453,7 +455,7 @@ const w2TuesdayLabQuestions = [
     "id": 2,
     "score": "2.0 คะแนน",
     "title": "ข้อที่ 2: การจัดกลุ่มช่องทางชำระเงินด้วย .replace() และการสกัดตัวเลขค่าจัดส่ง",
-    "task": "เขียนคำสั่งจัดมาตรฐานคอลัมน์ payment_channel ด้วย .replace({'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}) และจัดการคอลัมน์ shipping_fee_text โดยเติมค่าว่างด้วย .fillna('0 บาท') ตัดคำว่า ' บาท' ออกด้วย .str.replace() และแปลงเป็นชนิด float เก็บในคอลัมน์ใหม่ชื่อ shipping_fee",
+    "task": "เขียนคำสั่งปรับรูปแบบคอลัมน์ payment_channel ด้วย .replace({'โอน': 'พร้อมเพย์', 'โอนเงิน': 'พร้อมเพย์', 'PromptPay': 'พร้อมเพย์', 'ปลายทาง': 'COD', 'เก็บเงินปลายทาง': 'COD'}) และจัดการคอลัมน์ shipping_fee_text โดยเติมค่าว่างด้วย .fillna('0 บาท') ตัดคำว่า ' บาท' ออกด้วย .str.replace() และแปลงเป็นชนิด float เก็บในคอลัมน์ใหม่ชื่อ shipping_fee",
     "functions": [
       "orders['payment_channel'].str.strip().replace(ch_map)",
       "orders['shipping_fee_text'].fillna('0 บาท').str.replace(' บาท', '', regex=False).astype(float)"
@@ -720,8 +722,14 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
   </div>
  </>;
 }
+function PracticeLab({slide}){
+ const[active,setActive]=useState(0);
+ const q=slide.questions[active]??slide.questions[0];
+ return <><h1>{slide.title}</h1><p className="demo-caption">{slide.intro}</p><LessonDownloads files={slide.downloads}/><div className="choice-row" aria-label="เลือกข้อแบบฝึกหัด">{slide.questions.map((item,i)=><button key={item.title} aria-pressed={active===i} className={active===i?'selected':''} onClick={()=>setActive(i)}>ข้อที่ {i+1}</button>)}</div><section className="fn-detail"><h2>ข้อที่ {active+1}: {q.title}</h2><p className="concept-body">{q.task}</p><p>บันทึกคำสั่ง ผลลัพธ์ และคำอธิบายใน Notebook หรือใบงาน โดยใช้ผลจากการรันจริง</p></section><details className="lab-rules"><summary>เงื่อนไขของชุดข้อมูล</summary><ol>{slide.rules.map(rule=><li key={rule}>{rule}</li>)}</ol></details></>;
+}
 function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,projecting}){
  switch(slide.type){
+ case 'practice-lab':return <PracticeLab slide={slide}/>;
  case 'knowledge-check':return <><h1>{slide.title}</h1><p>ตอบคำถามและอธิบายเหตุผล ก่อนตรวจสอบกับแนวคำตอบ</p><div className="knowledge-checks">{slide.questions.map((q,i)=><section key={q.question}><h2>{i+1}. {q.question}</h2><details><summary>แสดงแนวคำตอบ</summary><p>{q.answer}</p></details></section>)}</div></>;
  case 'cover':return <div className="cover-slide"><BookOpen size={42} strokeWidth={1.4}/><h1>{slide.title}</h1><p className="cover-subtitle">{slide.subtitle}</p><p>{slide.body}</p></div>;
  case 'content':case 'summary':return <InteractiveContentSlide slide={slide} doneMap={doneMap} onToggleDone={onToggleDone}/>;
@@ -747,9 +755,17 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  }
 }
 function buildSessionModules(slides,weekNum,dayNum){
+ if(weekNum===3&&dayNum===0){
+  return [
+   {id:'review',label:'ส่วนที่ 1: แบบฝึกหัดทบทวนก่อนเรียน',sub:'นำเข้า จัดเตรียมข้อมูล และส่งออก CSV',module:'review'},
+   {id:'practice',label:'ส่วนที่ 2: Cleansing ขั้นประยุกต์จากศูนย์',sub:'Get Data · ค่าว่าง · ข้อความ · ราคา · วันที่ · Export',module:'practice'},
+   {id:'final',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบ',sub:'ชุดข้อมูลใหม่ 5 ข้อ 10 คะแนน และสรุปบทเรียน',module:'final'}
+  ].map(m=>{const indices=slides.flatMap((slide,i)=>slide.module===m.module?[i]:[]);return {...m,indices,firstIndex:indices[0]??0}}).filter(m=>m.indices.length);
+ }
+
   if(weekNum===2&&dayNum===1){
   return [
-   {id:'prep',label:'ส่วนที่ 1: เริ่มต้นสมุดงานใหม่และทฤษฎีไฟล์ Excel หลายชีต',sub:'สร้าง Notebook ใหม่จากศูนย์ ดาวน์โหลดชุดข้อมูล และสรุป 7 เทคนิคการ Clean ข้อมูล',match:(_,s)=>['w2-tuesday','w2-excel-explorer'].includes(s.id)||s.id.startsWith('w2-concept-1-')},
+   {id:'prep',label:'ส่วนที่ 1: เริ่มต้นNotebook ใหม่และทฤษฎีไฟล์ Excel หลายชีต',sub:'สร้าง Notebook ใหม่จากศูนย์ ดาวน์โหลดชุดข้อมูล และสรุป 7 เทคนิคการ Clean ข้อมูล',match:(_,s)=>['w2-tuesday','w2-excel-explorer'].includes(s.id)||s.id.startsWith('w2-concept-1-')},
    {id:'practice',label:'ส่วนที่ 2: ฝึกปฏิบัติเขียนคำสั่งตั้งแต่เริ่มต้น (ขั้นตอนที่ 1–12)',sub:'เริ่มตั้งแต่ import pandas สำรวจตาราง ทำความสะอาด 7 รูปแบบ ตรวจคุณภาพ และส่งออก CSV',match:(_,s)=>s.type==='guided'||s.type==='guided-check'},
    {id:'lab',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบเรียนและสรุปบทเรียน',sub:'แบบฝึกหัดท้ายคาบวันพฤหัสบดี (30 นาที · 10 คะแนน) และสรุปบทเรียน',match:(_,s)=>['w2-tuesday-lab','w2-summary'].includes(s.id)||s.id.startsWith('w2-exercise-1-')}
   ].map(m=>{
@@ -788,7 +804,7 @@ function buildSessionModules(slides,weekNum,dayNum){
  }).filter(m=>m.indices.length>0);
 }
 export default function App(){
- const[weekIndex,setWeekIndex]=useState(1);const[day,setDay]=useState(1);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
+ const[weekIndex,setWeekIndex]=useState(()=>teachingDeck.findIndex(w=>w.week===visibleLesson.week));const[day,setDay]=useState(visibleLesson.day);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
  const[projecting,setProjecting]=useState(false);
  const[doneMap,setDoneMap]=useState(()=>{try{return JSON.parse(localStorage.getItem('dva_interactive_done')||'{}')}catch{return {}}});
  function toggleDone(key){setDoneMap(prev=>{const next={...prev,[key]:!prev[key]};try{localStorage.setItem('dva_interactive_done',JSON.stringify(next))}catch{}return next})}
@@ -829,8 +845,10 @@ export default function App(){
  useEffect(()=>{function change(){setFull(Boolean(document.fullscreenElement))}document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change)},[]);
  useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, select, [contenteditable="true"]'))return;if(e.key===' '&&e.target.closest('button, a, summary'))return;if(e.key==='Escape'){setSidebar(false);setProjecting(false)}if(e.key.toLowerCase()==='p')setProjecting(v=>!v);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
  const isPracticeSlide=slide.type==='guided'||slide.type==='guided-check';
+ const isGuidedModule=activeModule?.indices.some(i=>slides[i].type==='guided');
+ const introductoryIndices=activeModule?.indices.filter(i=>!['guided','guided-check'].includes(slides[i].type))??[];
  return <div className={'teaching-app '+(projecting?'is-projecting':'')}><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
- <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
+ <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).filter(([unit])=>teachingDeck.some(w=>w.week<=visibleLesson.week&&w.unit===Number(unit))).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.week<=visibleLesson.week&&w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).filter(d=>w.week<visibleLesson.week||d.day<=visibleLesson.day).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
  <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><button className="projection-toggle" aria-pressed={projecting} onClick={()=>{setProjecting(v=>!v);setSidebar(false)}}><Eye size={18}/>{projecting?'ออกจากโหมดฉายสอน':'โหมดฉายสอน'}</button><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
  <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
   <div className="module-tabs">
@@ -841,19 +859,25 @@ export default function App(){
     </button>
    ))}
   </div>
-  {!isPracticeSlide&&activeModule?.indices.length>1&&(
+  {week.week===3&&day===0&&(
+   <div className="session-dataset" aria-label="ดาวน์โหลด Dataset สำหรับส่วนนี้">
+    <strong>Dataset ที่ใช้ในส่วนนี้</strong>
+    <a href={`ชุดเรียน/ชุดข้อมูล/${{review:'w03_review_basic.csv',practice:'w03_online_orders_dirty.csv',final:'w03_final_orders_dirty.csv'}[activeModule?.id]??'w03_review_basic.csv'}`} download><Download size={18}/>{ {review:'ทบทวน: w03_review_basic.csv',practice:'ฝึก Clean: w03_online_orders_dirty.csv',final:'ท้ายคาบ: w03_final_orders_dirty.csv'}[activeModule?.id]??'w03_review_basic.csv'}<span>ดาวน์โหลด CSV</span></a>
+   </div>
+  )}
+  {!isPracticeSlide&&introductoryIndices.length>0&&(
    <div className="subtopic-pills" aria-label="หัวข้อย่อยในส่วนนี้">
-    {activeModule.indices.map((sIdx,pos)=>{
+    {introductoryIndices.map((sIdx,pos)=>{
      const s=slides[sIdx];
      return <button key={s.id} type="button" className={'subtopic-pill '+(index===sIdx?'active':'')} onClick={()=>setIndex(sIdx)}>
-      <span>{pos+1}. {s.title}</span>
+      <span>{isGuidedModule?'':`${pos+1}. `}{s.title}</span>
      </button>;
     })}
    </div>
   )}
-  {isPracticeSlide&&guidedSteps.length>0&&(
+  {isGuidedModule&&guidedSteps.length>0&&(
    <div className="step-Interactive-strip" aria-label="ตัวเลือกขั้นตอนการฝึกปฏิบัติ">
-    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ:</span>
+    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ ({guidedSteps.length} ขั้นตอน):</span>
     <div className="step-Direct-buttons">
      {guidedSteps.map(g=>{
       const active=slide.step===g.step;
