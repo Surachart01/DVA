@@ -2922,8 +2922,8 @@ export const teachingDeck = [
             "task": "ตัด ฿ คำว่า บาท และเครื่องหมายคั่นหลักพันก่อนแปลงราคาเป็นตัวเลข ตรวจ quantity และ unit_price ที่ว่าง แล้วแยกรายการเหล่านั้นไว้ตรวจสอบ"
           },
           {
-            "title": "ลบแถวซ้ำและตรวจคุณภาพ",
-            "task": "ลบเฉพาะแถวที่เหมือนกันทุกคอลัมน์ ตรวจจำนวนแถวที่เหลือ ค่าว่าง และข้อมูลซ้ำก่อนส่งออก"
+            "title": "ตรวจและลบแถวซ้ำ",
+            "task": "ตรวจว่ามีแถวซ้ำกี่แถว แล้วลบแถวที่ข้อมูลเหมือนกันทุกคอลัมน์ โดยเก็บแถวแรกไว้ จากนั้นแสดงจำนวนแถวที่เหลือ และตรวจว่ายังมีแถวซ้ำหรือไม่"
           },
           {
             "title": "ส่งออกและอ่านกลับ",
@@ -3966,437 +3966,653 @@ export const teachingDeck = [
         "module": "final"
       },
       {
-        "id": "w3-tuesday",
+        "id": "w3-thursday-start",
         "type": "content",
-        "title": "การเตรียมความพร้อมก่อนเริ่มเรียน",
-        "items": [
-          "เปิดไฟล์ Notebook ที่ใช้เรียน และอัปโหลดไฟล์ชุดข้อมูลผ่านเมนู Files",
-          "หากระบบเริ่มต้นสภาพแวดล้อมการทำงานใหม่ ให้อัปโหลดไฟล์ข้อมูลและรันเซลล์คำสั่งตามลำดับ",
-          "ตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มเรียนคำสั่งใหม่"
-        ],
+        "title": "เตรียมไฟล์สำหรับวิเคราะห์ข้อมูล",
+        "module": "prep",
         "teachingDays": [
           1
         ],
-        "speakerNotes": "ผู้สอนอธิบายด้วยตัวอย่างจากไฟล์ฝึก ให้ผู้เรียนตรวจสอบก่อนดำเนินการต่อ"
-      },
-      {
-        "id": "w3-concept-1-2",
-        "type": "content",
-        "title": "ดูหลักฐานก่อนเสนอการแก้",
         "items": [
-          "วันพฤหัสบดี 120 นาที: เปิดแถวผิดช่วง ตรวจ GPA และอ่านข้อความวันที่",
-          "loc ใช้รูปแบบ df.loc[หน้ากาก, list ชื่อคอลัมน์]",
-          "ค่านอกช่วงเป็นสัญญาณให้ตรวจแหล่งต้นทาง ห้ามลบหรือแทนค่าโดยไม่มีเหตุผล",
-          "บันทึกชื่อปัญหา จำนวน เกณฑ์ และข้อจำกัด; จำนวนปัญหาอาจซ้อนกันในรายการเดียว"
+          "ดาวน์โหลดไฟล์ w03_orders_ready.xlsx จากลิงก์ด้านล่าง",
+          "สร้าง Notebook ใหม่ใน Google Colab",
+          "เปิดแถบ Files แล้วอัปโหลดไฟล์ w03_orders_ready.xlsx"
         ],
-        "teachingDays": [
-          1
-        ],
-        "speakerNotes": "ผู้สอนอธิบายด้วยตัวอย่างจากไฟล์ฝึก ให้ผู้เรียนตรวจสอบก่อนดำเนินการต่อ"
+        "downloads": [
+          {
+            "label": "ดาวน์โหลด w03_orders_ready.xlsx",
+            "url": "ชุดเรียน/เรียนย้อนหลัง_สัปดาห์03/w03_orders_ready.xlsx"
+          }
+        ]
       },
       {
-        "id": "w3-write-13",
+        "id": "w3-thursday-write-1",
         "type": "guided",
-        "flow": "write-then-check",
-        "step": 13,
-        "title": "ขั้นตอนที่ 13: เปิดแถวอายุผิดช่วง",
+        "title": "ขั้นตอนที่ 1: นำเข้า pandas และเปิดไฟล์ Excel",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "df.loc[age_bad, ['student_id', 'age']]",
-        "meaning": "ดูรหัสและอายุเฉพาะรายการผิดช่วง",
+        "step": 1,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())",
+        "meaning": "นำเข้า pandas อ่านไฟล์ และแสดงรายชื่อคอลัมน์สำหรับเลือกใช้ในการวิเคราะห์",
         "parts": [
           {
-            "token": ".loc[แถว, คอลัมน์]",
-            "meaning": "เลือกแถวและคอลัมน์พร้อมกัน"
+            "token": "import pandas as pd",
+            "meaning": "นำเข้า pandas"
           },
           {
-            "token": "['student_id', 'age']",
-            "meaning": "list ชื่อคอลัมน์ที่ต้องการ"
+            "token": "pd.read_excel()",
+            "meaning": "อ่านไฟล์ Excel"
+          },
+          {
+            "token": "sheet_name",
+            "meaning": "เลือกแผ่นงาน Orders"
+          },
+          {
+            "token": "df.columns.tolist()",
+            "meaning": "แสดงรายชื่อคอลัมน์"
           }
         ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())"
       },
       {
-        "id": "w3-write-13-result",
+        "id": "w3-thursday-write-1-result",
         "type": "guided-check",
-        "step": 13,
-        "title": "ขั้นตอนที่ 13: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
+        "title": "ขั้นตอนที่ 1: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "code": "df.loc[age_bad, ['student_id', 'age']]",
+        "step": 1,
+        "code": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "['order_id', 'date_clean', 'product_name', 'quantity', 'unit_price', 'payment_method', 'status']\n"
+        },
+        "interpretation": "ตรวจว่าตารางมี product_name, quantity และ payment_method ก่อนดำเนินการต่อ",
+        "mistake": "อัปโหลดไฟล์ก่อนรันและกำหนดให้ order_id เป็นข้อความเพื่อรักษาเลขศูนย์นำหน้า",
+        "checkpoint": "คอลัมน์ใดระบุช่องทางชำระเงิน?"
+      },
+      {
+        "id": "w3-thursday-write-2",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 2: สำรวจตารางและนับรายการตามชื่อสินค้า",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 2,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "print(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())",
+        "meaning": "แสดงข้อมูลห้าแถวแรก ตรวจขนาดตาราง และนับจำนวนรายการแยกตามชื่อสินค้าในเซลล์เดียว",
+        "parts": [
+          {
+            "token": "head()",
+            "meaning": "แสดงข้อมูลห้าแถวแรก"
+          },
+          {
+            "token": "shape",
+            "meaning": "แสดงจำนวนแถวและจำนวนคอลัมน์"
+          },
+          {
+            "token": "value_counts()",
+            "meaning": "นับจำนวนครั้งที่ชื่อสินค้าแต่ละชื่อปรากฏ"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())"
+      },
+      {
+        "id": "w3-thursday-write-2-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 2: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 2,
+        "code": "print(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "  order_id date_clean product_name  quantity  unit_price payment_method status\n0     0005 2026-11-05         แฟ้ม         2           0         เงินสด    ขาย\n1     0008 2026-11-03         แฟ้ม         1          99         เงินสด    ขาย\n2     0009 2026-11-04         สมุด         2        1250         เงินสด    ขาย\n3     0010 2026-11-05        ปากกา         3         250      พร้อมเพย์    ขาย\n4     0011 2026-11-01         แฟ้ม         4          99         เงินสด    ขาย\nขนาดตาราง: (28, 7)\nproduct_name\nแฟ้ม     11\nสมุด      9\nปากกา     8\nName: count, dtype: int64\n"
+        },
+        "interpretation": "อ่านผลตามลำดับ: ตัวอย่างห้าแถว ขนาดตาราง 28 แถว 7 คอลัมน์ และจำนวนรายการของสินค้าแต่ละชนิด",
+        "mistake": "ใช้ print() เพื่อแสดงผลทั้งสามส่วนในเซลล์เดียว ค่า shape แสดงจำนวนแถวก่อนจำนวนคอลัมน์",
+        "checkpoint": "สินค้าใดปรากฏมากที่สุด และมีกี่รายการ?"
+      },
+      {
+        "id": "w3-thursday-write-3",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 3: จัดกลุ่มสินค้าและรวมจำนวนชิ้น",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 3,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "product_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)",
+        "meaning": "จัดกลุ่มตามชื่อสินค้า รวมจำนวนชิ้นของแต่ละกลุ่ม แล้วแสดงผลรวม",
+        "parts": [
+          {
+            "token": "groupby()",
+            "meaning": "จัดกลุ่มตามชื่อสินค้า"
+          },
+          {
+            "token": "sum()",
+            "meaning": "รวมจำนวนชิ้นภายในกลุ่ม"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)"
+      },
+      {
+        "id": "w3-thursday-write-3-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 3: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 3,
+        "code": "product_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "product_name\nปากกา    19\nสมุด     19\nแฟ้ม     27\nName: quantity, dtype: int64\n"
+        },
+        "interpretation": "แต่ละบรรทัดระบุชื่อสินค้าและจำนวนชิ้นรวมของสินค้านั้น",
+        "mistake": "เลือก quantity สำหรับการรวมจำนวนชิ้น",
+        "checkpoint": "ผลรวมจำนวนชิ้นต่างจากการนับรายการอย่างไร?"
+      },
+      {
+        "id": "w3-thursday-write-4",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 4: เรียงจำนวนชิ้นรวมจากมากไปน้อย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 4,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "ranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())",
+        "meaning": "เรียงผลรวมเพื่อเปรียบเทียบจำนวนชิ้นของสินค้าแต่ละชนิด",
+        "parts": [
+          {
+            "token": "sort_values()",
+            "meaning": "เรียงตามค่าผลรวม"
+          },
+          {
+            "token": "ascending=False",
+            "meaning": "เรียงจากมากไปน้อย"
+          },
+          {
+            "token": "max()",
+            "meaning": "แสดงจำนวนชิ้นสูงสุด"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())"
+      },
+      {
+        "id": "w3-thursday-write-4-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 4: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 4,
+        "code": "ranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "product_name\nแฟ้ม     27\nปากกา    19\nสมุด     19\nName: quantity, dtype: int64\nจำนวนชิ้นสูงสุด: 27\n"
+        },
+        "interpretation": "แถวบนสุดมีจำนวนชิ้นรวมสูงสุด หากผลรวมเท่ากัน สินค้าเหล่านั้นมีอันดับร่วมกัน",
+        "mistake": "ตรวจชื่อคอลัมน์ที่นำมารวมก่อนอ่านอันดับ เพราะการเรียงจำนวนรายการอาจให้ผลต่างกัน",
+        "checkpoint": "สินค้าใดมีจำนวนชิ้นรวมสูงสุด และมีจำนวนเท่าใด?"
+      },
+      {
+        "id": "w3-thursday-write-5",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 5: เปรียบเทียบสองหน่วยในตารางเดียว",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 5,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "product_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary",
+        "meaning": "สร้างตารางสรุปที่มีจำนวนรายการและจำนวนชิ้นรวมของสินค้าแต่ละชนิด",
+        "parts": [
+          {
+            "token": "agg()",
+            "meaning": "คำนวณผลสรุปหลายแบบจากกลุ่มเดียวกัน"
+          },
+          {
+            "token": "orders='size'",
+            "meaning": "นับจำนวนแถวในกลุ่ม"
+          },
+          {
+            "token": "units='sum'",
+            "meaning": "รวมจำนวนชิ้นในกลุ่ม"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary"
+      },
+      {
+        "id": "w3-thursday-write-5-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 5: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 5,
+        "code": "product_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary",
         "output": {
           "kind": "table",
           "title": "ผลลัพธ์จากการรันคำสั่ง",
           "columns": [
             "ลำดับแถว",
-            "student_id",
-            "age"
+            "orders",
+            "units"
           ],
           "rows": [
             [
-              7,
-              "S008",
-              150.0
+              "ปากกา",
+              "8",
+              "19"
+            ],
+            [
+              "สมุด",
+              "9",
+              "19"
+            ],
+            [
+              "แฟ้ม",
+              "11",
+              "27"
             ]
           ],
-          "note": "ตารางข้อมูลมีทั้งหมด 1 แถว 2 คอลัมน์ · ลำดับแถวด้านซ้ายสุดสร้างโดยโปรแกรม ไม่ใช่คอลัมน์ในไฟล์ข้อมูล"
+          "note": "ตารางผลลัพธ์ทั้งหมด 3 แถว 2 คอลัมน์ · แสดงตัวอย่างไม่เกิน 10 แถว"
         },
-        "expected": "แสดง S008 อายุ 150.0 เพียงแถวเดียว",
-        "interpretation": "แสดง S008 อายุ 150.0 เพียงแถวเดียว",
-        "mistake": "เกณฑ์นี้เป็นสัญญาณให้ตรวจต้นทาง ยังไม่ยืนยันอายุจริง",
-        "checkpoint": "ระบุรหัสที่ควรตรวจสอบได้",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
+        "interpretation": "orders แสดงจำนวนแถวของสินค้าแต่ละชนิด ส่วน units แสดงผลรวมค่า quantity",
+        "mistake": "อ่านชื่อคอลัมน์ก่อนสรุปว่าสินค้าใดมีค่าสูงสุด เพราะแต่ละคอลัมน์ตอบคนละคำถาม",
+        "checkpoint": "เลือกสินค้าหนึ่งชนิด แล้วอ่านผลทั้งสองคอลัมน์พร้อมระบุหน่วย"
       },
       {
-        "id": "w3-write-14",
+        "id": "w3-thursday-write-6",
         "type": "guided",
-        "flow": "write-then-check",
-        "step": 14,
-        "title": "ขั้นตอนที่ 14: นับอายุผิดช่วง",
+        "title": "ขั้นตอนที่ 6: ตรวจสอบผลรวมกับข้อมูลต้นทาง",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "age_bad.sum()",
-        "meaning": "นับรายการที่มีอายุอยู่นอกเกณฑ์",
+        "step": 6,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "source_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)",
+        "meaning": "คำนวณผลรวมสองทางและเปรียบเทียบว่าตรงกันหรือไม่",
         "parts": [
           {
-            "token": ".sum()",
-            "meaning": "รวม True ในหน้ากาก"
-          }
-        ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
-      },
-      {
-        "id": "w3-write-14-result",
-        "type": "guided-check",
-        "step": 14,
-        "title": "ขั้นตอนที่ 14: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
-        "teachingDays": [
-          1
-        ],
-        "code": "age_bad.sum()",
-        "output": {
-          "kind": "text",
-          "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "1"
-        },
-        "expected": "ได้ 1 โดยไม่รวมอายุว่าง",
-        "interpretation": "ได้ 1 โดยไม่รวมอายุว่าง",
-        "mistake": "อย่านับจาก ~age_valid โดยไม่แยกค่าว่าง",
-        "checkpoint": "ได้ผล 1 และอธิบายตัวนับได้",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
-      },
-      {
-        "id": "w3-write-15",
-        "type": "guided",
-        "flow": "write-then-check",
-        "step": 15,
-        "title": "ขั้นตอนที่ 15: แยก GPA ที่มีค่า",
-        "teachingDays": [
-          1
-        ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "gpa_present = df['gpa'].notna()\ngpa_present",
-        "meaning": "ตรวจตำแหน่งที่ GPA ไม่ว่าง",
-        "parts": [
-          {
-            "token": ".notna()",
-            "meaning": "ให้ True เมื่อมีค่า"
-          }
-        ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
-      },
-      {
-        "id": "w3-write-15-result",
-        "type": "guided-check",
-        "step": 15,
-        "title": "ขั้นตอนที่ 15: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
-        "teachingDays": [
-          1
-        ],
-        "code": "gpa_present = df['gpa'].notna()\ngpa_present",
-        "output": {
-          "kind": "text",
-          "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "0      True\n1      True\n2      True\n3     False\n4      True\n5      True\n6      True\n      ...  \n35     True\n36     True\n37     True\n38     True\n39     True\n40     True\n41     True",
-          "note": "แสดงตัวอย่างบางส่วนจากข้อมูลทั้งหมด 42 รายการ"
-        },
-        "expected": "True 40 แถว และ False 2 แถว",
-        "interpretation": "True 40 แถว และ False 2 แถว",
-        "mistake": "GPA ว่างไม่ใช่ 0.00",
-        "checkpoint": "ยืนยันว่ามี GPA ว่าง 2 แถว",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
-      },
-      {
-        "id": "w3-write-16",
-        "type": "guided",
-        "flow": "write-then-check",
-        "step": 16,
-        "title": "ขั้นตอนที่ 16: ตรวจ GPA ในเกณฑ์",
-        "teachingDays": [
-          1
-        ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "gpa_valid = df['gpa'].between(0, 4)\ngpa_valid",
-        "meaning": "ตรวจ GPA ตามช่วง 0.00–4.00",
-        "parts": [
-          {
-            "token": ".between(0, 4)",
-            "meaning": "รวมค่าขอบ 0 และ 4"
-          }
-        ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
-      },
-      {
-        "id": "w3-write-16-result",
-        "type": "guided-check",
-        "step": 16,
-        "title": "ขั้นตอนที่ 16: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
-        "teachingDays": [
-          1
-        ],
-        "code": "gpa_valid = df['gpa'].between(0, 4)\ngpa_valid",
-        "output": {
-          "kind": "text",
-          "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "0      True\n1      True\n2      True\n3     False\n4      True\n5      True\n6      True\n      ...  \n35     True\n36     True\n37     True\n38     True\n39     True\n40     True\n41     True",
-          "note": "แสดงตัวอย่างบางส่วนจากข้อมูลทั้งหมด 42 รายการ"
-        },
-        "expected": "False 3 แถว: ค่าว่าง 2 แถว และ GPA 4.75 หนึ่งแถว",
-        "interpretation": "False 3 แถว: ค่าว่าง 2 แถว และ GPA 4.75 หนึ่งแถว",
-        "mistake": "ค่า 0 เป็นค่าที่อยู่ในเกณฑ์ ไม่ใช่ค่าว่าง",
-        "checkpoint": "อธิบายเหตุผลที่ False มี 3 แถวได้",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
-      },
-      {
-        "id": "w3-write-17",
-        "type": "guided",
-        "flow": "write-then-check",
-        "step": 17,
-        "title": "ขั้นตอนที่ 17: สร้างหน้ากาก GPA ผิดช่วง",
-        "teachingDays": [
-          1
-        ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "gpa_bad = ~gpa_valid & gpa_present\ngpa_bad",
-        "meaning": "เลือก GPA ที่มีค่าและอยู่นอกเกณฑ์",
-        "parts": [
-          {
-            "token": "~gpa_valid",
-            "meaning": "ไม่อยู่ในช่วง"
+            "token": "df['quantity']",
+            "meaning": "เลือกจำนวนชิ้นของทุกแถว"
           },
           {
-            "token": "& gpa_present",
-            "meaning": "และต้องมีค่า"
+            "token": "sum()",
+            "meaning": "รวมจำนวนชิ้นของแต่ละตาราง"
+          },
+          {
+            "token": "==",
+            "meaning": "เปรียบเทียบผลรวมทั้งสองค่า"
           }
         ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)"
       },
       {
-        "id": "w3-write-17-result",
+        "id": "w3-thursday-write-6-result",
         "type": "guided-check",
-        "step": 17,
-        "title": "ขั้นตอนที่ 17: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
+        "title": "ขั้นตอนที่ 6: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "code": "gpa_bad = ~gpa_valid & gpa_present\ngpa_bad",
+        "step": 6,
+        "code": "source_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)",
         "output": {
           "kind": "text",
           "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "0     False\n1     False\n2     False\n3     False\n4     False\n5     False\n6     False\n      ...  \n35    False\n36    False\n37    False\n38    False\n39    False\n40    False\n41    False",
-          "note": "แสดงตัวอย่างบางส่วนจากข้อมูลทั้งหมด 42 รายการ"
+          "text": "รวมจากข้อมูลต้นทาง: 65\nรวมจากตารางสรุป: 65\nผลรวมตรงกัน: True\n"
         },
-        "expected": "True 1 แถว; แถว GPA ว่างเป็น False",
-        "interpretation": "True 1 แถว; แถว GPA ว่างเป็น False",
-        "mistake": "ต้องใช้หน้ากากจาก df เดียวกัน",
-        "checkpoint": "แยก GPA ว่างกับ GPA ผิดช่วงได้",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
+        "interpretation": "True หมายถึงผลรวมจำนวนชิ้นจากตารางสรุปตรงกับผลรวมจากข้อมูลต้นทาง",
+        "mistake": "เปรียบเทียบผลรวมที่ใช้หน่วยเดียวกัน โดยตรวจว่ารวมจากตารางชุดเดียวกัน",
+        "checkpoint": "ถ้าผลรวมจากทุกกลุ่มต่างจากผลรวมของตารางต้นทาง ควรตรวจอะไร?"
       },
       {
-        "id": "w3-write-18",
+        "id": "w3-thursday-write-7",
         "type": "guided",
-        "flow": "write-then-check",
-        "step": 18,
-        "title": "ขั้นตอนที่ 18: เปิดแถว GPA ผิดช่วง",
+        "title": "ขั้นตอนที่ 7: เลือกเฉพาะรายการปากกา",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "df.loc[gpa_bad, ['student_id', 'gpa']]",
-        "meaning": "แสดงหลักฐานของค่า GPA ผิดช่วง",
+        "step": 7,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "pens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])",
+        "meaning": "เลือกเฉพาะแถวที่ชื่อสินค้าเป็นปากกา แล้วแสดงตารางที่ได้",
         "parts": [
           {
-            "token": ".loc[]",
-            "meaning": "เลือกแถวและคอลัมน์ตามที่ระบุ"
-          }
-        ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
-      },
-      {
-        "id": "w3-write-18-result",
-        "type": "guided-check",
-        "step": 18,
-        "title": "ขั้นตอนที่ 18: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
-        "teachingDays": [
-          1
-        ],
-        "code": "df.loc[gpa_bad, ['student_id', 'gpa']]",
-        "output": {
-          "kind": "table",
-          "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "columns": [
-            "ลำดับแถว",
-            "student_id",
-            "gpa"
-          ],
-          "rows": [
-            [
-              18,
-              "S019",
-              4.75
-            ]
-          ],
-          "note": "ตารางข้อมูลมีทั้งหมด 1 แถว 2 คอลัมน์ · ลำดับแถวด้านซ้ายสุดสร้างโดยโปรแกรม ไม่ใช่คอลัมน์ในไฟล์ข้อมูล"
-        },
-        "expected": "แสดง S019 มี GPA 4.75",
-        "interpretation": "แสดง S019 มี GPA 4.75",
-        "mistake": "ตรวจหลักฐานต้นทางก่อนแก้ค่า",
-        "checkpoint": "ระบุ S019 และค่า 4.75 ได้",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
-      },
-      {
-        "id": "w3-write-19",
-        "type": "guided",
-        "flow": "write-then-check",
-        "step": 19,
-        "title": "ขั้นตอนที่ 19: นับ GPA ผิดช่วง",
-        "teachingDays": [
-          1
-        ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "gpa_bad.sum()",
-        "meaning": "นับ GPA ที่มีค่าและอยู่นอกเกณฑ์",
-        "parts": [
+            "token": "df['product_name'] == 'ปากกา'",
+            "meaning": "สร้างเงื่อนไขเลือกแถว"
+          },
           {
-            "token": ".sum()",
-            "meaning": "รวม True"
+            "token": "df.loc[...]",
+            "meaning": "เลือกแถวที่ตรงเงื่อนไข"
+          },
+          {
+            "token": "len(pens)",
+            "meaning": "นับจำนวนแถวที่เลือก"
+          },
+          {
+            "token": "print()",
+            "meaning": "แสดงรหัส ชื่อสินค้า และจำนวนชิ้น"
           }
         ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)\n\npens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])"
       },
       {
-        "id": "w3-write-19-result",
+        "id": "w3-thursday-write-7-result",
         "type": "guided-check",
-        "step": 19,
-        "title": "ขั้นตอนที่ 19: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
+        "title": "ขั้นตอนที่ 7: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "code": "gpa_bad.sum()",
+        "step": 7,
+        "code": "pens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])",
         "output": {
           "kind": "text",
           "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "1"
+          "text": "จำนวนรายการปากกา: 8\n   order_id product_name  quantity\n3      0010        ปากกา         3\n6      0013        ปากกา         2\n8      0016        ปากกา         1\n13     0022        ปากกา         3\n16     0025        ปากกา         2\n19     0028        ปากกา         1\n22     0031        ปากกา         4\n25     0034        ปากกา         3\n"
         },
-        "expected": "ได้ 1; ค่าว่าง 2 แถวเป็นอีกปัญหาหนึ่ง",
-        "interpretation": "ได้ 1; ค่าว่าง 2 แถวเป็นอีกปัญหาหนึ่ง",
-        "mistake": "อย่ารวมจำนวนปัญหาเป็นจำนวนผู้เรียนโดยไม่ตรวจการซ้อนกัน",
-        "checkpoint": "รายงานได้ว่า GPA ผิดช่วง 1 และว่าง 2",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
+        "interpretation": "ตรวจว่าค่าในคอลัมน์ product_name ของทุกแถวที่แสดงเป็นปากกา",
+        "mistake": "ใช้ == เพื่อเปรียบเทียบชื่อสินค้า และใช้ = เพื่อเก็บตารางผลลัพธ์ในตัวแปร pens",
+        "checkpoint": "หากต้องการเลือกเฉพาะรายการสมุด ต้องเปลี่ยนค่าใดในคำสั่ง?"
       },
       {
-        "id": "w3-write-20",
+        "id": "w3-thursday-write-8",
         "type": "guided",
-        "flow": "write-then-check",
-        "step": 20,
-        "title": "ขั้นตอนที่ 20: อ่านวันที่ต้นทาง",
+        "title": "ขั้นตอนที่ 8: รวมจำนวนด้ามของปากกา",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "instruction": "ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์",
-        "code": "df['updated_date']",
-        "meaning": "ตรวจตัวอย่างข้อความวันที่ก่อนเรียนการแปลงวันที่",
+        "step": 8,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "pen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')",
+        "meaning": "รวมจำนวนด้ามจากรายการปากกาที่เลือกในขั้นตอนก่อนหน้า",
         "parts": [
           {
-            "token": "['updated_date']",
-            "meaning": "เลือกคอลัมน์วันที่ต้นทาง"
+            "token": "pens['quantity']",
+            "meaning": "เลือกจำนวนด้ามในแต่ละรายการปากกา"
+          },
+          {
+            "token": "sum()",
+            "meaning": "รวมจำนวนด้ามทั้งหมด"
           }
         ],
-        "decisionRule": null,
-        "teacherAction": "อธิบายความหมายของคำสั่งในแต่ละส่วน จากนั้นเขียนคำสั่งและรันผลลัพธ์ไปพร้อมกับผู้เรียน",
-        "studentAction": "พิมพ์คำสั่งลงในเซลล์โค้ดและรันคำสั่งเพื่อตรวจสอบผลลัพธ์ด้วยตนเอง",
-        "run": "วิธีรันคำสั่ง: กดปุ่ม Shift + Enter",
-        "speakerNotes": "อธิบายส่วนประกอบของคำสั่งทีละส่วน ให้ผู้เรียนพิมพ์คำสั่งและตรวจผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป"
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)\n\npens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])\n\npen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')"
       },
       {
-        "id": "w3-write-20-result",
+        "id": "w3-thursday-write-8-result",
         "type": "guided-check",
-        "step": 20,
-        "title": "ขั้นตอนที่ 20: ผลลัพธ์จากการรันคำสั่งและคำอธิบาย",
+        "title": "ขั้นตอนที่ 8: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
         "teachingDays": [
           1
         ],
-        "code": "df['updated_date']",
+        "step": 8,
+        "code": "pen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')",
         "output": {
           "kind": "text",
           "title": "ผลลัพธ์จากการรันคำสั่ง",
-          "text": "0     2026-06-01\n1     2026-06-09\n2     2026-06-06\n3     2026-06-04\n4     2026-06-05\n5     2026-06-08\n6     2026-06-04\n         ...    \n35    2026-06-07\n36    2026-06-02\n37    2026-06-05\n38    2026-06-02\n39    2026-06-07\n40    2026-06-08\n41    2026-06-06",
-          "note": "แสดงตัวอย่างบางส่วนจากข้อมูลทั้งหมด 42 รายการ"
+          "text": "ปากกาปรากฏ 8 รายการ รวม 19 ด้าม\n"
         },
-        "expected": "เห็นข้อความวันที่ปี 2026 และ 2020; ยังไม่ใช่ผลตรวจความเป็นปัจจุบัน",
-        "interpretation": "เห็นข้อความวันที่ปี 2026 และ 2020; ยังไม่ใช่ผลตรวจความเป็นปัจจุบัน",
-        "mistake": "อย่าสรุปว่าเก่าหรือผิดโดยยังไม่มีวันอ้างอิงและเกณฑ์",
-        "checkpoint": "บันทึกได้ว่าต้องมีวันอ้างอิงก่อนตรวจความเป็นปัจจุบัน",
-        "speakerNotes": "เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ"
+        "interpretation": "นำจำนวนรายการปากกาจากขั้นตอนที่ 2 มาเขียนคู่กับผลรวมหน่วยด้ามของขั้นตอนนี้",
+        "mistake": "ใช้ pens เพื่อรวมเฉพาะปากกา หากใช้ df จะรวมสินค้าทุกชนิด",
+        "checkpoint": "เติมข้อความให้สมบูรณ์ ปากกาปรากฏ ___ รายการ รวม ___ ด้าม"
       },
       {
-        "id": "w3-summary",
-        "type": "summary",
-        "title": "สรุปและตรวจสอบความเข้าใจ",
+        "id": "w3-thursday-write-9",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 9: สรุปจำนวนชิ้นแยกตามวันที่",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 9,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "daily_units = df.groupby('date_clean')['quantity'].sum()\ndaily_units = daily_units.sort_index()\nprint(daily_units)\nprint('จำนวนวันที่มีรายการขาย:', len(daily_units))",
+        "meaning": "จัดกลุ่มตามวันที่ รวมจำนวนชิ้นในแต่ละวัน และแสดงผลตามลำดับวันที่",
+        "parts": [
+          {
+            "token": "groupby()",
+            "meaning": "จัดกลุ่มตามวันที่"
+          },
+          {
+            "token": "sum()",
+            "meaning": "รวมจำนวนชิ้นของแต่ละวัน"
+          },
+          {
+            "token": "sort_index()",
+            "meaning": "เรียงตามวันที่"
+          },
+          {
+            "token": "len()",
+            "meaning": "นับจำนวนวันที่มีรายการ"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)\n\npens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])\n\npen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')\n\ndaily_units = df.groupby('date_clean')['quantity'].sum()\ndaily_units = daily_units.sort_index()\nprint(daily_units)\nprint('จำนวนวันที่มีรายการขาย:', len(daily_units))"
+      },
+      {
+        "id": "w3-thursday-write-9-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 9: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 9,
+        "code": "daily_units = df.groupby('date_clean')['quantity'].sum()\ndaily_units = daily_units.sort_index()\nprint(daily_units)\nprint('จำนวนวันที่มีรายการขาย:', len(daily_units))",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "date_clean\n2026-11-01    15\n2026-11-02    11\n2026-11-03    13\n2026-11-04    11\n2026-11-05    15\nName: quantity, dtype: int64\nจำนวนวันที่มีรายการขาย: 5\n"
+        },
+        "interpretation": "แต่ละบรรทัดคือจำนวนชิ้นรวมของวันนั้น และบรรทัดสุดท้ายคือจำนวนวันที่ปรากฏในข้อมูล",
+        "mistake": "อ่านผลจาก date_clean ซึ่งเป็นวันที่ที่ผ่านการจัดเตรียมแล้ว",
+        "checkpoint": "วันแรกในตารางมีจำนวนชิ้นรวมเท่าใด?"
+      },
+      {
+        "id": "w3-thursday-write-10",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 10: คำนวณสัดส่วนของวันที่ขายได้มากที่สุด",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 10,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "peak_units = daily_units.max()\npeak_days = daily_units.loc[daily_units == peak_units]\npeak_share = peak_units / source_total * 100\nprint(peak_days)\nprint(f'สัดส่วนต่อจำนวนชิ้นทั้งหมด: {peak_share:.1f}%')",
+        "meaning": "หาจำนวนชิ้นสูงสุด เลือกทุกวันที่ได้ค่าสูงสุด แล้วคิดเป็นร้อยละของจำนวนชิ้นทั้งหมด",
+        "parts": [
+          {
+            "token": "max()",
+            "meaning": "หาจำนวนชิ้นสูงสุดต่อวัน"
+          },
+          {
+            "token": "loc[]",
+            "meaning": "เลือกทุกวันที่ได้ค่าสูงสุด"
+          },
+          {
+            "token": "/ source_total * 100",
+            "meaning": "คำนวณร้อยละ"
+          },
+          {
+            "token": ":.1f",
+            "meaning": "แสดงทศนิยมหนึ่งตำแหน่ง"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)\n\npens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])\n\npen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')\n\ndaily_units = df.groupby('date_clean')['quantity'].sum()\ndaily_units = daily_units.sort_index()\nprint(daily_units)\nprint('จำนวนวันที่มีรายการขาย:', len(daily_units))\n\npeak_units = daily_units.max()\npeak_days = daily_units.loc[daily_units == peak_units]\npeak_share = peak_units / source_total * 100\nprint(peak_days)\nprint(f'สัดส่วนต่อจำนวนชิ้นทั้งหมด: {peak_share:.1f}%')"
+      },
+      {
+        "id": "w3-thursday-write-10-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 10: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 10,
+        "code": "peak_units = daily_units.max()\npeak_days = daily_units.loc[daily_units == peak_units]\npeak_share = peak_units / source_total * 100\nprint(peak_days)\nprint(f'สัดส่วนต่อจำนวนชิ้นทั้งหมด: {peak_share:.1f}%')",
+        "output": {
+          "kind": "text",
+          "title": "ผลลัพธ์จากการรันคำสั่ง",
+          "text": "date_clean\n2026-11-01    15\n2026-11-05    15\nName: quantity, dtype: int64\nสัดส่วนต่อจำนวนชิ้นทั้งหมด: 23.1%\n"
+        },
+        "interpretation": "ร้อยละที่แสดงเป็นสัดส่วนของแต่ละวันที่ได้ค่าสูงสุดเมื่อเทียบกับจำนวนชิ้นทั้งหมด",
+        "mistake": "ใช้จำนวนชิ้นทั้งหมดเป็นตัวหารเพื่อให้ตัวตั้งและตัวหารมีหน่วยเดียวกัน",
+        "checkpoint": "วันใดมีจำนวนชิ้นสูงสุด และคิดเป็นกี่เปอร์เซ็นต์ของจำนวนชิ้นทั้งหมด?"
+      },
+      {
+        "id": "w3-thursday-write-11",
+        "type": "guided",
+        "title": "ขั้นตอนที่ 11: สร้างกราฟแท่งแสดงจำนวนชิ้นที่ขายได้รายวัน",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 11,
+        "flow": "write-then-check",
+        "instruction": "พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter",
+        "run": "วิธีรันคำสั่ง: Shift + Enter",
+        "code": "import matplotlib.pyplot as plt\n\ndates = daily_units.index.strftime('%d/%m/%Y')\nfig, ax = plt.subplots(figsize=(8, 4))\nbars = ax.bar(dates, daily_units.values)\nax.set_title('Daily units sold')\nax.set_xlabel('Date')\nax.set_ylabel('Units sold')\nfig.tight_layout()\nplt.show()",
+        "meaning": "นำผลรวมรายวันจากขั้นตอนที่ 9 มาสร้างกราฟแท่งและแสดงผล",
+        "parts": [
+          {
+            "token": "plt.subplots(figsize=(8, 4))",
+            "meaning": "สร้างรูปขนาดกว้าง 8 นิ้ว สูง 4 นิ้ว และคืนค่า fig กับ ax"
+          },
+          {
+            "token": "fig",
+            "meaning": "Figure คือรูปทั้งรูป เปรียบได้กับกระดาษหนึ่งแผ่นที่มีพื้นที่วาดกราฟอยู่ภายใน"
+          },
+          {
+            "token": "ax",
+            "meaning": "Axes คือพื้นที่วาดกราฟหนึ่งช่องภายใน fig ซึ่งมีแกน X และแกน Y"
+          },
+          {
+            "token": "ax.bar()",
+            "meaning": "วาดแท่งจากวันที่และจำนวนชิ้นลงในพื้นที่ ax"
+          },
+          {
+            "token": "ax.set_title()",
+            "meaning": "กำหนดชื่อกราฟ"
+          },
+          {
+            "token": "ax.set_xlabel() และ ax.set_ylabel()",
+            "meaning": "กำหนดชื่อแกน"
+          },
+          {
+            "token": "fig.tight_layout()",
+            "meaning": "ปรับระยะขอบและการจัดวางในรูปให้ชื่อกราฟและข้อความบนแกนมีพื้นที่เพียงพอ"
+          },
+          {
+            "token": "plt.show()",
+            "meaning": "แสดงกราฟ"
+          }
+        ],
+        "teacherAction": "อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน",
+        "studentAction": "พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง",
+        "completeCode": "import pandas as pd\ndf = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})\nprint(df.columns.tolist())\n\nprint(df.head())\nprint('ขนาดตาราง:', df.shape)\nprint(df['product_name'].value_counts())\n\nproduct_groups = df.groupby('product_name')\nunits_per_product = product_groups['quantity'].sum()\nprint(units_per_product)\n\nranked_units = units_per_product.sort_values(ascending=False)\nprint(ranked_units)\nprint('จำนวนชิ้นสูงสุด:', ranked_units.max())\n\nproduct_summary = product_groups['quantity'].agg(orders='size', units='sum')\nproduct_summary\n\nsource_total = df['quantity'].sum()\ngroup_total = product_summary['units'].sum()\nprint('รวมจากข้อมูลต้นทาง:', source_total)\nprint('รวมจากตารางสรุป:', group_total)\nprint('ผลรวมตรงกัน:', source_total == group_total)\n\npens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])\n\npen_orders = len(pens)\npen_units = pens['quantity'].sum()\nprint(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')\n\ndaily_units = df.groupby('date_clean')['quantity'].sum()\ndaily_units = daily_units.sort_index()\nprint(daily_units)\nprint('จำนวนวันที่มีรายการขาย:', len(daily_units))\n\npeak_units = daily_units.max()\npeak_days = daily_units.loc[daily_units == peak_units]\npeak_share = peak_units / source_total * 100\nprint(peak_days)\nprint(f'สัดส่วนต่อจำนวนชิ้นทั้งหมด: {peak_share:.1f}%')\n\nimport matplotlib.pyplot as plt\n\ndates = daily_units.index.strftime('%d/%m/%Y')\nfig, ax = plt.subplots(figsize=(8, 4))\nbars = ax.bar(dates, daily_units.values)\nax.set_title('Daily units sold')\nax.set_xlabel('Date')\nax.set_ylabel('Units sold')\nfig.tight_layout()\nplt.show()"
+      },
+      {
+        "id": "w3-thursday-write-11-result",
+        "type": "guided-check",
+        "title": "ขั้นตอนที่ 11: ผลลัพธ์และคำอธิบาย",
+        "module": "practice",
+        "teachingDays": [
+          1
+        ],
+        "step": 11,
+        "code": "import matplotlib.pyplot as plt\n\ndates = daily_units.index.strftime('%d/%m/%Y')\nfig, ax = plt.subplots(figsize=(8, 4))\nbars = ax.bar(dates, daily_units.values)\nax.set_title('Daily units sold')\nax.set_xlabel('Date')\nax.set_ylabel('Units sold')\nfig.tight_layout()\nplt.show()",
+        "output": {
+          "kind": "figure",
+          "title": "กราฟแท่งจากไฟล์ Excel ของบทเรียน",
+          "url": "ชุดเรียน/ตัวอย่าง/W03_Thursday_Daily_Units.html"
+        },
+        "interpretation": "แกน X คือวันที่ แกน Y คือจำนวนชิ้นที่ขายได้ วันที่ 1 และ 5 พฤศจิกายน 2026 มีแท่งสูงสุดเท่ากันที่ 15 ชิ้น",
+        "mistake": "ใช้ค่าจาก daily_units เพื่อให้หนึ่งแท่งแทนจำนวนชิ้นรวมของหนึ่งวัน",
+        "checkpoint": "วันใดมีแท่งสูงสุดเท่ากัน และขายได้วันละกี่ชิ้น?"
+      },
+      {
+        "id": "w3-thursday-exercise",
+        "type": "content",
+        "title": "ใบงานท้ายคาบ: วิเคราะห์ข้อมูลการขาย",
+        "module": "final",
+        "teachingDays": [
+          1
+        ],
         "items": [
-          "ตรวจและนับค่าว่างกับแถวซ้ำได้",
-          "ใช้หน้ากากเลือกอายุและ GPA ที่ผิดช่วงได้",
-          "แยกปัญหาคุณภาพออกจากค่าว่างและบันทึกหลักฐานได้",
-          "อธิบายหน้าที่ของคำสั่งและผลจากข้อมูลตัวอย่างได้",
-          "บันทึก Notebook และใช้ผลลัพธ์อ้างอิงทบทวนตามลำดับ"
-        ],
-        "teachingDays": [
-          1
-        ],
-        "speakerNotes": "ผู้สอนอธิบายด้วยตัวอย่างจากไฟล์ฝึก ให้ผู้เรียนตรวจสอบก่อนดำเนินการต่อ"
+          "ทำรายบุคคล 30 นาที · 5 ข้อ ข้อละ 2 คะแนน · ตอบและส่งใน Google Docs",
+          "ใช้ไฟล์ w03_orders_ready.xlsx แผ่นงาน Orders วิเคราะห์ใน Colab แล้วเขียนคำตอบเป็นประโยค พร้อมตัวเลขและหน่วยประกอบ",
+          "ข้อ 1 — สินค้าชนิดใดปรากฏในรายการขายบ่อยที่สุด และสินค้าชนิดใดขายได้จำนวนชิ้นรวมสูงสุด? ระบุค่าทั้งสองและอธิบายว่าทำไมสองตัวเลขจึงตอบคนละคำถาม",
+          "ข้อ 2 — ช่องทางชำระเงินใดมีจำนวนรายการมากที่สุด และช่องทางใดมีจำนวนชิ้นรวมสูงสุด? แนบตารางที่มีทั้งสองตัวเลขแยกตามช่องทาง แล้วสรุปว่าอันดับแรกตรงกันหรือไม่ หากค่าสูงสุดเท่ากันให้ระบุทุกช่องทางที่ได้ค่านั้น",
+          "ข้อ 3 — วันใดขายได้จำนวนชิ้นสูงสุด? แนบกราฟแท่งจำนวนชิ้นรายวัน แล้วระบุทุกวันที่ได้ค่าสูงสุดพร้อมจำนวนชิ้น",
+          "ข้อ 4 — เลือกหนึ่งวันที่ได้ค่าสูงสุดจากข้อ 3 แล้วคำนวณว่าวันนั้นคิดเป็นกี่เปอร์เซ็นต์ของจำนวนชิ้นทั้งหมด แสดงตัวตั้ง ตัวหาร และผลลัพธ์เป็นทศนิยมหนึ่งตำแหน่ง",
+          "ข้อ 5 — ผู้จัดการจะเลือกสินค้าหนึ่งชนิดไปตรวจสต็อกก่อน โดยให้ความสำคัญกับจำนวนชิ้นที่ขายได้ คุณจะเลือกสินค้าใด? อ้างตัวเลขจากข้อมูล และระบุข้อมูลเพิ่มเติมหนึ่งอย่างที่ต้องทราบก่อนตัดสินใจสั่งเพิ่ม"
+        ]
       }
     ]
   },

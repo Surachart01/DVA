@@ -56,7 +56,7 @@ steps[12]['parts'] += [
  dict(token='review = ... .copy()', meaning='เก็บสำเนาแถวที่เลือกไว้ใน review โดย df ยังมีแถวเหล่านั้นอยู่'),
 ]
 REVIEW_RULES=['ราคาและจำนวนที่ว่างในชุดทบทวนนี้ต้องแยกออกจากชุดพร้อมใช้งาน ไม่เติมเป็น 0 หรือ 1','วันที่ใช้ YYYY-MM-DD ราคาอาจมีเครื่องหมาย ฿ คำว่า บาท และเครื่องหมายคั่นหลักพัน','ลบเฉพาะแถวที่ซ้ำกันทุกคอลัมน์ ช่องทาง CASH และ สด หมายถึง เงินสด ส่วน โอนเงิน หมายถึง พร้อมเพย์']
-warm_tasks=[('นำเข้าและสำรวจข้อมูล','สร้าง Notebook ใหม่ อัปโหลด w03_review_basic.csv นำเข้า pandas อ่านไฟล์ และตรวจขนาดตาราง ชนิดข้อมูล กับค่าว่าง'),('ปรับข้อความให้เป็นรูปแบบเดียวกัน','ตัดช่องว่างชื่อสินค้าและช่องทางชำระเงิน รวม CASH และ สด เป็น เงินสด และ โอนเงิน เป็น พร้อมเพย์'),('แปลงราคาและตรวจค่าว่าง','ตัด ฿ คำว่า บาท และเครื่องหมายคั่นหลักพันก่อนแปลงราคาเป็นตัวเลข ตรวจ quantity และ unit_price ที่ว่าง แล้วแยกรายการเหล่านั้นไว้ตรวจสอบ'),('ลบแถวซ้ำและตรวจคุณภาพ','ลบเฉพาะแถวที่เหมือนกันทุกคอลัมน์ ตรวจจำนวนแถวที่เหลือ ค่าว่าง และข้อมูลซ้ำก่อนส่งออก'),('ส่งออกและอ่านกลับ','ส่งออก w03_review_basic_clean.csv โดยไม่บันทึก index แล้วอ่านกลับ ตรวจขนาดตารางและรักษา order_id เป็นข้อความ')]
+warm_tasks=[('นำเข้าและสำรวจข้อมูล','สร้าง Notebook ใหม่ อัปโหลด w03_review_basic.csv นำเข้า pandas อ่านไฟล์ และตรวจขนาดตาราง ชนิดข้อมูล กับค่าว่าง'),('ปรับข้อความให้เป็นรูปแบบเดียวกัน','ตัดช่องว่างชื่อสินค้าและช่องทางชำระเงิน รวม CASH และ สด เป็น เงินสด และ โอนเงิน เป็น พร้อมเพย์'),('แปลงราคาและตรวจค่าว่าง','ตัด ฿ คำว่า บาท และเครื่องหมายคั่นหลักพันก่อนแปลงราคาเป็นตัวเลข ตรวจ quantity และ unit_price ที่ว่าง แล้วแยกรายการเหล่านั้นไว้ตรวจสอบ'),('ตรวจและลบแถวซ้ำ','ตรวจว่ามีแถวซ้ำกี่แถว แล้วลบแถวที่ข้อมูลเหมือนกันทุกคอลัมน์ โดยเก็บแถวแรกไว้ จากนั้นแสดงจำนวนแถวที่เหลือ และตรวจว่ายังมีแถวซ้ำหรือไม่'),('ส่งออกและอ่านกลับ','ส่งออก w03_review_basic_clean.csv โดยไม่บันทึก index แล้วอ่านกลับ ตรวจขนาดตารางและรักษา order_id เป็นข้อความ')]
 final_tasks=[('นำเข้าข้อมูลใหม่','สร้าง Notebook ใหม่ อัปโหลด w03_final_orders_dirty.csv และอ่านทุกคอลัมน์เป็นข้อความโดยรักษาสัญลักษณ์ค่าว่างไว้ก่อน ตรวจขนาดตารางและตัวอย่างข้อมูล'),('ปรับข้อความและค่าว่างที่บันทึกเป็นข้อความ','ตัดช่องว่างหัวท้าย แทนค่าว่างที่บันทึกเป็นข้อความเป็น pd.NA และรวมคำศัพท์ช่องทางชำระเงินตามกติกาเดียวกับตัวอย่าง'),('แปลงราคาและจำนวนสินค้า','ตัดสัญลักษณ์กับหน่วยราคา แปลงราคาและจำนวนเป็นตัวเลขโดยแยกรายการที่แปลงไม่ได้ไว้ตรวจสอบ'),('ตรวจวันที่และลบแถวซ้ำ','แปลงวันที่ทั้ง 2 รูปแบบ ตรวจวันที่ที่แปลงไม่ได้ และลบแถวซ้ำที่เหมือนกันทุกคอลัมน์ พร้อมระบุจำนวนแถวที่ลดลง'),('แยกผลลัพธ์ ตรวจคุณภาพ และส่งออก','ใช้เงื่อนไขเดียวกับชุดฝึกแยกข้อมูลพร้อมใช้งานกับรายการรอตรวจสอบ ส่งออก w03_final_ready.csv และ w03_final_review.csv โดยไม่บันทึกเลขลำดับแถวเป็นคอลัมน์เพิ่ม')]
 def mdcell(t):return dict(cell_type='markdown',metadata={},source=t.splitlines(keepends=True))
 def codecell(t='',n=None,outputs=None):return dict(cell_type='code',metadata={},source=t.splitlines(keepends=True),execution_count=n,outputs=outputs or [])
@@ -158,7 +158,184 @@ key='# แนวเฉลยและเกณฑ์ประเมินสั�
 (T/'W03_Advanced_Teacher_Key.md').write_text(key);(T/'W03_Advanced_Validation.json').write_text(json.dumps(dict(review=warm_report,advanced=report,final=final_report),ensure_ascii=False,indent=2))
 slides.append(dict(id='w3-advanced-final',type='practice-lab',title='แบบฝึกหัดท้ายคาบการทำความสะอาดข้อมูล',intro='เริ่ม Notebook ใหม่ · เวลา 30 นาที · 5 ข้อ ข้อละ 2 คะแนน รวม 10 คะแนน · ใช้ตัวอย่างใน Notebook ที่เรียนประกอบได้',questions=[dict(title=a,task=b) for a,b in final_tasks],rules=RULES,downloads=[dl('ดาวน์โหลดชุดข้อมูลท้ายคาบ',files[2],True),dl('ดาวน์โหลดใบงานท้ายคาบ','W03_Final_Worksheet.md'),dl('ดาวน์โหลด Notebook ท้ายคาบ','W03_Final_Practice.ipynb')],teachingDays=[0],module='final'))
 slides.append(dict(id='w3-advanced-summary',type='knowledge-check',title='สรุปการทำความสะอาดข้อมูลและส่งออกไฟล์',questions=[dict(question='คำว่า สอบถาม ในคอลัมน์ราคาควรเปลี่ยนเป็น 0 หรือไม่',answer='ไม่ควร เพราะยังไม่ทราบราคา ต้องแยกรายการไว้ตรวจสอบ ส่วนคำว่า ฟรี ของชุดฝึกได้รับการยืนยันว่าหมายถึง 0 บาท'),dict(question='วันที่ 31/02/2026 ต้องแก้เป็นวันใดทันทีหรือไม่',answer='ไม่ควรเดาวันที่ ต้องเก็บรายการที่แปลงไม่ได้ไว้ตรวจสอบต้นทาง'),dict(question='ตรวจสอบจำนวนแถวให้ตรงกันอย่างไร',answer='ต้นฉบับเท่ากับแถวซ้ำที่ลบออก บวกข้อมูลพร้อมใช้งาน บวกรายการรอตรวจสอบ')],teachingDays=[0],module='final'))
-deck_path=P/'src/teachingDeck.js';deck=json.loads(deck_path.read_text().split('=',1)[1].strip().rstrip(';'));w=deck[2];w['title']='การทำความสะอาดข้อมูลขั้นประยุกต์';w['slides']=slides+[s for s in w['slides'] if s.get('teachingDays')==[1]];w['files']=list(dict.fromkeys(w['files']+files));deck_path.write_text('export const teachingDeck = '+json.dumps(deck,ensure_ascii=False,indent=2)+';\n')
+# Package Monday's ready data as the Excel input for Thursday.
+ready.to_excel(F/'w03_orders_ready.xlsx', sheet_name='Orders', index=False)
+thursday = []
+def thu_slide(id, type, title, module, **fields):
+ return dict(id='w3-thursday-'+id, type=type, title=title, module=module, teachingDays=[1], **fields)
+
+thursday.extend([
+ thu_slide('start','content','เตรียมไฟล์สำหรับวิเคราะห์ข้อมูล','prep',items=[
+  'ดาวน์โหลดไฟล์ w03_orders_ready.xlsx จากลิงก์ด้านล่าง',
+  'สร้าง Notebook ใหม่ใน Google Colab',
+  'เปิดแถบ Files แล้วอัปโหลดไฟล์ w03_orders_ready.xlsx',
+ ],downloads=[dl('ดาวน์โหลด w03_orders_ready.xlsx','w03_orders_ready.xlsx')]),
+])
+analysis_steps = [
+ ('นำเข้า pandas และเปิดไฟล์ Excel',
+  """import pandas as pd
+df = pd.read_excel('w03_orders_ready.xlsx', sheet_name='Orders', dtype={'order_id': 'string'})
+print(df.columns.tolist())""",
+  'นำเข้า pandas อ่านไฟล์ และแสดงรายชื่อคอลัมน์สำหรับเลือกใช้ในการวิเคราะห์',
+  'ตรวจว่าตารางมี product_name, quantity และ payment_method ก่อนดำเนินการต่อ',
+  'อัปโหลดไฟล์ก่อนรันและกำหนดให้ order_id เป็นข้อความเพื่อรักษาเลขศูนย์นำหน้า',
+  'คอลัมน์ใดระบุช่องทางชำระเงิน?',
+  [('import pandas as pd','นำเข้า pandas'),('pd.read_excel()','อ่านไฟล์ Excel'),('sheet_name','เลือกแผ่นงาน Orders'),
+   ('df.columns.tolist()','แสดงรายชื่อคอลัมน์')]),
+ ('สำรวจตารางและนับรายการตามชื่อสินค้า',
+  """print(df.head())
+print('ขนาดตาราง:', df.shape)
+print(df['product_name'].value_counts())""",
+  'แสดงข้อมูลห้าแถวแรก ตรวจขนาดตาราง และนับจำนวนรายการแยกตามชื่อสินค้าในเซลล์เดียว',
+  'อ่านผลตามลำดับ: ตัวอย่างห้าแถว ขนาดตาราง 28 แถว 7 คอลัมน์ และจำนวนรายการของสินค้าแต่ละชนิด',
+  'ใช้ print() เพื่อแสดงผลทั้งสามส่วนในเซลล์เดียว ค่า shape แสดงจำนวนแถวก่อนจำนวนคอลัมน์',
+  'สินค้าใดปรากฏมากที่สุด และมีกี่รายการ?',
+  [('head()','แสดงข้อมูลห้าแถวแรก'),('shape','แสดงจำนวนแถวและจำนวนคอลัมน์'),
+   ('value_counts()','นับจำนวนครั้งที่ชื่อสินค้าแต่ละชื่อปรากฏ')]),
+ ('จัดกลุ่มสินค้าและรวมจำนวนชิ้น',
+  """product_groups = df.groupby('product_name')
+units_per_product = product_groups['quantity'].sum()
+print(units_per_product)""",
+  'จัดกลุ่มตามชื่อสินค้า รวมจำนวนชิ้นของแต่ละกลุ่ม แล้วแสดงผลรวม',
+  'แต่ละบรรทัดระบุชื่อสินค้าและจำนวนชิ้นรวมของสินค้านั้น',
+  'เลือก quantity สำหรับการรวมจำนวนชิ้น',
+  'ผลรวมจำนวนชิ้นต่างจากการนับรายการอย่างไร?',
+  [('groupby()','จัดกลุ่มตามชื่อสินค้า'),('sum()','รวมจำนวนชิ้นภายในกลุ่ม')]),
+]
+analysis_steps.extend([
+ ('เรียงจำนวนชิ้นรวมจากมากไปน้อย',"""ranked_units = units_per_product.sort_values(ascending=False)
+print(ranked_units)
+print('จำนวนชิ้นสูงสุด:', ranked_units.max())""",
+  'เรียงผลรวมเพื่อเปรียบเทียบจำนวนชิ้นของสินค้าแต่ละชนิด',
+  'แถวบนสุดมีจำนวนชิ้นรวมสูงสุด หากผลรวมเท่ากัน สินค้าเหล่านั้นมีอันดับร่วมกัน',
+  'ตรวจชื่อคอลัมน์ที่นำมารวมก่อนอ่านอันดับ เพราะการเรียงจำนวนรายการอาจให้ผลต่างกัน',
+  'สินค้าใดมีจำนวนชิ้นรวมสูงสุด และมีจำนวนเท่าใด?',
+  [('sort_values()','เรียงตามค่าผลรวม'),('ascending=False','เรียงจากมากไปน้อย'),('max()','แสดงจำนวนชิ้นสูงสุด')]),
+ ('เปรียบเทียบสองหน่วยในตารางเดียว',"""product_summary = product_groups['quantity'].agg(orders='size', units='sum')
+product_summary""",
+  'สร้างตารางสรุปที่มีจำนวนรายการและจำนวนชิ้นรวมของสินค้าแต่ละชนิด',
+  'orders แสดงจำนวนแถวของสินค้าแต่ละชนิด ส่วน units แสดงผลรวมค่า quantity',
+  'อ่านชื่อคอลัมน์ก่อนสรุปว่าสินค้าใดมีค่าสูงสุด เพราะแต่ละคอลัมน์ตอบคนละคำถาม',
+  'เลือกสินค้าหนึ่งชนิด แล้วอ่านผลทั้งสองคอลัมน์พร้อมระบุหน่วย',
+  [('agg()','คำนวณผลสรุปหลายแบบจากกลุ่มเดียวกัน'),("orders='size'",'นับจำนวนแถวในกลุ่ม'),("units='sum'",'รวมจำนวนชิ้นในกลุ่ม')]),
+ ('ตรวจสอบผลรวมกับข้อมูลต้นทาง',"""source_total = df['quantity'].sum()
+group_total = product_summary['units'].sum()
+print('รวมจากข้อมูลต้นทาง:', source_total)
+print('รวมจากตารางสรุป:', group_total)
+print('ผลรวมตรงกัน:', source_total == group_total)""",
+  'คำนวณผลรวมสองทางและเปรียบเทียบว่าตรงกันหรือไม่' ,
+  'True หมายถึงผลรวมจำนวนชิ้นจากตารางสรุปตรงกับผลรวมจากข้อมูลต้นทาง',
+  'เปรียบเทียบผลรวมที่ใช้หน่วยเดียวกัน โดยตรวจว่ารวมจากตารางชุดเดียวกัน',
+  'ถ้าผลรวมจากทุกกลุ่มต่างจากผลรวมของตารางต้นทาง ควรตรวจอะไร?',
+  [("df['quantity']",'เลือกจำนวนชิ้นของทุกแถว'),('sum()','รวมจำนวนชิ้นของแต่ละตาราง'),('==','เปรียบเทียบผลรวมทั้งสองค่า')]),
+ ('เลือกเฉพาะรายการปากกา',"pens = df.loc[df['product_name'] == 'ปากกา']\nprint('จำนวนรายการปากกา:', len(pens))\nprint(pens[['order_id', 'product_name', 'quantity']])",
+  'เลือกเฉพาะแถวที่ชื่อสินค้าเป็นปากกา แล้วแสดงตารางที่ได้',
+  'ตรวจว่าค่าในคอลัมน์ product_name ของทุกแถวที่แสดงเป็นปากกา',
+  'ใช้ == เพื่อเปรียบเทียบชื่อสินค้า และใช้ = เพื่อเก็บตารางผลลัพธ์ในตัวแปร pens',
+  'หากต้องการเลือกเฉพาะรายการสมุด ต้องเปลี่ยนค่าใดในคำสั่ง?',
+  [("df['product_name'] == 'ปากกา'",'สร้างเงื่อนไขเลือกแถว'),('df.loc[...]','เลือกแถวที่ตรงเงื่อนไข'),('len(pens)','นับจำนวนแถวที่เลือก'),('print()','แสดงรหัส ชื่อสินค้า และจำนวนชิ้น')]),
+ ('รวมจำนวนด้ามของปากกา',"""pen_orders = len(pens)
+pen_units = pens['quantity'].sum()
+print(f'ปากกาปรากฏ {pen_orders} รายการ รวม {pen_units} ด้าม')""",
+  'รวมจำนวนด้ามจากรายการปากกาที่เลือกในขั้นตอนก่อนหน้า',
+  'นำจำนวนรายการปากกาจากขั้นตอนที่ 2 มาเขียนคู่กับผลรวมหน่วยด้ามของขั้นตอนนี้',
+  'ใช้ pens เพื่อรวมเฉพาะปากกา หากใช้ df จะรวมสินค้าทุกชนิด',
+  'เติมข้อความให้สมบูรณ์ ปากกาปรากฏ ___ รายการ รวม ___ ด้าม',
+  [("pens['quantity']",'เลือกจำนวนด้ามในแต่ละรายการปากกา'),('sum()','รวมจำนวนด้ามทั้งหมด')]),
+ ('สรุปจำนวนชิ้นแยกตามวันที่',
+  """daily_units = df.groupby('date_clean')['quantity'].sum()
+daily_units = daily_units.sort_index()
+print(daily_units)
+print('จำนวนวันที่มีรายการขาย:', len(daily_units))""",
+  'จัดกลุ่มตามวันที่ รวมจำนวนชิ้นในแต่ละวัน และแสดงผลตามลำดับวันที่',
+  'แต่ละบรรทัดคือจำนวนชิ้นรวมของวันนั้น และบรรทัดสุดท้ายคือจำนวนวันที่ปรากฏในข้อมูล',
+  'อ่านผลจาก date_clean ซึ่งเป็นวันที่ที่ผ่านการจัดเตรียมแล้ว',
+  'วันแรกในตารางมีจำนวนชิ้นรวมเท่าใด?',
+  [('groupby()','จัดกลุ่มตามวันที่'),('sum()','รวมจำนวนชิ้นของแต่ละวัน'),('sort_index()','เรียงตามวันที่'),('len()','นับจำนวนวันที่มีรายการ')]),
+ ('คำนวณสัดส่วนของวันที่ขายได้มากที่สุด',
+  """peak_units = daily_units.max()
+peak_days = daily_units.loc[daily_units == peak_units]
+peak_share = peak_units / source_total * 100
+print(peak_days)
+print(f'สัดส่วนต่อจำนวนชิ้นทั้งหมด: {peak_share:.1f}%')""",
+  'หาจำนวนชิ้นสูงสุด เลือกทุกวันที่ได้ค่าสูงสุด แล้วคิดเป็นร้อยละของจำนวนชิ้นทั้งหมด',
+  'ร้อยละที่แสดงเป็นสัดส่วนของแต่ละวันที่ได้ค่าสูงสุดเมื่อเทียบกับจำนวนชิ้นทั้งหมด',
+  'ใช้จำนวนชิ้นทั้งหมดเป็นตัวหารเพื่อให้ตัวตั้งและตัวหารมีหน่วยเดียวกัน',
+  'วันใดมีจำนวนชิ้นสูงสุด และคิดเป็นกี่เปอร์เซ็นต์ของจำนวนชิ้นทั้งหมด?',
+  [('max()','หาจำนวนชิ้นสูงสุดต่อวัน'),('loc[]','เลือกทุกวันที่ได้ค่าสูงสุด'),('/ source_total * 100','คำนวณร้อยละ'),(':.1f','แสดงทศนิยมหนึ่งตำแหน่ง')]),
+ ('สร้างกราฟแท่งแสดงจำนวนชิ้นที่ขายได้รายวัน',
+  """import matplotlib.pyplot as plt
+
+dates = daily_units.index.strftime('%d/%m/%Y')
+fig, ax = plt.subplots(figsize=(8, 4))
+bars = ax.bar(dates, daily_units.values)
+ax.set_title('Daily units sold')
+ax.set_xlabel('Date')
+ax.set_ylabel('Units sold')
+fig.tight_layout()
+plt.show()""",
+  'นำผลรวมรายวันจากขั้นตอนที่ 9 มาสร้างกราฟแท่งและแสดงผล',
+  'แกน X คือวันที่ แกน Y คือจำนวนชิ้นที่ขายได้ วันที่ 1 และ 5 พฤศจิกายน 2026 มีแท่งสูงสุดเท่ากันที่ 15 ชิ้น',
+  'ใช้ค่าจาก daily_units เพื่อให้หนึ่งแท่งแทนจำนวนชิ้นรวมของหนึ่งวัน',
+  'วันใดมีแท่งสูงสุดเท่ากัน และขายได้วันละกี่ชิ้น?',
+  [('plt.subplots(figsize=(8, 4))','สร้างรูปขนาดกว้าง 8 นิ้ว สูง 4 นิ้ว และคืนค่า fig กับ ax'),
+   ('fig','Figure คือรูปทั้งรูป เปรียบได้กับกระดาษหนึ่งแผ่นที่มีพื้นที่วาดกราฟอยู่ภายใน'),
+   ('ax','Axes คือพื้นที่วาดกราฟหนึ่งช่องภายใน fig ซึ่งมีแกน X และแกน Y'),
+   ('ax.bar()','วาดแท่งจากวันที่และจำนวนชิ้นลงในพื้นที่ ax'),
+   ('ax.set_title()','กำหนดชื่อกราฟ'),('ax.set_xlabel() และ ax.set_ylabel()','กำหนดชื่อแกน'),
+   ('fig.tight_layout()','ปรับระยะขอบและการจัดวางในรูปให้ชื่อกราฟและข้อความบนแกนมีพื้นที่เพียงพอ'),
+   ('plt.show()','แสดงกราฟ')]),
+])
+scope = {}
+complete = []
+for n,(title,code,meaning,interpretation,mistake,checkpoint,parts) in enumerate(analysis_steps,1):
+ complete.append(code)
+ if n == 1:
+  load_code = code.replace("'w03_orders_ready.xlsx'",repr(str(F/'w03_orders_ready.xlsx')))
+ else:
+  load_code = code
+ is_chart = n == len(analysis_steps)
+ if is_chart:
+  run(load_code.removesuffix('plt.show()'),scope,n)
+  assert [bar.get_height() for bar in scope['bars']] == scope['daily_units'].tolist()
+  chart_file = PUBLIC/'ตัวอย่าง'/'W03_Thursday_Daily_Units.html'
+  chart_file.parent.mkdir(parents=True, exist_ok=True)
+  svg = io.StringIO()
+  scope['fig'].savefig(svg, format='svg')
+  scope['plt'].close(scope['fig'])
+  svg_content = svg.getvalue().split('<svg',1)[1]
+  chart_file.write_text(
+   '<!doctype html><html lang="th"><meta charset="utf-8">'
+   '<title>กราฟแท่งจำนวนชิ้นรายวัน</title>'
+   '<style>body{margin:0}svg{display:block;width:100%;height:auto}</style>'
+   '<svg'+svg_content+'</html>', encoding='utf-8')
+  output = dict(kind='figure',title='กราฟแท่งจากไฟล์ Excel ของบทเรียน',url='ชุดเรียน/ตัวอย่าง/'+chart_file.name)
+ else:
+  output,_,result = run(load_code,scope,n)
+ if not is_chart and not result:
+  output = dict(kind='text',title='ผลลัพธ์ที่คาดว่าจะพบ',text='เซลล์นี้ทำงานโดยไม่แสดงผลลัพธ์')
+ thursday.extend([
+  thu_slide(f'write-{n}','guided',f'ขั้นตอนที่ {n}: {title}','practice',step=n,flow='write-then-check',
+   instruction='พิมพ์คำสั่งในเซลล์ใหม่และรันด้วย Shift + Enter',run='วิธีรันคำสั่ง: Shift + Enter',
+   code=code,meaning=meaning,parts=[dict(token=token,meaning=detail) for token,detail in parts],
+   teacherAction='อธิบายคำสั่งทีละส่วนและรันพร้อมผู้เรียน',studentAction='พิมพ์คำสั่งและตรวจผลลัพธ์ด้วยตนเอง',
+   completeCode='\n\n'.join(complete)),
+  thu_slide(f'write-{n}-result','guided-check',f'ขั้นตอนที่ {n}: ผลลัพธ์และคำอธิบาย','practice',
+   step=n,code=code,output=output,interpretation=interpretation,mistake=mistake,checkpoint=checkpoint),
+ ])
+pd.testing.assert_frame_equal(scope['df'], pd.read_csv(F/'w03_orders_ready.csv', dtype={'order_id': 'string'}, parse_dates=['date_clean']), check_dtype=False)
+thursday.append(
+ thu_slide('exercise','content','ใบงานท้ายคาบ: วิเคราะห์ข้อมูลการขาย','final',items=[
+  'ทำรายบุคคล 30 นาที · 5 ข้อ ข้อละ 2 คะแนน · ตอบและส่งใน Google Docs',
+  'ใช้ไฟล์ w03_orders_ready.xlsx แผ่นงาน Orders วิเคราะห์ใน Colab แล้วเขียนคำตอบเป็นประโยค พร้อมตัวเลขและหน่วยประกอบ',
+  'ข้อ 1 — สินค้าชนิดใดปรากฏในรายการขายบ่อยที่สุด และสินค้าชนิดใดขายได้จำนวนชิ้นรวมสูงสุด? ระบุค่าทั้งสองและอธิบายว่าทำไมสองตัวเลขจึงตอบคนละคำถาม',
+  'ข้อ 2 — ช่องทางชำระเงินใดมีจำนวนรายการมากที่สุด และช่องทางใดมีจำนวนชิ้นรวมสูงสุด? แนบตารางที่มีทั้งสองตัวเลขแยกตามช่องทาง แล้วสรุปว่าอันดับแรกตรงกันหรือไม่ หากค่าสูงสุดเท่ากันให้ระบุทุกช่องทางที่ได้ค่านั้น',
+  'ข้อ 3 — วันใดขายได้จำนวนชิ้นสูงสุด? แนบกราฟแท่งจำนวนชิ้นรายวัน แล้วระบุทุกวันที่ได้ค่าสูงสุดพร้อมจำนวนชิ้น',
+  'ข้อ 4 — เลือกหนึ่งวันที่ได้ค่าสูงสุดจากข้อ 3 แล้วคำนวณว่าวันนั้นคิดเป็นกี่เปอร์เซ็นต์ของจำนวนชิ้นทั้งหมด แสดงตัวตั้ง ตัวหาร และผลลัพธ์เป็นทศนิยมหนึ่งตำแหน่ง',
+  'ข้อ 5 — ผู้จัดการจะเลือกสินค้าหนึ่งชนิดไปตรวจสต็อกก่อน โดยให้ความสำคัญกับจำนวนชิ้นที่ขายได้ คุณจะเลือกสินค้าใด? อ้างตัวเลขจากข้อมูล และระบุข้อมูลเพิ่มเติมหนึ่งอย่างที่ต้องทราบก่อนตัดสินใจสั่งเพิ่ม',
+ ]))
+
+deck_path=P/'src/teachingDeck.js';deck=json.loads(deck_path.read_text().split('=',1)[1].strip().rstrip(';'));w=deck[2];w['title']='การทำความสะอาดข้อมูลขั้นประยุกต์';w['slides']=slides+thursday;w['files']=list(dict.fromkeys(w['files']+files));deck_path.write_text('export const teachingDeck = '+json.dumps(deck,ensure_ascii=False,indent=2)+';\n')
 rpath=P/'src/courseResources.js';resources=json.loads(rpath.read_text().split('=',1)[1].strip().rstrip(';'));resources['3']['files']=[f for f in resources['3']['files'] if 'Advanced' not in f['url'] and not any(name in f['url'] for name in files)]+[dict(name=f,url='ชุดเรียน/ชุดข้อมูล/'+f) for f in files]+[dict(name='Notebook ฝึก Cleansing ขั้นประยุกต์จากศูนย์',url='ชุดเรียน/เรียนย้อนหลัง_สัปดาห์03/W03_Advanced_Practice.ipynb'),dict(name='Notebook ตัวอย่างพร้อมผลลัพธ์',url='ชุดเรียน/เรียนย้อนหลัง_สัปดาห์03/W03_Advanced_Example.ipynb')];rpath.write_text('export const courseResources = '+json.dumps(resources,ensure_ascii=False,indent=2)+';\n')
 (T/'W03_Monday_Teaching_Plan.md').write_text('# แผนการสอนวันจันทร์ 180 นาที\n\nทบทวน 45 นาที ตรวจคำตอบ 15 นาที ฝึกพร้อมกัน 90 นาที แบบฝึกหัดท้ายคาบ 30 นาที\n\n14 ขั้นตอนฝึกในช่วง 90 นาที ตรวจผลทุกขั้นก่อนดำเนินการต่อ หากมีปัญหาให้ใช้ Notebook ตัวอย่างประกอบ เพื่อรักษาเวลาประเมินท้ายคาบ\n\n'+key.split('## แบบฝึกหัดท้ายคาบ')[0])
 for f in F.iterdir():

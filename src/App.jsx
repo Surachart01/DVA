@@ -4,7 +4,7 @@ import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
 
 // Limit the current classroom view while retaining the complete course source.
-const visibleLesson = {week:3, day:0};
+const visibleLesson = {week:3, day:1};
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
@@ -755,6 +755,16 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  }
 }
 function buildSessionModules(slides,weekNum,dayNum){
+ if(weekNum===3&&dayNum===1){
+  return [
+   {id:'prep',label:'ส่วนที่ 1: เตรียมไฟล์',sub:'ดาวน์โหลด Excel และอัปโหลดเข้า Google Colab'},
+   {id:'practice',label:'ส่วนที่ 2: วิเคราะห์ข้อมูลและสร้างกราฟ',sub:'เปิดไฟล์ · สรุปข้อมูล · กราฟแท่งขั้นที่ 11'},
+   {id:'final',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบ',sub:'ใบงานวิเคราะห์ 5 ข้อ · ส่งใน Google Docs'},
+  ].map(m=>{
+   const indices=slides.flatMap((slide,i)=>slide.module===m.id?[i]:[]);
+   return {...m,indices,firstIndex:indices[0]};
+  }).filter(m=>m.indices.length);
+ }
  if(weekNum===3&&dayNum===0){
   return [
    {id:'review',label:'ส่วนที่ 1: แบบฝึกหัดทบทวนก่อนเรียน',sub:'นำเข้า จัดเตรียมข้อมูล และส่งออก CSV',module:'review'},
@@ -845,11 +855,12 @@ export default function App(){
  useEffect(()=>{function change(){setFull(Boolean(document.fullscreenElement))}document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change)},[]);
  useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, select, [contenteditable="true"]'))return;if(e.key===' '&&e.target.closest('button, a, summary'))return;if(e.key==='Escape'){setSidebar(false);setProjecting(false)}if(e.key.toLowerCase()==='p')setProjecting(v=>!v);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
  const isPracticeSlide=slide.type==='guided'||slide.type==='guided-check';
- const isGuidedModule=activeModule?.indices.some(i=>slides[i].type==='guided');
+ const moduleSteps=guidedSteps.filter(step=>activeModule?.indices.includes(step.writeIdx));
+ const isGuidedModule=moduleSteps.length>0;
  const introductoryIndices=activeModule?.indices.filter(i=>!['guided','guided-check'].includes(slides[i].type))??[];
  return <div className={'teaching-app '+(projecting?'is-projecting':'')}><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
  <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).filter(([unit])=>teachingDeck.some(w=>w.week<=visibleLesson.week&&w.unit===Number(unit))).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.week<=visibleLesson.week&&w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).filter(d=>w.week<visibleLesson.week||d.day<=visibleLesson.day).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
- <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.title}</strong></div><div className="header-controls"><button className="projection-toggle" aria-pressed={projecting} onClick={()=>{setProjecting(v=>!v);setSidebar(false)}}><Eye size={18}/>{projecting?'ออกจากโหมดฉายสอน':'โหมดฉายสอน'}</button><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
+ <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.week===3&&day===1?session.title:week.title}</strong></div><div className="header-controls"><button className="projection-toggle" aria-pressed={projecting} onClick={()=>{setProjecting(v=>!v);setSidebar(false)}}><Eye size={18}/>{projecting?'ออกจากโหมดฉายสอน':'โหมดฉายสอน'}</button><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
  <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
   <div className="module-tabs">
    {modules.map(m=>(
@@ -877,12 +888,12 @@ export default function App(){
   )}
   {isGuidedModule&&guidedSteps.length>0&&(
    <div className="step-Interactive-strip" aria-label="ตัวเลือกขั้นตอนการฝึกปฏิบัติ">
-    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ ({guidedSteps.length} ขั้นตอน):</span>
+    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ ({moduleSteps.length} ขั้นตอน):</span>
     <div className="step-Direct-buttons">
-     {guidedSteps.map(g=>{
+     {moduleSteps.map(g=>{
       const active=slide.step===g.step;
       const done=Boolean(doneMap[`step-${g.writeId}`]);
-      return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(g.writeIdx)} title={g.title}>
+      return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(slides[g.checkIdx]?.output?.kind==='figure'&&week.week===3&&day===1?g.checkIdx:g.writeIdx)} title={g.title}>
        {done&&<Check size={12}/>} ขั้นตอนที่ {g.step}
       </button>;
      })}
