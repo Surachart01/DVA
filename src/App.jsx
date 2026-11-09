@@ -841,7 +841,7 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
 function buildSessionModules(slides,weekNum,dayNum){
  if(weekNum===4&&dayNum===0){
   return [
-   {id:'intro',label:'ส่วนที่ 1: เป้าหมายและเตรียมความพร้อม',sub:'จุดประสงค์ · ไฟล์ข้อมูล · โครงสร้างข้อมูลและลำดับการทำงาน',match:(_,s)=>['w4-goals','w4-files','w4-data','w4-procedure'].includes(s.id)},
+   {id:'intro',label:'ส่วนที่ 1: เป้าหมายและเตรียมความพร้อม',sub:'จุดประสงค์ · เตรียมไฟล์ · รู้จักชุดข้อมูล · ภาพรวมการทำงาน',match:(_,s)=>['w4-goals','w4-files','w4-data','w4-procedure'].includes(s.id)},
    {id:'lesson',label:'ส่วนที่ 2: หลักการรายงานคุณภาพข้อมูลและฝึกปฏิบัติ',sub:'ทฤษฎี · สรุป 12 ขั้นตอน · ฝึกเขียนคำสั่งทีละขั้นตอน (1–12)',match:(_,s)=>s.id.startsWith('w4-concept-0-')||s.id==='w4-report-explorer'||s.type==='guided'||s.type==='guided-check'},
    {id:'exercise',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบและสรุปบทเรียน',sub:'แบบฝึกหัดรายบุคคล 5 ข้อ (10 คะแนน) และตรวจสอบความเข้าใจ',match:(_,s)=>['w4-closing-lab','w4-monday-summary'].includes(s.id)||s.id.startsWith('w4-exercise-')}
   ].map(m=>{const indices=slides.map((s,i)=>m.match(i,s)?i:-1).filter(i=>i!==-1);return {...m,indices,firstIndex:indices[0]??0}}).filter(m=>m.indices.length);
