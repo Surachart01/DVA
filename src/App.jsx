@@ -4,7 +4,7 @@ import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
 
 // Limit the current classroom view while retaining the complete course source.
-const visibleLesson = {week:3, day:1};
+const visibleLesson = {week:4, day:0};
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
@@ -547,6 +547,88 @@ function W2TuesdayLabDemo({doneMap,onToggleDone}){
  </section>;
 }
 
+const w4ReportCatalog=[
+ {step:1,group:'setup',period:'ขั้นตอนที่ 1 จาก 12 · การนำเข้าและกำหนดตัวหาร',token:'import pandas as pd',code:'import pandas as pd',purpose:'นำเข้าไลบรารี pandas ในชื่อย่อ pd สำหรับจัดการตารางข้อมูลและสร้างรายงานคุณภาพข้อมูล',result:'ระบบพร้อมใช้งานคำสั่งภายใต้ชื่อย่อ pd โดยไม่มีข้อความแจ้งข้อผิดพลาด',caution:'ต้องรันคำสั่งนี้ใหม่ทุกครั้งเมื่อเริ่มต้นสภาพแวดล้อมการทำงาน (Runtime) ใหม่ใน Google Colab'},
+ {step:2,group:'setup',period:'ขั้นตอนที่ 2 จาก 12 · การนำเข้าและกำหนดตัวหาร',token:"pd.read_csv(..., dtype=...)",code:"df = pd.read_csv('student_register_dirty.csv', dtype={'phone': 'string'})\ndf",purpose:'อ่านไฟล์ข้อมูลทะเบียนผู้เรียนต้นฉบับเข้าสู่ตัวแปร df โดยกำหนดชนิดข้อมูลหมายเลขโทรศัพท์เป็นข้อความ (string)',result:'ได้ตารางข้อมูลต้นฉบับขนาด 42 แถว 7 คอลัมน์ และหมายเลขโทรศัพท์ยังคงมีเลข 0 นำหน้าครบถ้วน',caution:'ต้องใช้ไฟล์ข้อมูลต้นฉบับที่ยังไม่ผ่านการลบหรือแก้ไขข้อมูล เพื่อรายงานสภาพปัญหาที่แท้จริง'},
+ {step:3,group:'setup',period:'ขั้นตอนที่ 3 จาก 12 · การนำเข้าและกำหนดตัวหาร',token:'df.head()',code:'df.head()',purpose:'แสดงข้อมูลตัวอย่าง 5 แถวแรกของตารางเพื่อสำรวจโครงสร้างคอลัมน์และสังเกตค่าว่างเบื้องต้น',result:'แสดงข้อมูลรหัส S001–S005 และพบค่าว่าง (NaN) ในคอลัมน์ gpa ของรหัส S004',caution:'คำสั่ง .head() ใช้แสดงตัวอย่างบนหน้าจอเท่านั้น ไม่ได้ตัดข้อมูลในตัวแปร df เหลือ 5 แถว'},
+ {step:4,group:'setup',period:'ขั้นตอนที่ 4 จาก 12 · การนำเข้าและกำหนดตัวหาร',token:'row_count = len(df)',code:'row_count = len(df)\nrow_count',purpose:'คำนวณจำนวนแถวทั้งหมดของตารางต้นฉบับเก็บไว้ในตัวแปร row_count เพื่อใช้เป็นตัวหารมาตรฐานของรายงาน',result:'ได้ค่าตัวหารเท่ากับ 42 แถว (รวมแถวที่บันทึกซ้ำซ้อน 2 แถวในไฟล์ต้นฉบับ)',caution:'ต้องระบุในรายงานอย่างชัดเจนว่าตัวหาร 42 มาจากจำนวนแถวทั้งหมดในไฟล์ต้นฉบับ ไม่ใช่จำนวนผู้เรียนที่ไม่ซ้ำกัน'},
+ {step:5,group:'report',period:'ขั้นตอนที่ 5 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:'missing = df.isna()',code:'missing = df.isna()\nmissing.head()',purpose:'สร้างตารางตรวจสอบตำแหน่งที่มีค่าว่าง (True = ว่าง, False = มีข้อมูล) เก็บในตัวแปร missing',result:'ปรากฏค่า True ที่คอลัมน์ gpa ในแถวดัชนีที่ 3 (รหัส S004) โดยตาราง missing มีครบ 42 แถว',caution:'ค่า True ในตารางนี้หมายถึงพบข้อมูลสูญหาย (Missing Value) ไม่ได้หมายถึงข้อมูลถูกต้อง'},
+ {step:6,group:'report',period:'ขั้นตอนที่ 6 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:'missing_count = missing.sum()',code:'missing_count = missing.sum()\nmissing_count',purpose:'รวมจำนวนค่าว่าง (นับค่า True = 1) แยกตามรายคอลัมน์ เก็บไว้ในตัวแปร Series ชื่อ missing_count',result:'พบค่าว่างในคอลัมน์ age จำนวน 1 แถว, gpa จำนวน 2 แถว และ phone จำนวน 1 แถว (คอลัมน์อื่นเป็น 0)',caution:'ห้ามนำจำนวนค่าว่างแต่ละคอลัมน์มาบวกรวมกันเป็นจำนวนผู้เรียนทันที เพราะผู้เรียน 1 คนอาจมีค่าว่างหลายคอลัมน์'},
+ {step:7,group:'report',period:'ขั้นตอนที่ 7 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:'missing_count / row_count * 100',code:'missing_percent = missing_count / row_count * 100\nmissing_percent',purpose:'คำนวณร้อยละของค่าว่างในแต่ละคอลัมน์เทียบกับตัวหาร (42 แถว) แล้วคูณด้วย 100',result:'คอลัมน์ age และ phone มีค่าว่างร้อยละ 2.380952 และคอลัมน์ gpa มีค่าว่างร้อยละ 4.761905',caution:'ระวังไม่คูณ 100 ซ้ำซ้อน และควรแสดงค่าจากผลการคำนวณจริงคู่กับตัวหารเสมอ'},
+ {step:8,group:'report',period:'ขั้นตอนที่ 8 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:'pd.DataFrame({...})',code:"quality = pd.DataFrame({'missing_count': missing_count, 'missing_percent': missing_percent})\nquality",purpose:'รวม Series จำนวนค่าว่างและร้อยละของค่าว่างเข้าด้วยกันเป็นตารางรายงาน DataFrame ชื่อ quality',result:'ได้ตารางรายงานขนาด 7 แถว 2 คอลัมน์ โดยมีรายชื่อคอลัมน์ต้นทางเป็นดัชนีแถว (Index) ด้านซ้าย',caution:'รายชื่อคอลัมน์ต้นทางถูกเก็บอยู่ในดัชนี (Index) จึงต้องรักษาดัชนีไว้เมื่อส่งออกเป็นไฟล์ CSV'},
+ {step:9,group:'report',period:'ขั้นตอนที่ 9 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:"to_csv(..., index_label='column')",code:"quality.to_csv('quality_report.csv', index_label='column', encoding='utf-8-sig')",purpose:'ส่งออกตารางรายงานเป็นไฟล์ CSV พร้อมกำหนดชื่อหัวคอลัมน์ของดัชนีว่า column',result:'สร้างไฟล์ quality_report.csv ที่มี 3 คอลัมน์ ได้แก่ column, missing_count และ missing_percent',caution:'ห้ามใช้ index=False ในขั้นตอนนี้ เพราะจะทำให้รายชื่อคอลัมน์ต้นทางในดัชนีหายไป'},
+ {step:10,group:'report',period:'ขั้นตอนที่ 10 จาก 12 · การคำนวณค่าว่างและสร้างรายงาน',token:"pd.read_csv('quality_report.csv')",code:"quality_saved = pd.read_csv('quality_report.csv')\nquality_saved",purpose:'อ่านไฟล์รายงาน CSV ที่บันทึกไว้กลับมาตรวจสอบความครบถ้วนของแถวและหัวคอลัมน์',result:'แสดงตาราง 7 แถว 3 คอลัมน์ (column, missing_count, missing_percent) ครบถ้วนถูกต้อง',caution:'หากเกิดข้อผิดพลาด FileNotFoundError ต้องตรวจสอบว่าได้รันเซลล์บันทึกไฟล์ในขั้นตอนที่ 9 แล้ว'},
+ {step:11,group:'check',period:'ขั้นตอนที่ 11 จาก 12 · การสำรวจสำเนาซ้ำและเกณฑ์ช่วงค่า',token:'df.duplicated().sum()',code:'duplicate_count = df.duplicated().sum()\nduplicate_count',purpose:'ตรวจนับจำนวนแถวที่เป็นสำเนาซ้ำซ้อนกับแถวก่อนหน้าทุกคอลัมน์ในตารางต้นฉบับ',result:'ได้ค่าเท่ากับ 2 แถว (ได้แก่ สำเนาซ้ำของรหัส S006 และ S021)',caution:'ในการจัดทำรายงานคุณภาพข้อมูล ให้ตรวจนับจากตารางต้นฉบับโดยยังไม่ลบแถวซ้ำออก'},
+ {step:12,group:'check',period:'ขั้นตอนที่ 12 จาก 12 · การสำรวจสำเนาซ้ำและเกณฑ์ช่วงค่า',token:"df['age'].between(15, 60)",code:"age_valid = df['age'].between(15, 60)\nage_valid",purpose:'ตรวจสอบว่าข้อมูลอายุอยู่ในเกณฑ์ช่วง 15–60 ปีหรือไม่ เพื่อเตรียมคัดแยกค่าผิดช่วงในคาบเรียนถัดไป',result:'ได้ Series ของ True/False จำนวน 42 แถว โดยมีค่า False 2 ตำแหน่ง (อายุ 150 ปี และอายุที่เป็นค่าว่าง)',caution:'ค่า False จาก .between() รวมทั้งค่าที่อยู่นอกเกณฑ์และค่าว่าง (NaN) จึงต้องแยกค่าว่างออกก่อนนับเป็นค่าผิดช่วง'}
+];
+function W4ReportExplorerDemo({onJumpStep}){
+ const[group,setGroup]=useState('all');const[selectedStep,setSelectedStep]=useState(1);
+ const groups=[['all','ทั้งหมดในคาบเรียน (12 ขั้นตอน)'],['setup','1. นำเข้าข้อมูลและกำหนดตัวหาร (1–4)'],['report','2. คำนวณค่าว่างและสร้างรายงาน CSV (5–10)'],['check','3. สำรวจสำเนาซ้ำและเกณฑ์ช่วงค่า (11–12)']];
+ const visible=group==='all'?w4ReportCatalog:w4ReportCatalog.filter(f=>f.group===group);
+ const active=visible.find(f=>f.step===selectedStep)??visible[0];
+ return <section className="demo fn-explorer">
+  <p className="demo-caption">สรุปคำสั่งทั้ง 12 ขั้นตอนสำหรับการจัดทำรายงานคุณภาพข้อมูลบนชุดข้อมูล <code>student_register_dirty.csv</code> · คลิกเลือกแต่ละขั้นตอนเพื่อดูคำอธิบายหรือเข้าสู่หน้าฝึกปฏิบัติ</p>
+  <div className="choice-row">{groups.map(([id,label])=><button key={id} type="button" className={group===id?'selected':''} onClick={()=>{setGroup(id);const first=(id==='all'?w4ReportCatalog:w4ReportCatalog.filter(f=>f.group===id))[0];if(first)setSelectedStep(first.step)}} aria-pressed={group===id}>{label}</button>)}</div>
+  <div className="fn-grid" role="list">{visible.map(item=><button key={item.step} type="button" className={active.step===item.step?'selected':''} onClick={()=>setSelectedStep(item.step)} aria-pressed={active.step===item.step}><span>ขั้นตอนที่ {item.step}</span><code>{item.token}</code></button>)}</div>
+  <div className="fn-detail" aria-live="polite">
+   <div className="fn-detail-head"><h3>ขั้นตอนที่ {active.step}: <code>{active.token}</code></h3><div className="fn-detail-actions"><span>{active.period}</span>{onJumpStep&&<button type="button" className="jump-step-btn" onClick={()=>onJumpStep(active.step)}>ไปที่หน้าฝึกปฏิบัติขั้นตอนที่ {active.step} <ArrowRight size={15}/></button>}</div></div>
+   <Code code={active.code}/>
+   <div className="fn-meta-grid">
+    <div><h4>หน้าที่ของคำสั่ง</h4><p>{active.purpose}</p></div>
+    <div><h4>ผลลัพธ์จากการรันคำสั่ง</h4><p>{active.result}</p></div>
+    <div className="fn-caution"><h4>ข้อควรระวังในการเขียนคำสั่ง</h4><p>{active.caution}</p></div>
+   </div>
+  </div>
+  <div className="etl-impact-grid">
+   <div><span>กรณีดัชนี (Index) เก็บชื่อคอลัมน์ต้นทาง (ตาราง quality)</span><strong>ส่งออกด้วย <code>index_label='column'</code></strong><small>รักษาชื่อคอลัมน์ student_id, age, gpa, phone ไว้เป็นคอลัมน์แรกของไฟล์ quality_report.csv</small></div>
+   <div><span>กรณีมีคอลัมน์เก็บชื่อรายการอยู่แล้ว (ตาราง missing_report)</span><strong>ส่งออกด้วย <code>index=False</code></strong><small>ป้องกันไม่ให้โปรแกรมบันทึกตัวเลขลำดับแถว 0, 1, 2... เพิ่มเป็นคอลัมน์เกินมาในไฟล์ CSV</small></div>
+  </div>
+ </section>;
+}
+const w4ClosingQuestions=[
+ {id:1,score:'2 คะแนน',title:'ข้อที่ 1: ระบุจำนวนแถวในชุดข้อมูลและตัวหารที่ใช้คำนวณร้อยละ',task:'ให้ผู้เรียนเขียนคำสั่งตรวจสอบจำนวนแถวทั้งหมดของตาราง df และระบุค่าตัวหารที่ใช้คำนวณร้อยละ พร้อมอธิบายเหตุผลว่าเหตุใดจึงไม่เรียกตัวหารนี้ว่าจำนวนผู้เรียนที่ไม่ซ้ำกัน',functions:['row_count = len(df)','row_count']},
+ {id:2,score:'2 คะแนน',title:'ข้อที่ 2: คำนวณจำนวนและร้อยละของค่าว่างในคอลัมน์ age, gpa และ phone',task:'ให้ผู้เรียนเขียนคำสั่งคำนวณจำนวนค่าว่างและร้อยละของค่าว่างเทียบกับตัวหาร (42 แถว) จากนั้นบันทึกจำนวนค่าว่าง ร้อยละ และวิธีคำนวณของคอลัมน์ age, gpa และ phone ลงในใบงาน',functions:['missing_count = df.isna().sum()','missing_percent = missing_count / row_count * 100']},
+ {id:3,score:'2 คะแนน',title:'ข้อที่ 3: ออกแบบและสร้างตารางรายงาน missing_report ด้วย pd.DataFrame()',task:'ให้ผู้เรียนสร้างตาราง DataFrame ชื่อ missing_report ให้มี 4 คอลัมน์ ได้แก่ issue (ชื่อคอลัมน์ต้นทาง), count (จำนวนค่าว่าง), denominator (ตัวหาร) และ percent (ร้อยละของค่าว่าง) แล้วนำผลลัพธ์ไปบันทึกในใบงาน',functions:['missing_count.index = รายชื่อคอลัมน์ต้นทาง (ดัชนี)','missing_count.values = จำนวนค่าว่างของแต่ละคอลัมน์','denominator ใช้ row_count ค่าเดียวทุกแถว',"pd.DataFrame({'issue': ..., 'count': ..., 'denominator': ..., 'percent': ...})"]},
+ {id:4,score:'2 คะแนน',title:'ข้อที่ 4: บันทึกรายงานเป็นไฟล์ quality_report_practice.csv และอ่านกลับมาตรวจสอบ',task:'ให้ผู้เรียนบันทึกตาราง missing_report เป็นไฟล์ CSV ชื่อ quality_report_practice.csv โดยไม่เพิ่มคอลัมน์เลขลำดับแถว (index=False) จากนั้นเขียนคำสั่งอ่านไฟล์กลับมาตรวจสอบหัวคอลัมน์และค่าภายในตาราง',functions:["missing_report.to_csv('quality_report_practice.csv', index=False, encoding='utf-8-sig')","pd.read_csv('quality_report_practice.csv')"]},
+ {id:5,score:'2 คะแนน',title:'ข้อที่ 5: เขียนข้อสรุปผลการตรวจสอบและข้อเสนอแนะก่อนทำความสะอาดข้อมูล',task:'ให้ผู้เรียนเขียนสรุปผลการตรวจสอบคุณภาพข้อมูลจากตารางรายงานและเสนอแนะแนวทางจัดการข้อมูลก่อนนำไปทำความสะอาด (ความยาว 2–3 ประโยค) ลงในเอกสารใบงาน',functions:['อ้างอิงจำนวนและร้อยละจากตารางรายงาน','เสนอให้ตรวจสอบหลักฐานต้นทางก่อนลบหรือแก้ไขข้อมูล']}
+];
+function W4ClosingLabDemo({doneMap,onToggleDone}){
+ const[activeQ,setActiveQ]=useState(1);
+ const q=w4ClosingQuestions.find(x=>x.id===activeQ)??w4ClosingQuestions[0];
+ const doneKey=`w4lab-${q.id}`;
+ const isDone=Boolean(doneMap?.[doneKey]);
+ const completedCount=w4ClosingQuestions.filter(x=>doneMap?.[`w4lab-${x.id}`]).length;
+ return <section className="demo fn-explorer">
+  <div className="exercise-header-bar"><p className="demo-caption">เวลาทำแบบฝึกหัด 30 นาที · คะแนนเต็ม 10 คะแนน (5 ข้อ ข้อละ 2 คะแนน) · เขียนคำสั่งใน Google Colab และบันทึกคำตอบลงในเอกสารใบงาน (.docx)</p><span className="progress-pill">ความคืบหน้า: {completedCount}/5 ข้อ</span></div>
+  <div className="interactive-question-cards five-cols">{w4ClosingQuestions.map(x=>{const k=`w4lab-${x.id}`;const checked=Boolean(doneMap?.[k]);return <button key={x.id} type="button" className={`q-card ${activeQ===x.id?'selected':''} ${checked?'is-done':''}`} onClick={()=>setActiveQ(x.id)} aria-pressed={activeQ===x.id}><div className="q-card-top"><span className="q-badge">ข้อที่ {x.id} ({x.score})</span>{checked?<CheckCircle2 size={18} className="done-icon"/>:<Circle size={18} className="todo-icon"/>}</div><strong>{x.title.replace(/^ข้อที่ \d+: /,'')}</strong></button>})}</div>
+  <div className="fn-detail" aria-live="polite">
+   <div className="fn-detail-head"><h3>{q.title}</h3><div className="fn-detail-actions"><span>คะแนน {q.score}</span>{onToggleDone&&<button type="button" className={'check-done-btn '+(isDone?'is-done':'')} onClick={()=>onToggleDone(doneKey)}>{isDone?<CheckCircle2 size={16}/>:<Circle size={16}/>}{isDone?'สถานะ: ดำเนินการเสร็จแล้ว':'บันทึกว่าดำเนินการเสร็จแล้ว'}</button>}</div></div>
+   <p className="concept-body">{q.task}</p>
+   <div className="fn-meta-grid">
+    <div><h4>คำสั่ง/แนวทางที่ใช้</h4><code>{q.functions.join('  |  ')}</code></div>
+    <div><h4>ชุดข้อมูลและไฟล์ที่ต้องส่ง</h4><p>ใช้ไฟล์ <code>student_register_dirty.csv</code> · ส่งใบงาน (.docx), ไฟล์ Notebook และไฟล์ <code>quality_report_practice.csv</code></p></div>
+   </div>
+  </div>
+  <div className="google-docs-callout">
+   <div className="google-docs-callout-info">
+    <FileText size={26}/>
+    <div>
+     <strong>เอกสารใบงานแบบฝึกหัดท้ายคาบรายงานคุณภาพข้อมูล (Google Docs / Word .docx)</strong>
+     <p>1) ดาวน์โหลดชุดข้อมูล <code>student_register_dirty.csv</code> ไปรันใน Google Colab  2) บันทึกคำตอบและตารางผลลัพธ์ลงในใบงาน (.docx)</p>
+    </div>
+   </div>
+   <div className="google-docs-callout-actions">
+    <a className="google-docs-callout-btn" href="ชุดเรียน/ชุดข้อมูล/student_register_dirty.csv" download>
+     <Download size={15}/> 1. ดาวน์โหลดชุดข้อมูล (student_register_dirty.csv)
+    </a>
+    <a className="google-docs-callout-btn secondary" href="ชุดเรียน/เรียนย้อนหลัง_สัปดาห์04/ใบงานแบบฝึกหัดท้ายคาบ_สัปดาห์04_จันทร์.docx" download>
+     <FileText size={15}/> 2. ดาวน์โหลดใบงานแบบฝึกหัด 5 ข้อ (.docx)
+    </a>
+   </div>
+  </div>
+ </section>;
+}
+
 function Code({code}){return <div className="code-block" style={{userSelect:'none'}}><div className="code-toolbar"><span><Code2 size={15}/> คำสั่งภาษา Python (Google Colab)</span><span>พิมพ์คำสั่งด้วยตนเอง (ปิดการคัดลอกอัตโนมัติ)</span></div><pre style={{userSelect:'none'}}><code>{code}</code></pre></div>}
 function LessonOutput({output}){
  if(!output)return null;
@@ -746,6 +828,8 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  case 'w2-closing-lab':return <><h1>{slide.title}</h1><W2ClosingLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
  case 'w2-excel-explorer':return <><h1>{slide.title}</h1><W2ExcelExplorerDemo onJumpStep={onJumpStep}/></>;
  case 'w2-tuesday-lab':return <><h1>{slide.title}</h1><W2TuesdayLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
+ case 'w4-report-explorer':return <><h1>{slide.title}</h1><W4ReportExplorerDemo onJumpStep={onJumpStep}/></>;
+ case 'w4-closing-lab':return <><h1>{slide.title}</h1><W4ClosingLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
  case 'quality':return <><h1>{slide.title}</h1><QualityDemo/></>;
  case 'merge':return <><h1>{slide.title}</h1><MergeDemo/></>;
  case 'forecast':return <><h1>{slide.title}</h1><ForecastDemo/></>;
@@ -755,6 +839,13 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  }
 }
 function buildSessionModules(slides,weekNum,dayNum){
+ if(weekNum===4&&dayNum===0){
+  return [
+   {id:'intro',label:'ส่วนที่ 1: เป้าหมายและเตรียมความพร้อม',sub:'จุดประสงค์ · ไฟล์ข้อมูล · โครงสร้างข้อมูลและลำดับการทำงาน',match:(_,s)=>['w4-goals','w4-files','w4-data','w4-procedure'].includes(s.id)},
+   {id:'lesson',label:'ส่วนที่ 2: หลักการรายงานคุณภาพข้อมูลและฝึกปฏิบัติ',sub:'ทฤษฎี · สรุป 12 ขั้นตอน · ฝึกเขียนคำสั่งทีละขั้นตอน (1–12)',match:(_,s)=>s.id.startsWith('w4-concept-0-')||s.id==='w4-report-explorer'||s.type==='guided'||s.type==='guided-check'},
+   {id:'exercise',label:'ส่วนที่ 3: แบบฝึกหัดท้ายคาบและสรุปบทเรียน',sub:'แบบฝึกหัดรายบุคคล 5 ข้อ (10 คะแนน) และตรวจสอบความเข้าใจ',match:(_,s)=>['w4-closing-lab','w4-monday-summary'].includes(s.id)||s.id.startsWith('w4-exercise-')}
+  ].map(m=>{const indices=slides.map((s,i)=>m.match(i,s)?i:-1).filter(i=>i!==-1);return {...m,indices,firstIndex:indices[0]??0}}).filter(m=>m.indices.length);
+ }
  if(weekNum===3&&dayNum===1){
   return [
    {id:'prep',label:'ส่วนที่ 1: เตรียมไฟล์',sub:'ดาวน์โหลด Excel และอัปโหลดเข้า Google Colab'},
