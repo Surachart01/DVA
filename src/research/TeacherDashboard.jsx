@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react';
 import { BookOpen, Cloud, Upload, FlaskConical, Copy, Check, X, Download, Database, TriangleAlert, Info } from 'lucide-react';
 import content from './researchContent.json';
 import { getApiUrl, setApiUrl, fetchAllRecords } from './storage.js';
-import { mean, sd, sum, pairedT, effectivenessIndex, itemAnalysis, interpretLikert, fmt, fmtP } from './stats.js';
+import { mean, sd, sum, pairedT, shapiroWilk, wilcoxonSignedRank, effectivenessIndex, itemAnalysis, interpretLikert, fmt, fmtP } from './stats.js';
 
 const TEST_TOTAL = content.test.items.length;
 const ACTS = content.activities;
 const ACT_TOTAL = sum(ACTS.map(a => a.quiz.length));
+const DEMO_N = 15;
 const SURVEY_ITEMS = content.survey.aspects.flatMap(a => a.items.map(it => ({ ...it, aspect: a.name })));
 
 // เลือกบันทึกครั้งแรกของผู้เรียนแต่ละคนในแต่ละรายการ (ใช้ผลครั้งแรกเป็นข้อมูลวิจัย)
@@ -43,7 +44,7 @@ function demoRecords() {
   const out = []; let t = Date.parse('2026-11-16T08:00:00Z');
   const rec = (code, kind, extra) => out.push({ id: `${code}-${kind}`, ts: new Date(t += 60000).toISOString(), code, group: 'ข้อมูลจำลอง', kind, consent: true, ...extra });
   const diff = Object.fromEntries(content.test.items.map((it, i) => [it.id, -1 + (i % 7) * 0.35]));
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= DEMO_N; i++) {
     const code = `DEMO${String(i).padStart(2, '0')}`; const ability = norm();
     const answerTest = shift => {
       const answers = {}; let score = 0;
@@ -103,6 +104,11 @@ export default function TeacherDashboard() {
     const paired = rows.filter(r => Number.isFinite(r.pre) && Number.isFinite(r.post));
     const pre = paired.map(r => r.pre), post = paired.map(r => r.post);
     const t = paired.length >= 2 ? pairedT(pre, post) : null;
+    // เลือกสถิติตามผลการทดสอบการแจกแจงปกติของผลต่างคะแนน: ปกติใช้ t-test ไม่ปกติใช้ Wilcoxon
+    const normality = paired.length >= 3 ? shapiroWilk(post.map((v, i) => v - pre[i])) : null;
+    const wx = paired.length >= 2 ? wilcoxonSignedRank(pre, post) : null;
+    const wxP = wx ? (Number.isFinite(wx.pExact) ? wx.pExact : wx.pApprox) : NaN;
+    const useT = !normality || normality.p >= 0.05;
     const actComplete = rows.filter(r => r.acts.every(Number.isFinite));
     const actSums = actComplete.map(r => sum(r.acts));
     const e1 = actComplete.length ? (mean(actSums) / ACT_TOTAL) * 100 : NaN;
@@ -124,7 +130,7 @@ export default function TeacherDashboard() {
     });
     const allSurvey = surveyRecs.flatMap(r => SURVEY_ITEMS.map(it => Number(r.answers?.[it.id]))).filter(Number.isFinite);
     const comments = surveyRecs.map(r => r.extra?.comment).filter(Boolean);
-    return { rows, paired, pre, post, t, actComplete, e1, e2, e2n: e2Rows.length, ei, perActivity, items, itemN: itemRows.length, surveyStats, aspectStats, surveyAll: { m: mean(allSurvey), s: sd(allSurvey), n: surveyRecs.length }, comments };
+    return { rows, paired, pre, post, t, normality, wx, wxP, useT, actComplete, e1, e2, e2n: e2Rows.length, ei, perActivity, items, itemN: itemRows.length, surveyStats, aspectStats, surveyAll: { m: mean(allSurvey), s: sd(allSurvey), n: surveyRecs.length }, comments };
   }, [data, itemTest]);
 
   function exportScores() {
@@ -178,7 +184,7 @@ export default function TeacherDashboard() {
             <div className="r-actions">
               <button className="r-primary" onClick={load} disabled={!api.trim() || !key || loading}><Cloud size={18} aria-hidden="true" />{loading ? 'กำลังดึงข้อมูล…' : 'ดึงข้อมูลจาก Google Sheets'}</button>
               <label className="r-file-button"><Upload size={18} aria-hidden="true" />นำเข้าไฟล์ JSON<input type="file" accept="application/json,.json" onChange={e => e.target.files[0] && importFile(e.target.files[0])} /></label>
-              <button onClick={() => { setRecords(demoRecords()); setSource('ข้อมูลจำลอง 30 คน'); }}><FlaskConical size={18} aria-hidden="true" />ทดลองด้วยข้อมูลจำลอง</button>
+              <button onClick={() => { setRecords(demoRecords()); setSource(`ข้อมูลจำลอง ${DEMO_N} คน`); }}><FlaskConical size={18} aria-hidden="true" />ทดลองด้วยข้อมูลจำลอง</button>
             </div>
             {error && <p className="r-status is-error" role="alert"><TriangleAlert size={18} aria-hidden="true" />{error}</p>}
             {studentLink && (
@@ -219,9 +225,11 @@ export default function TeacherDashboard() {
                     {verdict(A.e1 >= 80 && A.e2 >= 80, e1e2Pending)}
                   </li>
                   <li>
-                    <div className="r-hyp-text"><h3>สมมติฐานที่ 2 ผลสัมฤทธิ์หลังเรียนสูงกว่าก่อนเรียน</h3><p>t-test แบบ Dependent ทางเดียว n = {A.paired.length} · ดัชนีประสิทธิผล {fmt(A.ei, 4)}</p></div>
-                    <p className="r-hyp-value tabular">{A.t ? <>t = {fmt(A.t.t)}<small>p {fmtP(A.t.p).startsWith('<') ? '' : '= '}{fmtP(A.t.p)}</small></> : '–'}</p>
-                    {verdict(A.t && A.t.p < 0.05 && A.t.meanDiff > 0, !A.t)}
+                    <div className="r-hyp-text"><h3>สมมติฐานที่ 2 ผลสัมฤทธิ์หลังเรียนสูงกว่าก่อนเรียน</h3><p>{!A.normality ? 't-test แบบ Dependent ทางเดียว' : A.useT ? `ผลต่างคะแนนแจกแจงปกติ (Shapiro–Wilk p ${fmtP(A.normality.p)}) จึงใช้ t-test แบบ Dependent ทางเดียว` : `ผลต่างคะแนนไม่แจกแจงปกติ (Shapiro–Wilk p ${fmtP(A.normality.p)}) จึงใช้ Wilcoxon Signed-Rank Test ทางเดียว`} · n = {A.paired.length} · ดัชนีประสิทธิผล {fmt(A.ei, 4)}</p></div>
+                    {A.useT
+                      ? <p className="r-hyp-value tabular">{A.t ? <>t = {fmt(A.t.t)}<small>p {fmtP(A.t.p).startsWith('<') ? '' : '= '}{fmtP(A.t.p)}</small></> : '–'}</p>
+                      : <p className="r-hyp-value tabular">{A.wx ? <>Z = {fmt(A.wx.z)}<small>p {fmtP(A.wxP).startsWith('<') ? '' : '= '}{fmtP(A.wxP)}</small></> : '–'}</p>}
+                    {A.useT ? verdict(A.t && A.t.p < 0.05 && A.t.meanDiff > 0, !A.t) : verdict(A.wxP < 0.05 && A.wx.wPlus > A.wx.wMinus, !A.wx)}
                   </li>
                   <li>
                     <div className="r-hyp-text"><h3>สมมติฐานที่ 3 ความพึงพอใจระดับมากขึ้นไป</h3><p>ค่าเฉลี่ยตั้งแต่ 3.51 · n = {A.surveyAll.n}</p></div>
@@ -249,6 +257,24 @@ export default function TeacherDashboard() {
                   </tbody>
                 </table></div>
                 <p className="r-note">* มีนัยสำคัญทางสถิติที่ระดับ .05 · ใช้เฉพาะผู้เรียนที่มีคะแนนทั้งก่อนเรียนและหลังเรียน · ขนาดอิทธิพล Cohen's d<sub>z</sub> = {A.t ? fmt(A.t.dz) : '–'}</p>
+
+                <h2>ตารางที่ 2.1 การตรวจสอบการแจกแจงปกติของผลต่างคะแนน (หลังเรียน − ก่อนเรียน)</h2>
+                <div className="table-scroll"><table>
+                  <thead><tr><th>สถิติทดสอบ</th><th className="num">n</th><th className="num">W</th><th className="num">p</th><th>ผลการพิจารณา</th></tr></thead>
+                  <tbody><tr><td>Shapiro–Wilk</td><td className="num">{A.normality ? A.normality.n : A.paired.length}</td><td className="num">{A.normality ? fmt(A.normality.w, 3) : '–'}</td><td className="num">{A.normality ? fmtP(A.normality.p) : '–'}</td><td>{!A.normality ? 'ต้องมีข้อมูลอย่างน้อย 3 คู่ และผลต่างต้องไม่เท่ากันทุกคน' : A.useT ? 'แจกแจงปกติ ใช้ t-test แบบ Dependent' : 'ไม่แจกแจงปกติ ใช้ Wilcoxon Signed-Rank Test'}</td></tr></tbody>
+                </table></div>
+                <p className="r-note">H0: ผลต่างคะแนนแจกแจงปกติ · ถ้า p ตั้งแต่ .05 ขึ้นไป ถือว่าแจกแจงปกติ</p>
+
+                <h2>ตารางที่ 2.2 Wilcoxon Signed-Rank Test (สถิติไม่อิงพารามิเตอร์)</h2>
+                <div className="table-scroll"><table>
+                  <thead><tr><th>อันดับ</th><th className="num">จำนวน</th><th className="num">ผลรวมอันดับ</th><th className="num">Z</th><th className="num">p ทางเดียว (ประมาณค่า)</th><th className="num">p ทางเดียว (แม่นตรง)</th></tr></thead>
+                  <tbody>
+                    <tr><td>อันดับบวก (หลังเรียน &gt; ก่อนเรียน)</td><td className="num">{A.wx ? A.wx.nPos : '–'}</td><td className="num">{A.wx ? fmt(A.wx.wPlus, 1) : '–'}</td><td className="num" rowSpan={3}>{A.wx ? `${fmt(A.wx.z)}${A.wxP < 0.05 ? '*' : ''}` : '–'}</td><td className="num" rowSpan={3}>{A.wx ? fmtP(A.wx.pApprox) : '–'}</td><td className="num" rowSpan={3}>{A.wx ? fmtP(A.wx.pExact) : '–'}</td></tr>
+                    <tr><td>อันดับลบ (หลังเรียน &lt; ก่อนเรียน)</td><td className="num">{A.wx ? A.wx.nNeg : '–'}</td><td className="num">{A.wx ? fmt(A.wx.wMinus, 1) : '–'}</td></tr>
+                    <tr><td>คะแนนเท่าเดิม (ไม่นำมาจัดอันดับ)</td><td className="num">{A.wx ? A.wx.nZero : '–'}</td><td className="num">–</td></tr>
+                  </tbody>
+                </table></div>
+                <p className="r-note">ใช้เมื่อผลต่างคะแนนไม่แจกแจงปกติ · ตัดสินผลด้วย p แบบแม่นตรง เหมาะกับกลุ่มตัวอย่างขนาดเล็ก · Z ปรับค่าอันดับซ้ำแล้ว ไม่ปรับความต่อเนื่อง (โปรแกรม SPSS แสดงค่า Z เป็นค่าลบเพราะคำนวณจากอันดับลบ ขนาดเท่ากัน) · ขนาดอิทธิพล r = Z/√n = {A.wx ? fmt(A.wx.r) : '–'}</p>
               </section>
             )}
 
