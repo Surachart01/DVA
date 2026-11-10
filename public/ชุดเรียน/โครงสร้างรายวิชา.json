@@ -358,24 +358,25 @@
     },
     {
       "week": 10,
-      "title": "Visualization ผู้ชม การเลือกกราฟ และ Storyboard",
-      "unit": 5,
+      "title": "Data Model ทบทวนและต่อยอด: คีย์ การเชื่อมตาราง และตัวชี้วัด",
+      "unit": 4,
       "files": [
-        "drinks_shop.csv"
+        "menu.csv",
+        "sales.csv"
       ],
       "objectives": [
-        "ระบุผู้ชม คำถาม และตัวชี้วัดก่อนเลือกกราฟ",
-        "รวมจำนวนแก้วและรายได้แยกตามเมนูด้วยคำสั่งทีละขั้น",
-        "เลือกกราฟและจัด Storyboard ที่มีหน่วย แหล่งข้อมูล และข้อจำกัด"
+        "ตรวจสอบคีย์หลักและคีย์นอกก่อนเชื่อมตารางด้วยข้อมูลชุดใหม่ได้",
+        "เชื่อมตารางรายการขายกับตารางเมนู และตรวจสอบรายการที่ไม่พบคู่ได้",
+        "สร้างคอลัมน์คำนวณและตัวชี้วัด พร้อมอธิบายความต่างระหว่างจำนวนขายและรายได้ได้"
       ],
       "concept": [
-        "วันจันทร์ 180 นาที: ผู้ชม คำถาม และหลักฐาน",
-        "เกณฑ์เลือกกราฟให้ตอบคำถาม",
-        "วันพฤหัสบดี 120 นาที: ฝึกตั้งคำถามและทำ Storyboard"
+        "วันจันทร์ 180 นาที: ทบทวนและต่อยอด Modeling จากสัปดาห์ที่ 6–7",
+        "องค์ประกอบของแบบจำลองข้อมูล",
+        "วันพฤหัสบดี 120 นาที: ตัวชี้วัด แบบทดสอบหลังเรียน และแบบประเมิน"
       ],
-      "code": "import pandas as pd\ndf = pd.read_csv('drinks_shop.csv')\ndf.head()\nmenu_groups = df.groupby('menu')\nmenu_cups = menu_groups['cups']\ncups_total = menu_cups.sum()\ncups_total\nmenu_revenue = menu_groups['price']\nrevenue_total = menu_revenue.sum()\nsummary = revenue_total.to_frame(name='revenue')\nsummary['cups'] = cups_total\nsummary = summary.sort_values('revenue', ascending=False)\nsummary\naudience = 'ผู้จัดการร้านเครื่องดื่ม'\nquestion = 'เมนูใดขายจำนวนแก้วและมีรายได้สูงที่สุดในวันที่มีบันทึก?'\npd.DataFrame({'ผู้ชม': [audience], 'คำถาม': [question]})\nsummary['cups'].idxmax()\nsummary['revenue'].idxmax()\nstoryboard = pd.DataFrame({'ตำแหน่ง': ['ด้านบน', 'กลางซ้าย', 'กลางขวา', 'ด้านล่าง'], 'เนื้อหา': [question, 'กราฟแท่งเปรียบเทียบจำนวนขายตามเมนู หน่วยแก้ว', 'กราฟแท่งเปรียบเทียบรายได้ตามเมนู หน่วยบาท', 'แหล่งข้อมูล drinks_shop.csv; มีเฉพาะวันที่บันทึก และไม่มีต้นทุน']})\nstoryboard",
-      "challenge": "เขียนคำสั่งพร้อมผู้สอนทีละขั้น ตรวจผลและอธิบายความหมายจากไฟล์ฝึก",
-      "deliverable": "Notebook ที่เขียนในคาบและคำอธิบายผลลัพธ์",
+      "code": "import pandas as pd\nmenu = pd.read_csv('menu.csv')\nsales = pd.read_csv('sales.csv')\nmenu.head()\nmenu['menu_id'].is_unique\nsales['menu_id'].isin(menu['menu_id']).all()\nsales.loc[~sales['menu_id'].isin(menu['menu_id'])]\nmodel = sales.merge(menu, on='menu_id', how='left')\nmodel.shape\nmodel.head()\ncheck = sales.merge(menu, on='menu_id', how='left', validate='many_to_one', indicator=True)\ncheck['_merge'].value_counts()\nmodel_ok = check[check['_merge'] == 'both'].copy()\nmodel_ok['revenue'] = model_ok['cups'] * model_ok['price_per_cup']\nmodel_ok['revenue'].sum()\nmodel_ok['cups'].sum()\nmodel_ok.groupby('category')['revenue'].sum()\nmodel_ok.groupby('menu_name')[['cups', 'revenue']].sum()\nmodel_ok['revenue'].sum() / model_ok['cups'].sum()",
+      "challenge": "เขียนส่วนสำคัญของคำสั่งบนหน้าเว็บวิจัย ตรวจสอบทันที แล้วรันคำสั่งเดียวกันใน Google Colab ทีละเซลล์",
+      "deliverable": "Notebook ที่เขียนในคาบ คะแนนแบบฝึกท้ายกิจกรรม และคำอธิบายรายการที่ไม่พบคู่",
       "rubric": [
         [
           "ความถูกต้องของชิ้นงาน",
@@ -394,18 +395,20 @@
     },
     {
       "week": 11,
-      "title": "Visualization สร้างภาพข้อมูล",
+      "title": "Visualization ผู้ชม Storyboard และการสร้างภาพข้อมูล",
       "unit": 5,
       "files": [
         "drinks_shop.csv"
       ],
       "objectives": [
+        "ระบุผู้ชม คำถาม และตัวชี้วัด แล้วร่าง Storyboard บนกระดาษก่อนสร้างกราฟได้",
         "สร้างกราฟแท่งเปรียบเทียบยอดขายจากข้อมูลสรุปได้",
         "สร้างกราฟเส้นตามวันที่ที่มีข้อมูลและกำหนดชื่อแกนได้",
         "สร้างกราฟกระจายเพื่อพิจารณาจำนวนแก้วและยอดเงินต่อรายการได้",
         "ส่งออกกราฟแบบโต้ตอบเป็นไฟล์ HTML เพื่อเปิดภายหลังได้"
       ],
       "concept": [
+        "วันจันทร์ 45 นาทีแรก: ผู้ชม คำถาม และ Storyboard",
         "ส่วนประกอบของกราฟ",
         "การอ่านค่าจากผลการจัดกลุ่ม",
         "การตรวจกราฟก่อนเผยแพร่",
