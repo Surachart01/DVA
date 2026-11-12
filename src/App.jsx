@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Copy, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass } from 'lucide-react';
 import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
+import { W4SyntaxVisualizerDemo, W4FunctionLabDemo, W4PandasGameDemo, W4ThursdayAssignmentDemo } from './W4ThursdayGameModule';
 
 // Limit the current classroom view while retaining the complete course source.
-const visibleLesson = {week:4, day:0};
+const visibleLesson = {week:4, day:1};
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
@@ -834,6 +835,10 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  case 'w2-tuesday-lab':return <><h1>{slide.title}</h1><W2TuesdayLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
  case 'w4-report-explorer':return <><h1>{slide.title}</h1><W4ReportExplorerDemo onJumpStep={onJumpStep}/></>;
  case 'w4-closing-lab':return <><h1>{slide.title}</h1><W4ClosingLabDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
+ case 'w4-syntax-visualizer':return <><h1>{slide.title}</h1><W4SyntaxVisualizerDemo/></>;
+ case 'w4-fn-lab':return <><h1>{slide.title}</h1><W4FunctionLabDemo/></>;
+ case 'w4-pandas-game':return <><h1>{slide.title}</h1><W4PandasGameDemo/></>;
+ case 'w4-thu-assignment':return <><h1>{slide.title}</h1><W4ThursdayAssignmentDemo doneMap={doneMap} onToggleDone={onToggleDone}/></>;
  case 'quality':return <><h1>{slide.title}</h1><QualityDemo/></>;
  case 'merge':return <><h1>{slide.title}</h1><MergeDemo/></>;
  case 'forecast':return <><h1>{slide.title}</h1><ForecastDemo/></>;
@@ -843,6 +848,14 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  }
 }
 function buildSessionModules(slides,weekNum,dayNum){
+ if(weekNum===4&&dayNum===1){
+  return [
+   {id:'syntax',label:'ส่วนที่ 1: โครงสร้าง Function & Parameter',sub:'แผนการเรียนออนไลน์ · ผ่าโครงสร้างคำสั่ง · 4 กฎเหล็กป้องกันบั๊ก',match:(_,s)=>['w4-thu-overview','w4-syntax-visualizer'].includes(s.id)},
+   {id:'fnlab',label:'ส่วนที่ 2: คลัง 16 ฟังก์ชัน & ทดลอง Parameter',sub:'เจาะลึก 16 ฟังก์ชันหลัก 5 หมวดหมู่ พร้อมกดสลับ Parameter ดูตารางผลลัพธ์',match:(_,s)=>s.id==='w4-fn-lab'},
+   {id:'game',label:'ส่วนที่ 3: เกมพิชิตภารกิจ Pandas (3 ด่าน)',sub:'Function Hunter · Parameter Debugger · Output Predictor (15 ภารกิจ)',match:(_,s)=>s.id==='w4-pandas-game'},
+   {id:'assignment',label:'ส่วนที่ 4: ภารกิจใบงานส่งสัปดาห์หน้า (10 คะแนน)',sub:'ใบงานประยุกต์ใช้ Function & Parameter 10 ข้อ (.docx) และสรุปบทเรียน',match:(_,s)=>['w4-thu-assignment','w4-thu-summary','w4-summary'].includes(s.id)}
+  ].map(m=>{const indices=slides.map((s,i)=>m.match(i,s)?i:-1).filter(i=>i!==-1);return {...m,indices,firstIndex:indices[0]??0}}).filter(m=>m.indices.length);
+ }
  if(weekNum===4&&dayNum===0){
   return [
    {id:'intro',label:'ส่วนที่ 1: เป้าหมายและเตรียมความพร้อม',sub:'จุดประสงค์ · เตรียมไฟล์ · รู้จักชุดข้อมูล · ภาพรวมการทำงาน',match:(_,s)=>['w4-goals','w4-files','w4-data','w4-procedure'].includes(s.id)},
