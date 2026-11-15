@@ -5,7 +5,7 @@ import { sessionsFor } from './teachingSessions';
 import { W4SyntaxVisualizerDemo, W4FunctionLabDemo, W4PandasGameDemo, W4ThursdayAssignmentDemo } from './W4ThursdayGameModule';
 
 // Limit the current classroom view while retaining the complete course source.
-const visibleLesson = {week:4, day:1};
+const visibleLesson = {week:5, day:0};
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
@@ -847,7 +847,11 @@ function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,proj
  default:return <p>ไม่พบเนื้อหา กรุณาเลือกหัวข้อจากสารบัญด้านซ้าย</p>;
  }
 }
-function buildSessionModules(slides,weekNum,dayNum){
+function buildSessionModules(slides,weekNum,dayNum,weekData){
+ const specModules=weekData?.modules?.[String(dayNum)];
+ if(specModules?.length){
+  return specModules.map(m=>{const indices=slides.flatMap((s,i)=>s.module===m.id?[i]:[]);return {...m,indices,firstIndex:indices[0]??0}}).filter(m=>m.indices.length);
+ }
  if(weekNum===4&&dayNum===1){
   return [
    {id:'syntax',label:'ส่วนที่ 1: โครงสร้าง Function & Parameter',sub:'แผนการเรียนออนไลน์ · ผ่าโครงสร้างคำสั่ง · 4 กฎเหล็กป้องกันบั๊ก',match:(_,s)=>['w4-thu-overview','w4-syntax-visualizer'].includes(s.id)},
@@ -927,7 +931,7 @@ export default function App(){
  const[doneMap,setDoneMap]=useState(()=>{try{return JSON.parse(localStorage.getItem('dva_interactive_done')||'{}')}catch{return {}}});
  function toggleDone(key){setDoneMap(prev=>{const next={...prev,[key]:!prev[key]};try{localStorage.setItem('dva_interactive_done',JSON.stringify(next))}catch{}return next})}
  const week=teachingDeck[weekIndex];const session=sessionsFor(week)[day];const slides=session.slides;const slide=slides[index]??slides[0];
- const modules=useMemo(()=>buildSessionModules(slides,week.week,day),[slides,week.week,day]);
+ const modules=useMemo(()=>buildSessionModules(slides,week.week,day,week),[slides,week,day]);
  const activeModule=modules.find(m=>m.indices.includes(index))??modules[0];
  const guidedSteps=useMemo(()=>{
   const map=new Map();

@@ -151,7 +151,15 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
    'บันทึกและตรวจไฟล์ (ขั้นตอนที่ 8–9): บันทึกเป็นไฟล์ CSV ด้วย .to_csv() แล้วอ่านไฟล์กลับมาตรวจสอบ',
    'ตรวจมิติคุณภาพอื่นและสรุปรายงาน (ขั้นตอนที่ 10–16): ตรวจชื่อสาขาวิชา หมายเลขโทรศัพท์ และวันที่ปรับปรุงข้อมูล แล้วบันทึกเป็นไฟล์ quality_dimensions.csv'
   ],0) if week==4 else content(week,'procedure','แนวทางการฝึกปฏิบัติเขียนคำสั่งภาษา Python',['ลำดับการเรียนรู้: ศึกษาหน้าที่ของคำสั่ง → พิมพ์คำสั่งใน Google Colab → รันคำสั่ง → ตรวจสอบและแปลความหมายของผลลัพธ์','พิมพ์คำสั่งแยกเป็นขั้นตอนละ 1 เซลล์ และตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มขั้นตอนถัดไป','คำสั่งที่เป็นการกำหนดค่าให้ตัวแปรจะไม่แสดงผลลัพธ์ทันที ผู้เรียนสามารถตรวจสอบผลลัพธ์ได้จากคำสั่งแสดงผลในขั้นตอนถัดไป'],0)]
- concepts={day:[content(week,f'concept-{day}-{i}',c['title'],c['items'],day) for i,c in enumerate(spec['concepts']) if c['day']==day] for day in (0,1)}
+ # Optional spec keys: intro (replaces default opening slides), concept beforeStep/module (section intro before a step), closing, modules.
+ mod=lambda x:{'module':x['module']} if x.get('module') else {}
+ dl=lambda x:{'downloads':x['downloads'] if isinstance(x['downloads'],list) else downloads(m_files,week)} if x.get('downloads') else {}
+ if spec.get('intro'):slides=[content(week,x['id'],x['title'],x['items'],x.get('day',0),**dl(x),**mod(x)) for x in spec['intro']]
+ custom_day1_intro=any(x.get('day',0)==1 for x in spec.get('intro',[]))
+ concepts={day:[content(week,f'concept-{day}-{i}',c['title'],c['items'],day,**mod(c)) for i,c in enumerate(spec['concepts']) if c['day']==day and not c.get('beforeStep')] for day in (0,1)}
+ placed={}
+ for i,c in enumerate(spec['concepts']):
+  if c.get('beforeStep'):placed.setdefault(c['beforeStep'],[]).append(content(week,f'concept-{c["day"]}-{i}',c['title'],c['items'],c['day'],**mod(c)))
  if week==2:
   slides.append({'id':'w2-warmup','type':'warmup-drill','title':'ส่วนที่ 1: แบบฝึกหัดทบทวนก่อนเรียน (ทบทวนการสำรวจและวิเคราะห์ข้อมูล 9 ข้อ · เวลา 30 นาที)','teachingDays':[0],'speakerNotes':'ให้ผู้เรียนเปิด Google Colab เขียนคำสั่งวิเคราะห์สำรวจข้อมูลทั้ง 9 ข้อด้วยตนเอง แล้วบันทึกผลลงในใบงาน Google Docs เมื่อครบเวลาแล้วผู้สอนจึงสรุปผลการวิเคราะห์ร่วมกัน'})
  slides.extend(concepts[0])
@@ -264,13 +272,16 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
       slides.append({'id':'w4-fn-lab','type':'w4-fn-lab','title':'คลัง 16 ฟังก์ชันหลักของ Pandas และห้องทดลองสลับค่า Parameter แบบโต้ตอบ','teachingDays':[1],'speakerNotes':'ผู้สอนเลือกหมวดหมู่ทั้ง 5 หมวด อธิบายหน้าที่ของแต่ละฟังก์ชัน ตารางเจาะลึกพารามิเตอร์ และกดปุ่มห้องทดลองสลับค่า Parameter เพื่อเปรียบเทียบตารางผลลัพธ์ให้ผู้เรียนดูสดบนหน้าจอ'})
       slides.append({'id':'w4-pandas-game','type':'w4-pandas-game','title':'เกมพิชิตภารกิจ Pandas Master Arena (3 ด่าน · 15 ภารกิจท้าทาย)','teachingDays':[1],'speakerNotes':'ผู้สอนเปิดเกมให้ผู้เรียนร่วมกันตอบผ่านไมโครโฟนหรือช่องแชตทีละภารกิจ สะสมคะแนน XP และคอมโบ พร้อมอ่านคำอธิบายกลไกของ Parameter ทันทีที่เฉลย'})
       slides.append({'id':'w4-thu-assignment','type':'w4-thu-assignment','title':'ภารกิจใบงานประจำสัปดาห์: การประยุกต์ใช้ Function & Parameter (10 คะแนน · ส่งสัปดาห์ถัดไป)','teachingDays':[1],'speakerNotes':'ผู้สอนอธิบายโจทย์ใบงานทั้ง 10 ข้อ (3 ตอน) และให้ผู้เรียนดาวน์โหลดไฟล์ .docx ไปทำส่งภายในสัปดาห์ถัดไป'})
-     else:
+     elif not custom_day1_intro:
       slides.append(content(week,'tuesday','การเตรียมความพร้อมก่อนเริ่มเรียน',['เปิดไฟล์ Notebook ที่ใช้เรียน และอัปโหลดไฟล์ชุดข้อมูลผ่านเมนู Files','หากระบบเริ่มต้นสภาพแวดล้อมการทำงานใหม่ ให้อัปโหลดไฟล์ข้อมูลและรันเซลล์คำสั่งตามลำดับ','ตรวจสอบความถูกต้องของผลลัพธ์ก่อนเริ่มเรียนคำสั่งใหม่'],1))
      slides.extend(concepts[1]);switch=True
      if week==2:
       slides.append({'id':'w2-excel-explorer','type':'w2-excel-explorer','title':'ภาพรวมเนื้อหาและสรุป 12 ขั้นตอนเทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ (เริ่มต้นใหม่ตั้งแต่ขั้นตอนที่ 1–12)','teachingDays':[1],'speakerNotes':'ผู้สอนใช้หน้านี้อธิบายภาพรวม 7 เทคนิคการทำความสะอาดข้อมูลหลายรูปแบบ และสรุป 12 ขั้นตอนการปฏิบัติการที่เริ่มต้นใหม่ตั้งแต่ขั้นตอนที่ 1–12'})
      learners.append(md('---\n\n# คาบเรียนที่ 2 (เริ่มต้นสมุดงานใหม่จากศูนย์ · ขั้นตอนที่ 1–12)\n\nให้ผู้เรียนสร้างสมุดงานใหม่ อัปโหลดไฟล์ nvc_store_sales.xlsx และเริ่มเขียนคำสั่งตั้งแต่ขั้นตอนที่ 1 เป็นต้นไป\n') if week==2 else md('---\n\n# คาบเรียนที่ 2: งานทบทวนประจำคาบ\n\nคาบนี้ไม่มีคำสั่งใหม่ ให้ทำงานทบทวนในไฟล์ใหม่ตามใบงาน งานทบทวนประจำคาบ_สัปดาห์04_พฤหัสบดี.docx\n') if s.get('_review') else md(f'---\n\n# คาบเรียนที่ 2 (ขั้นตอนที่ {i}–{len(spec["steps"])})\n\nให้ผู้เรียนเปิด Notebook นี้ต่อจากคาบที่แล้ว อัปโหลดไฟล์ {", ".join(spec["files"])} ผ่านเมนู Files แล้วรันเซลล์ขั้นตอนที่ 1–{i-1} ใหม่ตามลำดับ (เมนู Runtime → Run before) ก่อนเริ่มขั้นตอนที่ {i}\n'));hdr2='# คาบเรียนที่ 2 (ขั้นตอนที่ 1–12)\n' if week==2 else ('# คาบเรียนที่ 2: งานทบทวนประจำคาบ (ทำในไฟล์ใหม่ตามใบงาน)\n' if s.get('_review') else f'# คาบเรียนที่ 2 (ขั้นตอนที่ {i}–{len(spec["steps"])})\n');references.append(md('---\n\n'+hdr2));reader.append('\n'+hdr2)
      if s.get('_review'):continue
+    for c_slide in placed.get(i,[]):
+     slides.append(c_slide);sec='## '+c_slide['title']+'\n\n'+''.join('- '+x+'\n' for x in c_slide['items'])
+     learners.append(md(sec));references.append(md(sec));reader.append(sec);teacher.append(sec)
     preview,nb_outputs=evaluate(s['code'],namespace,week,i)
     before=set(exports)
     for f in workdir.iterdir():
@@ -293,6 +304,7 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
       'code':s['code'],'output':preview,'expected':s['interpretation'],'interpretation':s['interpretation'],'mistake':s['mistake'],'checkpoint':s['checkpoint'],
       'speakerNotes':'เปรียบเทียบผลจากไฟล์เดียวกัน ให้ผู้เรียนอธิบายความหมายโดยใช้หน่วยและข้อจำกัด ตรวจและช่วยแก้ก่อนดำเนินการต่อ'}
     if links:check['downloads']=links
+    if s.get('module'):write['module']=check['module']=s['module']
     slides.extend([write,check])
     description=f'## ขั้นตอนที่ {step_num}: {s["title"]}\n\n{s["meaning"]}\n\n```python\n{s["code"]}\n```\n\n'+''.join(f'- `{p["token"]}`: {p["meaning"]}\n' for p in s['parts'])+'\nพิมพ์คำสั่งและกดปุ่ม Shift + Enter เพื่อรันคำสั่งและตรวจสอบผลลัพธ์\n'
     if s.get('decisionRule'):description+='\n**เงื่อนไขก่อนใช้คำสั่ง:** '+s['decisionRule']+'\n'
@@ -342,7 +354,21 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
    {'question':'พารามิเตอร์ subset=... ในคำสั่ง df.dropna() และ df.drop_duplicates() มีความสำคัญอย่างไร?', 'answer':'ช่วยจำกัดขอบเขตให้ตรวจสอบเฉพาะคอลัมน์เป้าหมายที่ระบุเท่านั้น (เช่น subset=[\'gpa\'] หรือ subset=[\'student_id\']) ป้องกันไม่ให้โปรแกรมลบแถวข้อมูลสำคัญทิ้งเพียงเพราะคอลัมน์รองอื่นๆ มีค่าว่าง'},
    {'question':'เมื่อใดควรใช้พารามิเตอร์ errors=\'coerce\' ในคำสั่ง pd.to_numeric() หรือ pd.to_datetime()?', 'answer':'ใช้เมื่อคอลัมน์ต้นทางอาจมีข้อความผิดรูปแบบปะปนอยู่ (เช่น คำว่า \'ไม่ระบุ\') เพื่อสั่งให้แปลงค่าที่ผิดรูปแบบเหล่านั้นเป็นค่าว่าง (NaN/NaT) อัตโนมัติ แทนการแจ้งข้อผิดพลาด ValueError และหยุดการทำงาน'}
   ]
+ if spec.get('summary'):summary.update(title=spec['summary']['title'],items=spec['summary']['items'])
  slides.append(summary)
+ for x in spec.get('closing',[]):slides.append(content(week,x['id'],x['title'],x['items'],x.get('day',0),**mod(x)))
+ if spec.get('modules'):
+  old['modules']=spec['modules']
+  for day in (0,1):
+   ids=[m['id'] for m in spec['modules'].get(str(day),[])]
+   if not ids:continue
+   cur=ids[0]
+   for sl in slides:
+    if day not in sl.get('teachingDays',[]):continue
+    if sl is summary and len(ids)>1:sl['module']=ids[-1]
+    if sl.get('module'):cur=sl['module']
+    else:sl['module']=cur
+ else:old.pop('modules',None)
  old['slides']=slides;old['files']=spec['files']
  end=md('## สรุป\n\nอธิบายคำสั่ง ผลลัพธ์ หน่วย และข้อจำกัด บันทึก Notebook สำหรับทบทวน\n')
  learners.append(end);references.append(end)
