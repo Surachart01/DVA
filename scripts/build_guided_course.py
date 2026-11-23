@@ -38,7 +38,8 @@ def output_md(output):
   return '| '+' | '.join(map(str,output['columns']))+' |\n| '+' | '.join(['---']*len(output['columns']))+' |\n'+''.join('| '+' | '.join(str(x).replace('|','\\|') for x in row)+' |\n' for row in output['rows'])
  return '```text\n'+output['text']+'\n```\n'
 def downloads(files,week):
- return [{'label':'ดาวน์โหลดไฟล์ข้อมูล '+f,'url':'ชุดเรียน/ชุดข้อมูล/'+f} for f in files]+[{'label':f'ดาวน์โหลดไฟล์ Notebook สำหรับฝึกปฏิบัติ (W{week:02}.ipynb)','url':f'ชุดเรียน/Notebook_ฝึกพิมพ์/W{week:02}.ipynb'}]
+ # Learners create a new Notebook and type along; practice notebooks contain every command and result, so they are not offered.
+ return [{'label':'ดาวน์โหลดไฟล์ข้อมูล '+f,'url':'ชุดเรียน/ชุดข้อมูล/'+f} for f in files]
 def content(week,id,title,items,day,**extras):return {'id':f'w{week}-{id}','type':'content','title':title,'items':items,'teachingDays':[day],'speakerNotes':'ผู้สอนอธิบายด้วยตัวอย่างจากไฟล์ฝึก ให้ผู้เรียนตรวจสอบก่อนดำเนินการต่อ',**extras}
 def shape_summary(files):
  result=[]
@@ -124,11 +125,11 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
    {'label':'ดาวน์โหลดใบงานทบทวนก่อนเรียน 9 ข้อ (Google Docs .docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์02/ใบงานปฏิบัติการ_ทบทวนก่อนเรียน_GoogleDocs.docx'}
   ]) if week==2 else content(week,'files','เตรียมไฟล์ก่อนเริ่มเรียน',[
    'ชุดข้อมูล student_register_dirty.csv (42 แถว 7 คอลัมน์): ดาวน์โหลด แล้วอัปโหลดเข้า Google Colab ที่เมนู Files → Upload',
-   'Notebook W04.ipynb: เปิดใน Google Colab หรือสร้าง Notebook ใหม่ เพื่อพิมพ์คำสั่งตามขั้นตอนที่ 1–16',
+   'Notebook: สร้าง Notebook ใหม่ใน Google Colab (เมนู File → New notebook) เพื่อพิมพ์คำสั่งตามขั้นตอนที่ 1–16 พร้อมผู้สอน',
    'ใบงานแบบฝึกหัดท้ายคาบ (.docx) 5 ข้อ 10 คะแนน: ใช้บันทึกคำตอบและผลลัพธ์จาก Google Colab'
   ],0,downloads=downloads(m_files,week)+[{'label':'ดาวน์โหลดใบงานแบบฝึกหัดท้ายคาบเรียน (.docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์04/ใบงานแบบฝึกหัดท้ายคาบ_สัปดาห์04_จันทร์.docx'}]) if week==4 else content(week,'files','การเตรียมไฟล์ข้อมูลและไฟล์ Notebook สำหรับฝึกปฏิบัติ',[
-   'ดาวน์โหลดไฟล์ชุดข้อมูลและไฟล์ Notebook จากลิงก์ด้านล่างเพื่อเตรียมฝึกปฏิบัติ',
-   'เปิดไฟล์ Notebook ในโปรแกรม Google Colab จากนั้นอัปโหลดไฟล์ชุดข้อมูลผ่านเมนู Files → Upload',
+   'ดาวน์โหลดไฟล์ชุดข้อมูลจากลิงก์ด้านล่างเพื่อเตรียมฝึกปฏิบัติ',
+   'สร้าง Notebook ใหม่ในโปรแกรม Google Colab (เมนู File → New notebook) จากนั้นอัปโหลดไฟล์ชุดข้อมูลผ่านเมนู Files → Upload',
    'ตรวจสอบชื่อไฟล์ชุดข้อมูลให้ถูกต้อง และรันคำสั่งในเซลล์ตามลำดับตั้งแต่เซลล์แรกเป็นต้นไป'],0,downloads=downloads(m_files,week)),
   content(week,'data','ลักษณะและโครงสร้างของชุดข้อมูลที่ใช้ฝึกปฏิบัติ (nvc_tech_store.csv)',[
    'โครงสร้างของตารางข้อมูลต้นฉบับ: ไฟล์ nvc_tech_store.csv มีจำนวน 36 แถว 7 คอลัมน์ ได้แก่ รหัสคำสั่งซื้อ (order_id), หมายเลขโทรศัพท์ลูกค้า (customer_phone), ชื่อสินค้า (product_name), หมวดหมู่สินค้า (category), จำนวนชิ้น (quantity), ยอดเงินรวม (total_price) และสถานะการชำระเงิน (payment_status)',
@@ -291,8 +292,7 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
     for f in created:
      copy_name=f'{tag}_{f}' if not f.startswith(tag) else f
      shutil.copy2(workdir/f,examples/copy_name)
-     p=public/'ตัวอย่าง'/copy_name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(workdir/f,p)
-     links.append({'label':'ดาวน์โหลดไฟล์ '+f,'url':'ชุดเรียน/ตัวอย่าง/'+copy_name})
+     # Result files are answers: keep them for the teacher, never link them on the learner web.
     step_num=(i-10) if (week==2 and s['day']==1) else i
     identifier=f'w{week}-write-{i}'
     write={'id':identifier,'type':'guided','flow':'write-then-check','step':step_num,'title':f'ขั้นตอนที่ {step_num}: {s["title"]}','teachingDays':[s['day']],
@@ -404,7 +404,6 @@ for spec_file in sorted((project/'lesson-specs').glob('week[0-9][0-9].json')):
   {'name':'ใบงานแบบฝึกหัดท้ายคาบวันจันทร์ สำหรับ Google Docs / Word (.docx)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์04/ใบงานแบบฝึกหัดท้ายคาบ_สัปดาห์04_จันทร์.docx'},
   {'name':'ใบงานภารกิจวันพฤหัสบดี: ฟังก์ชันและพารามิเตอร์ของ Pandas (.docx · ส่งสัปดาห์ถัดไป)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์04/ใบงานภารกิจ_ฟังก์ชันและพารามิเตอร์_Pandas_สัปดาห์04.docx'}
  ] if week==4 else [])+[
-  {'name':'Notebook ตัวอย่างพร้อมผลลัพธ์ '+tag,'url':f'ชุดเรียน/Notebook_ตัวอย่าง/{tag}.ipynb'},
   {'name':f'บทเรียนอ่านตามสไลด์ สัปดาห์ {week}','url':f'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์{week:02}/บทเรียนสัปดาห์{week:02}_อ่านตามสไลด์.md'},
   {'name':f'ชุดเรียนย้อนหลัง สัปดาห์ {week} (รวมข้อมูลและ Notebook)','url':f'ชุดเรียน/สัปดาห์{week:02}_เรียนย้อนหลัง.zip'}]
  report.append({'week':week,'commands':len(spec['steps']),'slides':len(slides),'status':'executed','exports':exports})
@@ -481,12 +480,11 @@ if w1_spec_file.exists() and (not args.weeks or 1 in args.weeks):
   ],'teachingDays':[0],'orientationMinutes':6}
  ]
  tuesday_slides=[content(1,'tuesday','การเตรียมความพร้อมก่อนเริ่มเรียนปฏิบัติการ (เวลา 120 นาที)',[
-  'การเตรียมไฟล์: ดาวน์โหลดไฟล์ชุดข้อมูล nvc_tech_store.csv และไฟล์ Notebook (W01.ipynb) จากลิงก์ด้านล่าง',
+  'การเตรียมไฟล์: ดาวน์โหลดไฟล์ชุดข้อมูล nvc_tech_store.csv จากลิงก์ด้านล่าง แล้วสร้าง Notebook ใหม่ในโปรแกรม Google Colab',
   'การอัปโหลดข้อมูล: เปิดโปรแกรม Google Colab และอัปโหลดไฟล์ nvc_tech_store.csv ผ่านเมนู Files → Upload',
   'ส่วนที่ 1 การฝึกปฏิบัติ (90 นาที): ฝึกเขียนคำสั่งพื้นฐาน 9 คำสั่ง (ขั้นตอนที่ 1–9) เพื่อนำเข้าข้อมูลและสำรวจโครงสร้างตาราง',
   'ส่วนที่ 2 แบบฝึกหัดท้ายคาบเรียน (30 นาที): ทำแบบฝึกหัดทบทวนความเข้าใจจำนวน 5 ข้อ (10 คะแนน) ในส่วนท้ายของไฟล์ Notebook'],1,downloads=[
   {'label':'ดาวน์โหลดไฟล์ข้อมูล nvc_tech_store.csv','url':'ชุดเรียน/ชุดข้อมูล/nvc_tech_store.csv'},
-  {'label':'ดาวน์โหลดไฟล์ Notebook สำหรับฝึกปฏิบัติ (W01.ipynb)','url':'ชุดเรียน/Notebook_ฝึกพิมพ์/W01.ipynb'},
   {'label':'ดาวน์โหลดใบงานแบบฝึกหัดท้ายคาบเรียน (.md)','url':'ชุดเรียน/เรียนย้อนหลัง_สัปดาห์01/แบบฝึกหัดท้ายคาบ_สัปดาห์01_พฤหัสบดี.md'}])]
  for idx,c in enumerate(w1_spec['concepts']):
   tuesday_slides.append(content(1,f'concept-1-{idx}',c['title'],c['items'],1))
@@ -515,8 +513,7 @@ if w1_spec_file.exists() and (not args.weeks or 1 in args.weeks):
     for f in created:
      copy_name=f'W01_{f}' if not f.startswith('W01') else f
      shutil.copy2(workdir1/f,examples/copy_name)
-     p=public/'ตัวอย่าง'/copy_name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(workdir1/f,p)
-     links.append({'label':'ดาวน์โหลดไฟล์ '+f,'url':'ชุดเรียน/ตัวอย่าง/'+copy_name})
+     # Result files are answers: keep them for the teacher, never link them on the learner web.
     w1_codes.append(s['code']);identifier=f'w1-write-{i}'
     write={'id':identifier,'type':'guided','flow':'write-then-check','step':i,'title':f'ขั้นตอนที่ {i}: {s["title"]}','teachingDays':[1],
      'instruction':'ให้ผู้เรียนพิมพ์คำสั่งภาษา Python ด้านล่างลงในเซลล์ของโปรแกรม Google Colab และรันคำสั่งเพื่อตรวจสอบผลลัพธ์','code':s['code'],'meaning':s['meaning'],'parts':s['parts'],

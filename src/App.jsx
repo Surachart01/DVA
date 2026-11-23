@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Copy, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass } from 'lucide-react';
+import { Menu, ChevronLeft, ChevronRight, Maximize, Minimize, Download, X, RotateCcw, BookOpen, FlaskConical, FileText, ArrowRight, Copy, Check, CheckCircle2, Circle, Code2, Eye, Sparkles, Compass, TriangleAlert, CircleHelp, Lightbulb, Keyboard } from 'lucide-react';
 import { teachingDeck } from './teachingDeck';
 import { sessionsFor } from './teachingSessions';
 import { W4SyntaxVisualizerDemo, W4FunctionLabDemo, W4PandasGameDemo, W4ThursdayAssignmentDemo } from './W4ThursdayGameModule';
 
 // Limit the current classroom view while retaining the complete course source.
-const visibleLesson = {week:5, day:0};
+const visibleLesson = {week:5, day:1};
+// Session opened first when the page loads (week 5 catch-up starts on the Monday slides).
+const startLesson = {week:5, day:0};
 const unitNames={1:'พื้นฐานและการปฐมนิเทศรายวิชา',2:'การนำเข้าข้อมูลและการจัดเตรียมข้อมูล',3:'การทำความสะอาดข้อมูลขั้นประยุกต์'};
 const healthRows=[{id:'S01',age:20,gpa:3.2},{id:'S02',age:19,gpa:null},{id:'S03',age:150,gpa:4.75},{id:'S04',age:null,gpa:2.8},{id:'S05',age:21,gpa:3.5},{id:'S05',age:21,gpa:3.5}];
 function QualityDemo(){
@@ -634,7 +636,36 @@ function W4ClosingLabDemo({doneMap,onToggleDone}){
  </section>;
 }
 
-function Code({code}){return <div className="code-block" style={{userSelect:'none'}}><div className="code-toolbar"><span><Code2 size={15}/> คำสั่งภาษา Python (Google Colab)</span><span>พิมพ์คำสั่งด้วยตนเอง (ปิดการคัดลอกอัตโนมัติ)</span></div><pre style={{userSelect:'none'}}><code>{code}</code></pre></div>}
+// Light Python colouring so learners can tell names, text values, numbers and functions apart on the projector.
+const pyKeywords=new Set(['import','as','from','def','return','if','elif','else','for','while','in','is','and','or','not','True','False','None','lambda','with','try','except']);
+const pyToken=/(#[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)(?=\s*\()|([A-Za-z_][A-Za-z0-9_]*)/g;
+function highlightPython(text,keyBase=0){
+ const out=[];let last=0;let m;pyToken.lastIndex=0;
+ while((m=pyToken.exec(text))){
+  if(m.index>last)out.push(text.slice(last,m.index));
+  const k=keyBase+out.length;
+  if(m[1])out.push(<span key={k} className="tok-com">{m[1]}</span>);
+  else if(m[2])out.push(<span key={k} className="tok-str">{m[2]}</span>);
+  else if(m[3])out.push(<span key={k} className="tok-num">{m[3]}</span>);
+  else if(m[4])out.push(<span key={k} className={pyKeywords.has(m[4])?'tok-kw':'tok-fn'}>{m[4]}</span>);
+  else out.push(pyKeywords.has(m[5])?<span key={k} className="tok-kw">{m[5]}</span>:m[5]);
+  last=pyToken.lastIndex;
+ }
+ if(last<text.length)out.push(text.slice(last));
+ return out;
+}
+function CodeText({code,mark}){
+ const at=mark?code.indexOf(mark):-1;
+ if(at<0)return highlightPython(code);
+ return [...highlightPython(code.slice(0,at),0),<mark key="mark" className="code-mark">{highlightPython(mark,5000)}</mark>,...highlightPython(code.slice(at+mark.length),10000)];
+}
+// Shows "Shift + Enter" style instructions as keyboard keys.
+function withKeys(text){
+ if(!text)return text;
+ const parts=text.split(/(Shift \+ Enter)/);
+ return parts.map((p,i)=>p==='Shift + Enter'?<span key={i} className="key-combo"><kbd>Shift</kbd>+<kbd>Enter</kbd></span>:p);
+}
+function Code({code,mark}){return <div className="code-block" style={{userSelect:'none'}}><div className="code-toolbar"><span><Code2 size={15}/> คำสั่งภาษา Python (Google Colab)</span><span>พิมพ์คำสั่งด้วยตนเอง (ปิดการคัดลอกอัตโนมัติ)</span></div><pre style={{userSelect:'none'}}><code><CodeText code={code} mark={mark}/></code></pre></div>}
 function LessonOutput({output}){
  if(!output)return null;
  return <section className="lesson-output" aria-label={output.title??'ผลลัพธ์อ้างอิง'}>
@@ -677,26 +708,38 @@ function InteractiveContentSlide({slide,doneMap,onToggleDone}){
    <LessonDownloads files={slide.downloads}/>
   </>;
  }
+ const items=(slide.items??[]).map(item=>{
+  const colonIdx=item.indexOf(':');
+  const hasHeading=colonIdx>0&&colonIdx<56;
+  let heading=hasHeading?item.slice(0,colonIdx):null;
+  const body=hasHeading?item.slice(colonIdx+1).trim():item;
+  // "(20 นาที)" or "(ประมาณ 55 นาที)" at the end of a heading becomes a time chip.
+  const time=heading?.match(/\s*\(((?:ประมาณ\s*)?\d+\s*นาที)\)\s*$/);
+  if(time)heading=heading.slice(0,time.index);
+  return {heading,body,time:time?.[1]};
+ });
+ // Number markers only when the headings do not already carry their own order (ขั้นที่ 1, ช่วงที่ 2 ...).
+ const ordered=!items.some(x=>/^(ขั้นที่|ช่วงที่|หลักการที่|งานที่|ข้อที่|ส่วนที่)\s*\d/.test(x.heading??''));
+ const hasLead=items.length>=3&&items.length%2===1;
+ const opener=slide.title?.match(/^ส่วนที่\s*(\d+)\s*:\s*(.+?)(?:\s*\((ขั้นตอนที่[^)]*)\))?$/);
  return <>
-  <h1>{slide.title}</h1>
-  <div className="interactive-topic-grid">
-   {slide.items.map((item,i)=>{
-    const colonIdx=item.indexOf(':');
-    const hasHeading=colonIdx>0&&colonIdx<56;
-    const heading=hasHeading?item.slice(0,colonIdx):null;
-    const body=hasHeading?item.slice(colonIdx+1).trim():item;
-    return <div key={i} className={'topic-card '+(activeCard===i?'is-focused':'')} onClick={()=>setActiveCard(i)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')setActiveCard(i)}}>
-     {heading?(
-      <>
-       <div className="topic-card-head"><span className="topic-num">{i+1}</span><strong>{heading}</strong></div>
+  {opener?<header className="section-opener">
+   <span className="title-tile is-large" aria-hidden="true"><small>ส่วนที่</small><b>{opener[1]}</b></span>
+   <div><h1><span className="sr-only">ส่วนที่ {opener[1]}: </span>{opener[2]}</h1>{opener[3]&&<p className="section-opener-steps">{opener[3]}</p>}</div>
+  </header>:<h1>{slide.title}</h1>}
+  <ol className={'topic-board'+(hasLead?' has-lead':'')+(ordered?' is-ordered':'')}>
+   {items.map(({heading,body,time},i)=>(
+    <li key={i} className={'topic-item'+(activeCard===i?' is-focused':'')+(hasLead&&i===0?' is-lead':'')}>
+     <div className="topic-item-inner" onClick={()=>setActiveCard(i)} role="button" tabIndex={0} aria-pressed={activeCard===i} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();setActiveCard(i)}}}>
+      <span className="topic-marker" aria-hidden="true">{ordered?i+1:''}</span>
+      <div className="topic-text">
+       {heading&&<strong className="topic-heading">{heading}{time&&<span className="topic-time">{time}</span>}</strong>}
        <p>{body}</p>
-      </>
-     ):(
-      <div className="topic-card-head"><span className="topic-num">{i+1}</span><p style={{margin:0}}>{body}</p></div>
-     )}
-    </div>;
-   })}
-  </div>
+      </div>
+     </div>
+    </li>
+   ))}
+  </ol>
   <LessonDownloads files={slide.downloads}/>
   <LessonOutput output={slide.output}/>
   {slide.animation&&<StepMotion config={slide.animation}/>}
@@ -707,15 +750,19 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
  const writeSlide=isCheckView?(pairSlide??slide):slide;
  const checkSlide=isCheckView?slide:pairSlide;
  const[activePart,setActivePart]=useState(0);
+ const[partsOpen,setPartsOpen]=useState(!projecting);
  const stepKey=`step-${writeSlide.id}`;
  const isDone=Boolean(doneMap?.[stepKey]);
  useEffect(()=>setActivePart(0),[writeSlide.id]);
+ useEffect(()=>setPartsOpen(!projecting),[projecting,writeSlide.id]);
+ const markedPart=partsOpen?writeSlide.parts?.[activePart]?.token:null;
+ const stepTitle=writeSlide.title?.match(/^ขั้นตอนที่\s*(\d+)\s*:\s*(.+)$/);
  return <>
-  <h1>{projecting?writeSlide.title.replace(/เทคนิคที่ \d+: /, ''):writeSlide.title}</h1>
+  {stepTitle?<h1 className="step-title"><span className="title-tile" aria-hidden="true"><small>ขั้นตอนที่</small><b>{stepTitle[1]}</b></span><span><span className="sr-only">ขั้นตอนที่ {stepTitle[1]}: </span>{stepTitle[2]}</span></h1>:<h1>{projecting?writeSlide.title.replace(/เทคนิคที่ \d+: /, ''):writeSlide.title}</h1>}
   <div className="step-studio">
    <div className="step-studio-top">
     <div className="step-badge-row">
-     <span className="step-pill"><Sparkles size={14}/> ขั้นตอนที่ {slide.step}</span>
+     {!stepTitle&&<span className="step-pill">ขั้นตอนที่ <b>{slide.step}</b></span>}
      {checkSlide&&<div className="studio-view-tabs" role="tablist" aria-label="สลับมุมมองคำสั่งและผลลัพธ์">
       <button type="button" role="tab" aria-selected={!isCheckView} className={!isCheckView?'active':''} onClick={()=>onSwitchTab('write')}><Code2 size={16}/> 1. คำสั่งและคำอธิบาย</button>
       <button type="button" role="tab" aria-selected={isCheckView} className={isCheckView?'active':''} onClick={()=>onSwitchTab('check')}><Eye size={16}/> 2. ผลลัพธ์จากการรันคำสั่ง</button>
@@ -728,19 +775,15 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
     <div className="studio-workspace">
      <div className="studio-main-col">
       {writeSlide.decisionRule&&<aside className="decision-rule"><strong>เงื่อนไขก่อนใช้คำสั่ง</strong><p>{writeSlide.decisionRule}</p></aside>}
-      <Code code={writeSlide.code}/>
+      <Code code={writeSlide.code} mark={markedPart}/>
       <div className="studio-instruction-banner">
-       <div><strong>การปฏิบัติ:</strong> {writeSlide.instruction}</div>
-       <span className="run-badge">{writeSlide.run}</span>
+       <div><Keyboard size={18} aria-hidden="true"/><span><strong>การปฏิบัติ:</strong> {writeSlide.instruction}</span></div>
+       <span className="run-badge">{withKeys(writeSlide.run)}</span>
       </div>
       {writeSlide.parts?.length>0&&(
-       <details className="interactive-parts-box" open={projecting?undefined:true}>
-        <summary>คำอธิบายส่วนประกอบของคำสั่ง</summary>
-        <div className="parts-header">
-         <h2>คลิกเลือกส่วนประกอบของคำสั่งเพื่อดูคำอธิบาย</h2>
-         <span>{writeSlide.parts.length} ส่วนประกอบ</span>
-        </div>
-        <div className="token-pill-row" role="tablist">
+       <details className="interactive-parts-box" open={partsOpen} onToggle={e=>setPartsOpen(e.currentTarget.open)}>
+        <summary>คำอธิบายส่วนประกอบของคำสั่ง <span>{writeSlide.parts.length} ส่วน · คลิกเลือกเพื่อเน้นในคำสั่งด้านบน</span></summary>
+        <div className="token-pill-row" role="tablist" aria-label="ส่วนประกอบของคำสั่ง">
          {writeSlide.parts.map((part,i)=>(
           <button key={part.token} type="button" role="tab" aria-selected={activePart===i} className={'token-pill '+(activePart===i?'selected':'')} onClick={()=>setActivePart(i)}>
            <span className="token-idx">{i+1}</span>
@@ -754,25 +797,17 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
           <p>{writeSlide.parts[activePart].meaning}</p>
          </div>
         )}
-        <dl className="command-breakdown" aria-label="คำอธิบายส่วนประกอบของคำสั่งทั้งหมด">
-         {writeSlide.parts.map((part,i)=>(
-          <div key={part.token} className={'breakdown-item '+(activePart===i?'is-active':'')} onClick={()=>setActivePart(i)}>
-           <dt><code>{part.token}</code></dt>
-           <dd>{part.meaning}</dd>
-          </div>
-         ))}
-        </dl>
        </details>
       )}
      </div>
      <div className="studio-side-col">
       <details className="studio-card meaning-card" open={projecting?undefined:true}>
-       <summary>ความหมายของคำสั่ง</summary>
+       <summary><Lightbulb size={18} aria-hidden="true"/> ความหมายของคำสั่ง</summary>
        <p>{writeSlide.meaning}</p>
       </details>
       {checkSlide&&(
        <div className="studio-next-prompt">
-        <p>เมื่อพิมพ์คำสั่งและกด <code>Shift + Enter</code> ใน Google Colab แล้ว คลิกปุ่มด้านล่างเพื่อตรวจสอบผลลัพธ์</p>
+        <p>เมื่อพิมพ์คำสั่งและกด {withKeys('Shift + Enter')} ใน Google Colab แล้ว คลิกปุ่มด้านล่างเพื่อตรวจสอบผลลัพธ์</p>
         <button type="button" className="primary-switch-btn" onClick={()=>onSwitchTab('check')}>
          <Eye size={18}/> ดูผลลัพธ์จากการรันคำสั่งขั้นตอนที่ {slide.step} <ArrowRight size={16}/>
         </button>
@@ -781,23 +816,23 @@ function InteractiveStepStudio({slide,pairSlide,onSwitchTab,doneMap,onToggleDone
      </div>
     </div>
    ):(
-    <div className="studio-workspace">
+    <div className="studio-workspace is-check">
      <div className="studio-main-col">
-      {slide.code&&<div className="checked-command-bar"><span>คำสั่งที่ใช้:</span><code>{slide.code}</code></div>}
+      {slide.code&&<div className="checked-command-bar"><span>คำสั่งที่ใช้</span><code><CodeText code={slide.code}/></code></div>}
       <LessonOutput output={slide.output}/>
       <LessonDownloads files={slide.downloads}/>
      </div>
      <div className="studio-side-col">
       <section className="studio-card result-card">
-       <h2>คำอธิบายผลลัพธ์</h2>
+       <h2><CheckCircle2 size={18} aria-hidden="true"/> คำอธิบายผลลัพธ์</h2>
        <p>{slide.interpretation??slide.expected}</p>
       </section>
       <section className="studio-card caution-card">
-       <h2>ข้อควรระวังในการเขียนคำสั่ง</h2>
+       <h2><TriangleAlert size={18} aria-hidden="true"/> ข้อควรระวังในการเขียนคำสั่ง</h2>
        <p>{slide.mistake}</p>
       </section>
       <section className="studio-card checkpoint-card">
-       <h2>ประเด็นตรวจสอบความเข้าใจ</h2>
+       <h2><CircleHelp size={18} aria-hidden="true"/> ประเด็นตรวจสอบความเข้าใจ</h2>
        <p>{slide.checkpoint??'เปรียบเทียบผลลัพธ์ในไฟล์ Notebook กับตัวอย่างด้านซ้ายมือ หากผลลัพธ์ยังไม่ตรงกัน ให้กลับไปตรวจสอบการสะกดคำสั่งอีกครั้ง'}</p>
       </section>
       <button type="button" className="secondary-switch-btn" onClick={()=>onSwitchTab('write')}>
@@ -817,7 +852,7 @@ function PracticeLab({slide}){
 function Slide({slide,pairSlide,onSwitchTab,onJumpStep,doneMap,onToggleDone,projecting}){
  switch(slide.type){
  case 'practice-lab':return <PracticeLab slide={slide}/>;
- case 'knowledge-check':return <><h1>{slide.title}</h1><p>ตอบคำถามและอธิบายเหตุผล ก่อนตรวจสอบกับแนวคำตอบ</p><div className="knowledge-checks">{slide.questions.map((q,i)=><section key={q.question}><h2>{i+1}. {q.question}</h2><details><summary>แสดงแนวคำตอบ</summary><p>{q.answer}</p></details></section>)}</div></>;
+ case 'knowledge-check':return <><h1>{slide.title}</h1><p>ตอบคำถามและอธิบายเหตุผลด้วยตนเอง แล้วร่วมกันอภิปรายในชั้นเรียน</p><div className="knowledge-checks">{slide.questions.map((q,i)=><section key={q.question}><h2>{i+1}. {q.question}</h2></section>)}</div></>;
  case 'cover':return <div className="cover-slide"><BookOpen size={42} strokeWidth={1.4}/><h1>{slide.title}</h1><p className="cover-subtitle">{slide.subtitle}</p><p>{slide.body}</p></div>;
  case 'content':case 'summary':return <InteractiveContentSlide slide={slide} doneMap={doneMap} onToggleDone={onToggleDone}/>;
  case 'concept':return <><h1>{slide.title}</h1><p className="concept-body">{slide.body}</p><div className="think-prompt"><h2>คำถามชวนคิดก่อนลงมือปฏิบัติ</h2><p>{slide.question}</p></div></>;
@@ -926,13 +961,15 @@ function buildSessionModules(slides,weekNum,dayNum,weekData){
  }).filter(m=>m.indices.length>0);
 }
 export default function App(){
- const[weekIndex,setWeekIndex]=useState(()=>teachingDeck.findIndex(w=>w.week===visibleLesson.week));const[day,setDay]=useState(visibleLesson.day);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
+ const[weekIndex,setWeekIndex]=useState(()=>teachingDeck.findIndex(w=>w.week===startLesson.week));const[day,setDay]=useState(startLesson.day);const[index,setIndex]=useState(0);const[sidebar,setSidebar]=useState(false);const[full,setFull]=useState(false);const[notice,setNotice]=useState('');
  const[projecting,setProjecting]=useState(false);
  const[doneMap,setDoneMap]=useState(()=>{try{return JSON.parse(localStorage.getItem('dva_interactive_done')||'{}')}catch{return {}}});
  function toggleDone(key){setDoneMap(prev=>{const next={...prev,[key]:!prev[key]};try{localStorage.setItem('dva_interactive_done',JSON.stringify(next))}catch{}return next})}
  const week=teachingDeck[weekIndex];const session=sessionsFor(week)[day];const slides=session.slides;const slide=slides[index]??slides[0];
  const modules=useMemo(()=>buildSessionModules(slides,week.week,day,week),[slides,week,day]);
  const activeModule=modules.find(m=>m.indices.includes(index))??modules[0];
+ // Each part of the day carries its own colour (like binder tabs) so the class can see where they are.
+ const sectionIndex=Math.max(0,modules.indexOf(activeModule))%4;
  const guidedSteps=useMemo(()=>{
   const map=new Map();
   slides.forEach((s,idx)=>{
@@ -964,23 +1001,26 @@ export default function App(){
  const go=(delta)=>setIndex(i=>Math.max(0,Math.min(slides.length-1,i+delta)));
  function selectSession(i,d){setWeekIndex(i);setDay(d);setIndex(0);setSidebar(false)}
  async function toggleFull(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{setNotice('เบราว์เซอร์นี้ไม่รองรับการแสดงผลเต็มหน้าจอ สามารถปรับขยายขนาดหน้าต่างเบราว์เซอร์แทนได้')}}
+ // Learners must type every command themselves: block copying, cutting and dragging text out of the slides.
+ useEffect(()=>{function block(e){if(e.target instanceof Element&&e.target.closest('input, textarea, [contenteditable="true"]'))return;e.preventDefault()}const events=['copy','cut','dragstart','selectstart'];events.forEach(t=>document.addEventListener(t,block));return()=>events.forEach(t=>document.removeEventListener(t,block))},[]);
  useEffect(()=>{function change(){setFull(Boolean(document.fullscreenElement))}document.addEventListener('fullscreenchange',change);return()=>document.removeEventListener('fullscreenchange',change)},[]);
  useEffect(()=>{function keys(e){if(e.target.closest('input, textarea, select, [contenteditable="true"]'))return;if(e.key===' '&&e.target.closest('button, a, summary'))return;if(e.key==='Escape'){setSidebar(false);setProjecting(false)}if(e.key.toLowerCase()==='p')setProjecting(v=>!v);if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp'].includes(e.key)){e.preventDefault();go(['ArrowRight',' ','PageDown'].includes(e.key)?1:-1)}if(e.key.toLowerCase()==='f')toggleFull()}window.addEventListener('keydown',keys);return()=>window.removeEventListener('keydown',keys)},[weekIndex,day,slides.length]);
  const isPracticeSlide=slide.type==='guided'||slide.type==='guided-check';
  const moduleSteps=guidedSteps.filter(step=>activeModule?.indices.includes(step.writeIdx));
  const isGuidedModule=moduleSteps.length>0;
  const introductoryIndices=activeModule?.indices.filter(i=>!['guided','guided-check'].includes(slides[i].type))??[];
- return <div className={'teaching-app '+(projecting?'is-projecting':'')}><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
+ return <div className={'teaching-app '+(projecting?'is-projecting':'')} data-section={sectionIndex}><a className="skip-link" href="#lesson-content">ข้ามไปยังเนื้อหาบทเรียน</a><button className="mobile-menu icon-button" onClick={()=>setSidebar(true)} aria-label="เปิดสารบัญบทเรียน"><Menu/></button>{sidebar&&<button className="sidebar-backdrop" aria-label="ปิดสารบัญ" onClick={()=>setSidebar(false)}/>}
  <aside className={'lesson-sidebar '+(sidebar?'open':'')} aria-label="สารบัญบทเรียน"><div className="sidebar-brand"><BookOpen size={29}/><div><strong>รหัสวิชา 31901-2012</strong><span>การวิเคราะห์และนำเสนอข้อมูล</span></div><button className="sidebar-close icon-button" onClick={()=>setSidebar(false)} aria-label="ปิดสารบัญ"><X size={18}/></button></div><nav>{Object.entries(unitNames).filter(([unit])=>teachingDeck.some(w=>w.week<=visibleLesson.week&&w.unit===Number(unit))).map(([unit,name])=><details key={unit} open={week.unit===Number(unit)}><summary>หน่วยที่ {unit}: {name}</summary>{teachingDeck.map((w,i)=>w.week<=visibleLesson.week&&w.unit===Number(unit)&&<details className="week-group" key={w.week} open={i===weekIndex}><summary className={i===weekIndex?'active':''}><span>สัปดาห์ที่ {w.week}</span><strong>{w.title}</strong></summary><div className="day-links">{sessionsFor(w).filter(d=>w.week<visibleLesson.week||d.day<=visibleLesson.day).map(d=><button key={d.day} className={'day-button '+(i===weekIndex&&day===d.day?'active':'')} aria-label={`สัปดาห์ที่ ${w.week} ${d.label}: ${d.title}`} onClick={()=>selectSession(i,d.day)} aria-current={i===weekIndex&&day===d.day?'page':undefined}><strong>{d.label} · {d.periods} ชั่วโมง</strong><span>{d.title}</span></button>)}</div></details>)}</details>)}</nav><div className="sidebar-progress">สัปดาห์ที่ {week.week} · {session.label} · หัวข้อที่ {index+1} จาก {slides.length}<progress value={index+1} max={slides.length}/></div></aside>
  <main className="lesson-main"><header className="lesson-header"><div className="header-title"><span>หน่วยที่ {week.unit} · สัปดาห์ที่ {week.week} · {session.label}</span><strong>{week.week===3&&day===1?session.title:week.title}</strong></div><div className="header-controls"><button className="projection-toggle" aria-pressed={projecting} onClick={()=>{setProjecting(v=>!v);setSidebar(false)}}><Eye size={18}/>{projecting?'ออกจากโหมดฉายสอน':'โหมดฉายสอน'}</button><button className="icon-button" onClick={toggleFull} aria-label={full?'ออกจากโหมดเต็มหน้าจอ':'แสดงผลเต็มหน้าจอ'}>{full?<Minimize/>:<Maximize/>}</button></div></header>
  <div className="interactive-module-bar" aria-label="ส่วนของเนื้อหาในคาบเรียน">
   <div className="module-tabs">
-   {modules.map(m=>(
-    <button key={m.id} type="button" className={'module-tab '+(activeModule?.id===m.id?'active':'')} onClick={()=>setIndex(m.firstIndex)}>
-     <strong>{m.label}</strong>
-     <small>{m.sub}</small>
-    </button>
-   ))}
+   {modules.map((m,mi)=>{
+    const part=m.label.match(/^ส่วนที่\s*(\d+)\s*:\s*(.+)$/);
+    return <button key={m.id} type="button" data-section={mi%4} className={'module-tab '+(activeModule?.id===m.id?'active':'')} aria-current={activeModule?.id===m.id?'true':undefined} title={m.sub} onClick={()=>setIndex(m.firstIndex)}>
+     <span className="module-num" aria-hidden="true">{part?part[1]:mi+1}</span>
+     <span className="module-text"><strong>{part?<><span className="sr-only">ส่วนที่ {part[1]}: </span>{part[2]}</>:m.label}</strong><small>{m.sub}</small></span>
+    </button>;
+   })}
   </div>
   {week.week===3&&day===0&&(
    <div className="session-dataset" aria-label="ดาวน์โหลด Dataset สำหรับส่วนนี้">
@@ -1000,13 +1040,13 @@ export default function App(){
   )}
   {isGuidedModule&&guidedSteps.length>0&&(
    <div className="step-Interactive-strip" aria-label="ตัวเลือกขั้นตอนการฝึกปฏิบัติ">
-    <span className="strip-label">เลือกขั้นตอนการฝึกปฏิบัติ ({moduleSteps.length} ขั้นตอน):</span>
+    <span className="strip-label">ขั้นตอนที่</span>
     <div className="step-Direct-buttons">
      {moduleSteps.map(g=>{
       const active=slide.step===g.step;
       const done=Boolean(doneMap[`step-${g.writeId}`]);
-      return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(slides[g.checkIdx]?.output?.kind==='figure'&&week.week===3&&day===1?g.checkIdx:g.writeIdx)} title={g.title}>
-       {done&&<Check size={12}/>} ขั้นตอนที่ {g.step}
+      return <button key={g.step} type="button" className={`step-num-btn ${active?'active':''} ${done?'is-done':''}`} onClick={()=>setIndex(slides[g.checkIdx]?.output?.kind==='figure'&&week.week===3&&day===1?g.checkIdx:g.writeIdx)} title={g.title} aria-label={`${g.title}${done?' (ดำเนินการเสร็จแล้ว)':''}`} aria-current={active?'step':undefined}>
+       {g.step}{done&&<Check size={11} strokeWidth={3} className="step-done-mark" aria-hidden="true"/>}
       </button>;
      })}
     </div>
@@ -1017,5 +1057,5 @@ export default function App(){
  <div className="lesson-scroll" id="lesson-content" tabIndex={-1}>
  <article className={'slide-paper '+(slide.type==='cover'?'is-cover':isPracticeSlide?'is-studio':'')} key={slide.id}><Slide projecting={projecting} slide={slide} pairSlide={pairSlide} onSwitchTab={handleSwitchStudioTab} onJumpStep={jumpToStep} doneMap={doneMap} onToggleDone={toggleDone}/></article>
  </div>
- <footer className="lesson-footer"><div className="footer-navigation"><span className="projection-position">{index+1} / {slides.length}</span><span className="keyboard-hint">กด P เพื่อสลับโหมดฉายสอน · คลิกเลือกส่วนของเนื้อหาและขั้นตอนด้านบน หรือใช้ปุ่มลูกศร ← → บนแป้นพิมพ์เพื่อเปลี่ยนหน้า</span><button onClick={()=>go(-1)} disabled={index===0}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump">หัวข้อที่<select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value))}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button onClick={()=>go(1)} disabled={index===slides.length-1}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
+ <footer className="lesson-footer"><div className="footer-navigation"><div className="footer-status"><span className="projection-position"><b>{index+1}</b> / {slides.length}</span><span className="footer-meter" aria-hidden="true"><i style={{transform:`scaleX(${(index+1)/slides.length})`}}/></span><span className="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> เปลี่ยนหน้า<span aria-hidden="true">·</span><kbd>P</kbd> โหมดฉายสอน</span></div><button className="nav-prev" onClick={()=>go(-1)} disabled={index===0}><ChevronLeft size={18}/>หน้าที่แล้ว</button><label className="slide-jump"><span>หัวข้อที่</span><select aria-label="เลือกหัวข้อ" value={index} onChange={e=>{setIndex(Number(e.target.value))}}>{slides.map((s,i)=><option key={s.id} value={i}>{i+1}. {s.title}</option>)}</select></label><button className="nav-next" onClick={()=>go(1)} disabled={index===slides.length-1}>หน้าถัดไป<ChevronRight size={18}/></button><button className="icon-button" onClick={()=>setIndex(0)} aria-label="กลับไปยังหัวข้อแรก" title="กลับไปยังหัวข้อแรก"><RotateCcw size={17}/></button></div></footer></main></div>
 }

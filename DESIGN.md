@@ -3,17 +3,22 @@ name: "DVA Teaching Slides"
 description: "Thai teaching slides, daily lessons, exercises, and Colab resources."
 colors:
   accent: "#007da2"
-  ink: "#172638"
+  ink: "#152536"
   body-ink: "#253548"
-  muted: "#586b7e"
+  muted: "#566a7d"
   line: "#dbe3ec"
+  line-strong: "#c8d4df"
   surface: "#fff"
-  canvas: "#f1f5f9"
+  canvas: "#eef2f6"
+  section-1: "#007da2"
+  section-2: "#5b45c2"
+  section-3: "#17784a"
+  section-4: "#b02f63"
   subtle-surface: "#f8fafc"
   active-surface: "#eaf5fb"
   hover-surface: "#eff8fc"
-  code-surface: "#182635"
-  code-toolbar: "#223548"
+  code-surface: "#14212f"
+  code-toolbar: "#1c2c3d"
   code-text: "#eaf3fc"
   focus: "#0085b0"
   problem-surface: "#fff4e6"
@@ -27,7 +32,7 @@ typography:
     letterSpacing: "-.01em"
   headline:
     fontFamily: "Sarabun, 'Noto Sans Thai', sans-serif"
-    fontSize: "clamp(1.7rem, 2.5vw, 2.8rem)"
+    fontSize: "clamp(2rem, 2.9vw, 3rem)"
     fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "-.01em"
@@ -51,7 +56,7 @@ typography:
     lineHeight: 1.65
   guided-code:
     fontFamily: "'SFMono-Regular', Consolas, 'Liberation Mono', monospace"
-    fontSize: "1.15rem"
+    fontSize: "clamp(1.15rem, 1.5vw, 1.42rem)"
     fontWeight: 400
     lineHeight: 1.65
   guided-code-mobile:
@@ -62,8 +67,10 @@ typography:
 rounded:
   field: "6px"
   control: "8px"
-  code: "10px"
-  paper: "12px"
+  chip: "9px"
+  card: "14px"
+  code: "16px"
+  paper: "18px"
 spacing:
   compact: "8px"
   control: "12px"
@@ -176,11 +183,17 @@ Lesson paper and session banners share an 1100px maximum width. The desktop cont
 
 The recurring rhythm uses compact control gaps and larger separations between blocks, as recorded in spacing. These are extracted repeated values, not a newly imposed mathematical scale. At 600px the session banner stacks vertically. The five-column pipeline becomes two columns at 850px, with its last stage spanning the row. Data sources stack in a single column at 480px. Tables retain horizontal scroll instead of compressing their columns.
 
+## Section Colour (added November 2026)
+
+Each part of a teaching day (the "ส่วนที่ 1–4" tabs) owns one colour, like the coloured index tabs of a binder: section-1 cyan-blue (the brand accent), section-2 violet, section-3 green, section-4 raspberry, cycling for longer days. The colour is set as `--section` from `data-section` on the app root (current part) and on each tab (its own part); `--section-ink`, `--section-soft`, `--section-wash`, `--section-line` and `--section-canvas` are mixed from it. It marks only wayfinding: the tab and its number, the step chips, the number tiles, the 6px top edge of the slide paper, the canvas tint, the footer progress bar, and the primary "next" actions. Reading text, code panels, and the semantic result/caution colours stay out of it. Section-ink text passes 4.5:1 on its soft surfaces.
+
+**The Number Tile Rule.** A coloured tile with a small label over a large numeral ("ส่วนที่ 2", "ขั้นตอนที่ 7") introduces a part opener and every step title; the plain "ส่วนที่ N:" or "ขั้นตอนที่ N:" prefix stays in the heading for screen readers.
+
 ## Elevation & Depth
 
-The interface uses no box shadows. White paper and chrome contrast with a cool canvas, separated by thin borders. Covers use a soft diagonal gradient; the mobile drawer uses a translucent slate backdrop. Dark code panels supply contrast through tone rather than simulated elevation.
+White paper and chrome contrast with a cool canvas, separated by thin borders. The slide paper alone carries one soft, offset shadow so it lifts off the tinted canvas; controls and cards stay flat. Covers use a soft diagonal gradient; the mobile drawer uses a translucent slate backdrop. Dark code panels supply contrast through tone rather than simulated elevation.
 
-**The Flat Workspace Rule.** Separate lesson paper, navigation, and controls with thin borders and tonal backgrounds; the shipped interface has no box shadows.
+**The One Lifted Sheet Rule.** Only the lesson paper is elevated; everything inside it separates with thin borders and tonal backgrounds. No thick one-sided accent stripes on cards or callouts.
 
 ## Shapes
 
@@ -214,7 +227,13 @@ A dark rounded panel contains a lighter slate toolbar and copy action, followed 
 
 Tables use quiet blue-gray headers, 12px 15px cell padding, and horizontal rules. Problem rows combine amber tone with explicit result text. Demo choices wrap, retain pressed states, and show a strong accent-colored written result. State changes are reflected in content, not only in button color.
 
+### Content Board
+
+Content and summary slides render their items as a two-column numbered board separated by hairlines rather than identical boxes. When the item count is odd (3, 5, 7), the first item becomes a full-width lead panel on the section-soft surface. Items show large numbers only when their headings do not already carry an order ("ขั้นที่", "ช่วงที่", "หลักการที่"...); otherwise a small section-coloured square marks them. A heading ending in "(20 นาที)" or "(ประมาณ 55 นาที)" shows that time as a chip. Clicking an item highlights it for discussion.
+
 ### Guided Writing and Checking
+
+Python in command panels is coloured by role (keywords violet, text values green, numbers amber, functions cyan, comments muted italic). Choosing a part of the command in "คำอธิบายส่วนประกอบของคำสั่ง" highlights that exact part inside the panel with a highlighter-yellow mark. "Shift + Enter" renders as keyboard keys. The step chips above the slide show only numbers after the label "ขั้นตอนที่".
 
 A writing page orders the typing instruction, exact command, run instruction, command explanation, and next-page reminder. Its command panel reuses the existing dark surface and copy toolbar, with larger code lettering and a compact 18px vertical gap. The accent-colored run instruction is bold and remains outside the command panel. Explanation headings use 1.08rem type; prose is limited to 75ch.
 
